@@ -20,6 +20,8 @@
     ISTCameraFlashMode currentFlashMode;
 }
 @property(nonatomic,strong)UIView *previewView;
+
+@property(nonatomic,strong)UIImageView *drawImageView;
 @end
 
 @implementation ADCameraViewController
@@ -46,6 +48,10 @@
     self.drawView = [[ADPreviewView alloc] initWithFrame:_previewView.bounds];
     _drawView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_drawView];
+    
+    self.drawImageView = [[UIImageView alloc] initWithFrame:_previewView.bounds];
+    _drawImageView.backgroundColor = [UIColor redColor];
+    // [_drawView addSubview:_drawImageView];
     
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -84,6 +90,10 @@
             //在此对图片用openCV作处理
             
             UIImage *outImage = [self processFrameWithImage:captureImage];
+            
+            // UIImage *outImage = [self rotateImage:captureImage];
+            [_drawImageView performSelectorOnMainThread:@selector(setImage:)
+                                             withObject:outImage waitUntilDone:YES];
             
             
             
@@ -125,14 +135,18 @@
     
     //对原图进行旋转90度处理
     UIImage *rotatedImage = [self rotateImage:aImage];
+    
     NSLog(@"旋转之后的图片是%@",rotatedImage);
     int lowThreshold = 100;
     int ratio = 3;
     int kernel_size = 3;
     
-    Mat lastFrame = [aImage CVMat];
+    Mat lastFrame = [rotatedImage CVMat];
     Mat grayFrame, detFrame,output;
     
+    //打印图像尺寸
+    NSLog(@"原图像的行是 %f  列是  %f",aImage.size.width, aImage.size.height);
+    NSLog(@"行是 %d  列是  %d",lastFrame.rows,lastFrame.cols);
     // Convert captured frame to grayscale  灰度图
     cvtColor(lastFrame, grayFrame,COLOR_RGB2GRAY);
     
@@ -232,15 +246,27 @@
     return resultImage;
     
     
-    
 }
 - (UIImage *)rotateImage:(UIImage *)aImage
 {
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextDrawImage (context,_drawView.bounds,aImage. CGImage );
-    CGContextRotateCTM (context, ((90) / 180.0 * M_PI));
-    UIImage *roteImage =[UIImage imageWithCGImage: CGBitmapContextCreateImage(context)];
-    return roteImage;
+    
+    
+    //    CGSize outputSize = aImage.size;
+    //    UIGraphicsBeginImageContext(aImage.size);
+    //    CGContextRef context = UIGraphicsGetCurrentContext();
+    //
+    //    CGContextTranslateCTM(context, outputSize.width / 2, outputSize.height / 2);
+    //
+    //    CGContextRotateCTM(context, ((90) / 180.0 * M_PI));
+    //
+    //    CGContextTranslateCTM(context, -outputSize.width / 2, -outputSize.height / 2);
+    //    [aImage drawInRect:CGRectMake(0, 0, outputSize.width, outputSize.height)];
+    //    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    //    UIGraphicsEndImageContext();
+    
+    return aImage;
+    
+    
 }
 //自动拍照
 - (void)capturePictureAutomaticlyWithImage:(UIImage *)aImage

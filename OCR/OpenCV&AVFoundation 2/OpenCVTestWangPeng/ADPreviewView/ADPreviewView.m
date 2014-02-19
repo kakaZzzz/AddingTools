@@ -41,14 +41,16 @@
         
         
         ADContours *contours = [self.modelArray objectAtIndex:i];
-		CGContextMoveToPoint(ctx, contours.point_x, contours.point_y);
+        //		CGContextMoveToPoint(ctx, contours.point_x * 2.5 , contours.point_y * 2.5 );
+        CGContextMoveToPoint(ctx, 320 -  contours.point_y * 2.2222, contours.point_x * 2.2222 - 10 );
         if (i == [self.modelArray count] - 1) {
             
             break;
         }
         else{
             ADContours *contourNext = [self.modelArray objectAtIndex:i + 1];
-            CGContextAddLineToPoint(ctx, contourNext.point_x,contourNext.point_y);
+            //            CGContextAddLineToPoint(ctx, contourNext.point_x * 2.5 ,contourNext.point_y * 2.5 );
+            CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y * 2.2222, contourNext.point_x * 2.2222 - 10);
             NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
             
         }
@@ -56,13 +58,6 @@
 	}
     
     
-    //    CGContextSetLineWidth(ctx, 0.5);
-    //    CGContextSetRGBStrokeColor(ctx, 0.4f, 0.4f, 0.4f, 10.0f);
-    //
-    //    CGContextMoveToPoint(ctx, 30, 30);
-    //    CGContextAddLineToPoint(ctx, 30,100);
-    //
-    //    CGContextStrokePath(ctx);
     
     
 }
