@@ -42,7 +42,7 @@
         
         ADContours *contours = [self.modelArray objectAtIndex:i];
         //		CGContextMoveToPoint(ctx, contours.point_x * 2.5 , contours.point_y * 2.5 );
-        CGContextMoveToPoint(ctx, 320 -  contours.point_y * 2.2222, contours.point_x * 2.2222 - 10 );
+        CGContextMoveToPoint(ctx, 320 -  contours.point_y * 2.2222 -2, contours.point_x * 2.2222 - 12 );
         if (i == [self.modelArray count] - 1) {
             
             break;
@@ -50,7 +50,7 @@
         else{
             ADContours *contourNext = [self.modelArray objectAtIndex:i + 1];
             //            CGContextAddLineToPoint(ctx, contourNext.point_x * 2.5 ,contourNext.point_y * 2.5 );
-            CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y * 2.2222, contourNext.point_x * 2.2222 - 10);
+            CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y * 2.2222 -2, contourNext.point_x * 2.2222 - 12);
             NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
             
         }
