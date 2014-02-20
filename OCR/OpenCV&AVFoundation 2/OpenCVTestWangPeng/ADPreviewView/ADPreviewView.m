@@ -29,34 +29,39 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    
+    int yfix = -53;
+    if (IPHONE_5_OR_LATER) {
+        yfix = 0;
+    }
     NSLog(@"绘制绘制");
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
-    CGContextSetLineWidth(ctx, 1.0);
+    CGContextSetLineWidth(ctx, 2.0);
     //CGContextSetRGBStrokeColor(ctx, 0.4f, 0.4f, 0.4f, 1.0f);
     CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
     
-	for (int i=0; i<[self.modelArray count]; i++) {
-        
-        
-        ADContours *contours = [self.modelArray objectAtIndex:i];
-        //		CGContextMoveToPoint(ctx, contours.point_x * 2.5 , contours.point_y * 2.5 );
-        CGContextMoveToPoint(ctx, 320 -  contours.point_y * 2.2222 -2, contours.point_x * 2.2222 - 12 );
-        if (i == [self.modelArray count] - 1) {
+    if ([self.modelArray count] > 0) {
+        for (int i=0; i<[self.modelArray count]; i++) {
             
-            break;
+            NSLog(@"轮廓点数%d",[self.modelArray count]);
+            ADContours *contours = [self.modelArray objectAtIndex:i];
+            //            CGContextMoveToPoint(ctx, contours.point_x  , contours.point_y  );
+            CGContextMoveToPoint(ctx, 320 -  contours.point_y  , contours.point_x + yfix  );
+            if (i == [self.modelArray count] - 1) {
+                ADContours *contourNext = [self.modelArray objectAtIndex:0];
+                CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y  , contourNext.point_x + yfix );
+            }
+            else{
+                ADContours *contourNext = [self.modelArray objectAtIndex:i + 1];
+                //                CGContextAddLineToPoint(ctx, contourNext.point_x ,contourNext.point_y );
+                CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y  , contourNext.point_x + yfix);
+                NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
+                
+            }
+            CGContextStrokePath(ctx);
         }
-        else{
-            ADContours *contourNext = [self.modelArray objectAtIndex:i + 1];
-            //            CGContextAddLineToPoint(ctx, contourNext.point_x * 2.5 ,contourNext.point_y * 2.5 );
-            CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y * 2.2222 -2, contourNext.point_x * 2.2222 - 12);
-            NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
-            
-        }
-        CGContextStrokePath(ctx);
-	}
-    
+        
+    }
     
     
     

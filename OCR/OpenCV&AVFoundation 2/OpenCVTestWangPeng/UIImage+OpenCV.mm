@@ -110,6 +110,7 @@ static void ProviderReleaseDataNOP(void *info, const void *data, size_t size)
     CGImageRelease(imageRef);
     CGDataProviderRelease(provider);
     CGColorSpaceRelease(colorSpace);
+
     
     return self;
 }

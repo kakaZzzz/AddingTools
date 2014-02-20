@@ -40,7 +40,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     //创建视图
-    self.previewView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 400)];
+    self.previewView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     _previewView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_previewView];
     
@@ -134,22 +134,23 @@
     using namespace cv;
     
     //对原图进行旋转90度处理
-    UIImage *rotatedImage = [self rotateImage:aImage];
+//    UIImage *rotatedImage = [self rotateImage:aImage];
     
-    NSLog(@"旋转之后的图片是%@",rotatedImage);
+//    NSLog(@"旋转之后的图片是%@",rotatedImage);
     int lowThreshold = 100;
     int ratio = 3;
     int kernel_size = 3;
     
-    Mat lastFrame = [rotatedImage CVMat];
+    Mat lastFrame = [aImage CVMat];
     Mat grayFrame, detFrame,output;
+    
+    resize(lastFrame, lastFrame, cv::Size(568,320));
     
     //打印图像尺寸
     NSLog(@"原图像的行是 %f  列是  %f",aImage.size.width, aImage.size.height);
     NSLog(@"行是 %d  列是  %d",lastFrame.rows,lastFrame.cols);
     // Convert captured frame to grayscale  灰度图
     cvtColor(lastFrame, grayFrame,COLOR_RGB2GRAY);
-    
     
     //使用Canny算法进行边缘检测,返回图像即是二值单通道的图
     Canny(grayFrame, output,
@@ -174,7 +175,7 @@
     }
     
     //画轮廓和包围盒
-    Mat drawing = Mat(output.size(),CV_8UC4,Scalar(255,255,255,0));
+//    Mat drawing = Mat(output.size(),CV_8UC4,Scalar(255,255,255,0));
     // Mat drawing(output.size(),CV_8UC4,Scalar(255,255,255,0));
     
     double area, maxArea = 0;
@@ -191,45 +192,73 @@
             maxArea = area;
         }
         
-        Scalar color = Scalar(150);
-        //轮廓
-        drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, cv::Point() );
+//        Scalar color = Scalar(150);
+//        //轮廓
+//        drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, cv::Point() );
+//        
+//        Point2f rect_points[4];
+//        minRect[i].points(rect_points);//returns 4 vertices of the rectangle
+//        
+//        for( int j = 0; j < 4; j++ )
+//        {
+//            line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+//            NSLog(@"------%f",rect_points[j].x);
+//            
+//        }
         
-        Point2f rect_points[4];
-        minRect[i].points(rect_points);//returns 4 vertices of the rectangle
+
+    }
+    
+    
+    if (maxArea > 10000) {
         
-        for( int j = 0; j < 4; j++ )
+        
+        //将倾斜角度算出来
+//        RotatedRect minRect = minAreaRect( Mat(contours[maxIdx]));
+        
+//        if (fabs(minRect.angle) < 5.0 ) {
+//            
+//            NSLog(@"倾斜角度是多少啊 ...%f",minRect.angle);
+//            
+//            //停止取景
+//            [ADCameraHelper stopRunning];
+//            [self capturePictureAutomaticlyWithImage:aImage];
+//            
+//        }
+        //
+ 
+        vector<cv::Point> approxCurve;
+         //将vector转换成Mat型，此时的Mat还是列向量，只不过是2个通道的列向量而已
+        Mat contourMat = Mat(contours[maxIdx]);
+        double eps = contours[maxIdx].size() * 0.05;
+        approxPolyDP(contourMat, approxCurve, eps, YES);//求出轮廓的封闭的曲线，保存在approxCurve，轮廓和封闭曲线直接的最大距离为1
+        if (approxCurve.size() != 4)
         {
-            line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
-            NSLog(@"------%f",rect_points[j].x);
-            
+            return nil;
         }
         
+        else{
+            // vector<cv::Point> c =  contours[maxIdx];
+            NSMutableArray *contourArray = [NSMutableArray arrayWithCapacity:1];
+            for (int k = 0; k < approxCurve.size(); k++) {
+                
+                ADContours *contour = [[ADContours alloc] initWithPointX:approxCurve[k].x pointY:approxCurve[k].y];
+                [contourArray addObject:contour];
+                
+                NSLog(@"---------%d,%d",approxCurve[k].x,approxCurve[k].y);
+            }
+            _drawView.modelArray = [NSArray arrayWithArray:contourArray];
+            
+            [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
+                                        withObject:nil waitUntilDone:YES];
+            
+            NSLog(@"绘制背景view是%@",contourArray);
+
+        }
         
     }
     
-    
-    if (maxArea > 0) {
-        vector<cv::Point> c =  contours[maxIdx];
-        
-        NSMutableArray *contourArray = [NSMutableArray arrayWithCapacity:1];
-        for (int k = 0; k < c.size(); k++) {
-            
-            ADContours *contour = [[ADContours alloc] initWithPointX:c[k].x pointY:c[k].y];
-            [contourArray addObject:contour];
-            
-            NSLog(@"---------%d,%d",c[k].x,c[k].y);
-        }
-        _drawView.modelArray = [NSArray arrayWithArray:contourArray];
-        
-        [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
-                                    withObject:nil waitUntilDone:YES];
-        
-        NSLog(@"绘制背景view是%@",contourArray);
-        
-    }
-    
-    //  NSLog(@"倾斜角度是多少啊 ...%f",minAreaRect.angle);
+
     
     //    //画出轮廓
     //
@@ -241,11 +270,19 @@
     
     
     // Display result
-    UIImage *resultImage = [UIImage imageWithCVMat:drawing];
+//    UIImage *resultImage = [UIImage imageWithCVMat:output];
     
-    return resultImage;
+    lastFrame.release();
+    grayFrame.release();
+    output.release();
+
+    contours.clear();
+    minEllipse.clear();
+    minRect.clear();
     
+    return nil;
     
+  
 }
 - (UIImage *)rotateImage:(UIImage *)aImage
 {
@@ -309,7 +346,10 @@
 {
     //    [ADCameraHelper captureStillImage];
     //    [self performSelector:@selector(getImage) withObject:nil afterDelay:0.5];
-    [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+    
+   // [ADCameraHelper captureStillImage];
+        [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+        
         ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
         viewPhotoVc.photoImage = captureImage;
         [self.navigationController pushViewController:viewPhotoVc animated:YES];

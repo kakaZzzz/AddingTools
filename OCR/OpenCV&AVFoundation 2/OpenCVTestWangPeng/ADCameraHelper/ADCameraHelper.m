@@ -43,7 +43,7 @@ static ADCameraHelper *sharedInstance = nil;
 //        NSLog(@"Set capture session preset AVCaptureSessionPresetLow");
 //    }
     
-    [self.session setSessionPreset:AVCaptureSessionPresetLow];//丫的这个几个级别不一样还会导致程序crash
+    [self.session setSessionPreset:AVCaptureSessionPresetHigh];//丫的这个几个级别不一样还会导致程序crash
     
     
     //2.创建、配置输入设备
@@ -83,9 +83,15 @@ static ADCameraHelper *sharedInstance = nil;
      [NSNumber numberWithInt:kCVPixelFormatType_32BGRA]
                                 forKey:(id)kCVPixelBufferPixelFormatTypeKey];
     
+    [_output setAlwaysDiscardsLateVideoFrames:YES];//丢弃延迟的影格
     // If you wish to cap the frame rate to a known value, such as 15 fps, set
     // minFrameDuration.
     //output.minFrameDuration = CMTimeMake(1, 15);
+    
+    AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
+    [connection setVideoMaxFrameDuration:CMTimeMake(1, 20)];
+    [connection setVideoMinFrameDuration:CMTimeMake(1, 10)];
+
 
 	[self.session addOutput:_output];
     
@@ -278,13 +284,18 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 }
 - (void)captureImage:(CaptureImageBlock)block{
     //get connection
-//    if (captureBlock){
-//        Block_release(captureBlock);
-//    }
-   // captureBlock = Block_copy(block);
-    captureBlock = block;
+//    if (_captureBlock){
+//        Block_release(_captureBlock);
+//            }
+//    captureBlock = Block_copy(block);
+    _captureBlock = block;
+    //将处理图片状态值置为YES
+    //获取连接
+    self.isProcessingImage = YES;
+    //get connection
+    
     AVCaptureConnection *videoConnection = nil;
-    for (AVCaptureConnection *connection in _output.connections) {
+    for (AVCaptureConnection *connection in _captureOutput.connections) {
         for (AVCaptureInputPort *port in [connection inputPorts]) {
             if ([[port mediaType] isEqual:AVMediaTypeVideo] ) {
                 videoConnection = connection;
@@ -300,15 +311,34 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
      ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
          if (imageSampleBuffer != NULL) {
              NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
-            
              NSLog(@"开始生成图片");
              UIImage *tempImage = [[UIImage alloc] initWithData:imageData];
              objSelf.image = tempImage;
+             //将处理图片状态值置为NO
+             objSelf.isProcessingImage = NO;
              
              //返回图片
-             objSelf->captureBlock(objSelf.image);
+             objSelf->_captureBlock(objSelf.image);
+
          }
-     }];
+         
+         }];
+//    //get UIImage
+//    __block ADCameraHelper *objSelf = self;
+//    [_captureOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:
+//     
+//     ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
+//         if (imageSampleBuffer != NULL) {
+//             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
+//            
+//             NSLog(@"开始生成图片");
+//             UIImage *tempImage = [[UIImage alloc] initWithData:imageData];
+//             objSelf.image = tempImage;
+//             
+//             //返回图片
+//             objSelf->_captureBlock(objSelf.image);
+//         }
+//     }];
 }
 
 - (AVCaptureDevice *) cameraWithPosition:(AVCaptureDevicePosition) position

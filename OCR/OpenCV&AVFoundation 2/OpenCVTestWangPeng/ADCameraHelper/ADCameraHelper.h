@@ -19,7 +19,7 @@ typedef void (^CaptureReallyImageBlock)(UIImage *aImage);//实时取景
   
     UIImage *image;
    
-    CaptureImageBlock captureBlock;
+    
 }
 @property (nonatomic,strong) AVCaptureSession *session;
 @property (nonatomic,strong) AVCaptureStillImageOutput *captureOutput;
@@ -28,7 +28,7 @@ typedef void (^CaptureReallyImageBlock)(UIImage *aImage);//实时取景
 @property (nonatomic,strong) UIImage *image;
 @property (nonatomic,strong) AVCaptureVideoPreviewLayer *preview;
 @property (nonatomic,assign) BOOL isProcessingImage;
-
+@property (nonatomic,copy) CaptureImageBlock captureBlock;
 @property (nonatomic,copy) CaptureReallyImageBlock captureReallyImage;
 @property (nonatomic,strong) dispatch_queue_t serialQueue;
 /**
