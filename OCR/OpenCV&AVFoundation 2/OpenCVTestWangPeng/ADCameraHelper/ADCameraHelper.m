@@ -25,25 +25,11 @@ static ADCameraHelper *sharedInstance = nil;
     self.isProcessingImage = NO;
     //1.创建会话层
     self.session = [[AVCaptureSession alloc] init];
-    
-//    if ([self.session canSetSessionPreset:AVCaptureSessionPreset640x480])
-//    {
-//        [self.session setSessionPreset:AVCaptureSessionPreset640x480];
-//        NSLog(@"Set capture session preset AVCaptureSessionPreset640x480");
-//    }
-//    else if ([self.session canSetSessionPreset:AVCaptureSessionPresetHigh])
-//    {
-//        [self.session setSessionPreset:AVCaptureSessionPresetHigh];
-//        NSLog(@"Set capture session preset AVCaptureSessionPresetHigh");
-//    }
-//
-//    else if([self.session canSetSessionPreset:AVCaptureSessionPresetLow])
-//    {
-//        [self.session setSessionPreset:AVCaptureSessionPresetLow];
-//        NSLog(@"Set capture session preset AVCaptureSessionPresetLow");
-//    }
-    
     [self.session setSessionPreset:AVCaptureSessionPresetHigh];//丫的这个几个级别不一样还会导致程序crash
+    
+    
+    [self configurateTakePhote];
+    
     
     
     //2.创建、配置输入设备
@@ -63,10 +49,10 @@ static ADCameraHelper *sharedInstance = nil;
     }
    // self.videoInput = newVideoInput;
    
-//    //3.创建、配置输出  image输出
-//    self.captureOutput = [[AVCaptureStillImageOutput alloc] init];
-//    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecJPEG,AVVideoCodecKey,nil];
-//    [_captureOutput setOutputSettings:outputSettings];
+    //3.创建、配置输出  image输出
+    self.captureOutput = [[AVCaptureStillImageOutput alloc] init];
+    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecJPEG,AVVideoCodecKey,nil];
+    [_captureOutput setOutputSettings:outputSettings];
     
     //配置输出 video输出
     self.output = [[AVCaptureVideoDataOutput alloc] init];
@@ -88,14 +74,14 @@ static ADCameraHelper *sharedInstance = nil;
     // minFrameDuration.
     //output.minFrameDuration = CMTimeMake(1, 15);
     
-    AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
-    [connection setVideoMaxFrameDuration:CMTimeMake(1, 20)];
-    [connection setVideoMinFrameDuration:CMTimeMake(1, 10)];
+//    AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
+//    [connection setVideoMaxFrameDuration:CMTimeMake(1, 20)];
+//    [connection setVideoMinFrameDuration:CMTimeMake(1, 10)];
 
 
 	[self.session addOutput:_output];
     
-    //
+    
     
 }
 - (id) init
@@ -103,16 +89,63 @@ static ADCameraHelper *sharedInstance = nil;
 	if (self = [super init]) [self initialize];
 	return self;
 }
+
+- (void)configurateTakePhote
+{
+    AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSError *deviceError;
+    if (device.hasFlash) {
+        NSLog(@"device.hasFlash turning flash mode on");
+        [device lockForConfiguration:&deviceError];
+        device.flashMode = AVCaptureFlashModeOn;
+        [device unlockForConfiguration];
+    }
+    else {
+        NSLog(@"Device does not have Flash");
+    }
+    
+    if ([device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+        NSLog(@"Enabling ContinuousAutoFocus");
+        [device lockForConfiguration:&deviceError];
+        device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
+        [device unlockForConfiguration];
+    }
+    else {
+        NSLog(@"Device does not support ContinuousAutoFocus");
+    }
+    
+    if ([device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+        NSLog(@"Enabling ContinuousAutoExposure");
+        [device lockForConfiguration:&deviceError];
+        device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+        [device unlockForConfiguration];
+    }
+    else {
+        NSLog(@"Device does not support ContinuousAutoExposure");
+    }
+    
+    if ([device isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance]) {
+        NSLog(@"Enabling ContinuousAutoWhiteBalance");
+        [device lockForConfiguration:&deviceError];
+        device.whiteBalanceMode = AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance;
+        [device unlockForConfiguration];
+    }
+    else {
+        NSLog(@"Device does not support ContinuousAutoWhiteBalance");
+    }
+}
+
 /**
  *  插入预览视图到主视图中
  *
  *  @param aView 背景视图
  */
 -(void) embedPreviewInView: (UIView *) aView {
+    
     if (!_session) return;
     NSLog(@"实时显示的镜头内容");
     self.preview = [AVCaptureVideoPreviewLayer layerWithSession: _session];
-        _preview.frame = aView.bounds;
+    _preview.frame = aView.bounds;
     _preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
     [aView.layer addSublayer: _preview];
     
@@ -283,6 +316,9 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
      }];
 }
 - (void)captureImage:(CaptureImageBlock)block{
+    
+    
+    NSLog(@"拍照-------");
     //get connection
 //    if (_captureBlock){
 //        Block_release(_captureBlock);
@@ -500,11 +536,13 @@ bail:
 + (void) startRunning
 {
 	[[[ADCameraHelper sharedInstance] session] startRunning];
+   
 }
 
 + (void) stopRunning
 {
 	[[[ADCameraHelper sharedInstance] session] stopRunning];
+
 }
 
 + (BOOL)toggleCamera

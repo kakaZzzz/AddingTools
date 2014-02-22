@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 @class ADContours;
 @interface ADPreviewView : UIView
-@property(nonatomic,strong)NSArray *modelArray;
+@property(nonatomic,strong)NSMutableArray *modelArray;
 - (void)display;
 @end

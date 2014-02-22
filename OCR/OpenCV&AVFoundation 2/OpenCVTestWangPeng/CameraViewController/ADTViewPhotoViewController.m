@@ -27,12 +27,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    backBtn.frame = CGRectMake(10, 10, 80, 30);
-    [backBtn setTitle:@"返回" forState:UIControlStateNormal];
-    [backBtn addTarget:self action:@selector(backToCamera) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backBtn];
     //预览图片
     NSLog(@"图片宽高%f,%f",_photoImage.size.width,_photoImage.size.height);
     CGFloat photoHeight;
@@ -45,6 +39,13 @@
     photoImageView.image = _photoImage;
     [self.view addSubview:photoImageView];
     
+    // Do any additional setup after loading the view.
+    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    backBtn.frame = CGRectMake(10, 10, 80, 30);
+    [backBtn setTitle:@"返回" forState:UIControlStateNormal];
+    [backBtn addTarget:self action:@selector(backToCamera) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backBtn];
+
 }
 
 - (void)backToCamera

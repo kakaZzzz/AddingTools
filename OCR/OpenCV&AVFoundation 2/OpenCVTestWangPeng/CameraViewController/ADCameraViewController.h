@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#define MAX_AREA 10000
 typedef enum{
     ISTCameraFlashModeAuto = 1,
     ISTCameraFlashModeOn,

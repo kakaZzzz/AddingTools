@@ -22,6 +22,7 @@
 @property(nonatomic,strong)UIView *previewView;
 
 @property(nonatomic,strong)UIImageView *drawImageView;
+@property(nonatomic,assign)int whiteBalanceCount;
 @end
 
 @implementation ADCameraViewController
@@ -31,6 +32,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.whiteBalanceCount = 0;
     }
     return self;
 }
@@ -85,24 +87,9 @@
     [[ADCameraHelper sharedInstance] setCaptureReallyImage:^(UIImage *captureImage){
         if (captureImage) {
             
-            
-            
             //在此对图片用openCV作处理
-            
             UIImage *outImage = [self processFrameWithImage:captureImage];
             
-            // UIImage *outImage = [self rotateImage:captureImage];
-            [_drawImageView performSelectorOnMainThread:@selector(setImage:)
-                                             withObject:outImage waitUntilDone:YES];
-            
-            
-            
-            littleWidow.transform = CGAffineTransformMakeRotation((90.0f * M_PI) / 180.0f);
-            [littleWidow performSelectorOnMainThread:@selector(setImage:)
-                                          withObject:outImage waitUntilDone:YES];
-            // littleWidow.image = captureImage;
-            NSLog(@"输出图片%@",captureImage);
-            NSLog(@"block回调");
         }
         
     }];
@@ -126,17 +113,64 @@
     
     [ADCameraHelper embedPreviewInView:_previewView];
     //[ADCameraHelper startRunning];
+    
+    AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    [device addObserver:self forKeyPath:@"adjustingWhiteBalance" options:(NSKeyValueObservingOptionNew |
+                                                                          NSKeyValueObservingOptionOld) context:nil];
+    [device addObserver:self forKeyPath:@"adjustingFocus" options:(NSKeyValueObservingOptionNew |
+                                                                   NSKeyValueObservingOptionOld) context:nil];
+    [device addObserver:self forKeyPath:@"adjustingExposure" options:(NSKeyValueObservingOptionNew |
+                                                                      NSKeyValueObservingOptionOld) context:nil];
+    
+    
+    
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    NSLog(@"add ob!!!!!!");
+    
+    if ([keyPath isEqualToString:@"adjustingWhiteBalance"]) {
+        
+        AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        
+        NSLog(@"-------白平衡%hhd", device.isAdjustingWhiteBalance);
+        
+        if (device.adjustingWhiteBalance) {
+            if (self.whiteBalanceCount == 2) {
+                self.whiteBalanceCount = 3;
+            }
+        }else{
+            if (self.whiteBalanceCount == 1) {
+                self.whiteBalanceCount = 2;
+            }else if(self.whiteBalanceCount == 3){
+                
+                self.whiteBalanceCount = 10;
+                
+                
+                [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+                    
+                    ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
+                    viewPhotoVc.photoImage = captureImage;
+                    [self.navigationController pushViewController:viewPhotoVc animated:YES];
+                    
+                }];
+            }
+        }
+    }
+    
+    
+    
+}
+
+
 #pragma mark - openCV对图像进行处理
 // Perform image processing on the last captured frame and display the results
 - (UIImage *)processFrameWithImage:(UIImage *)aImage
 {
     using namespace cv;
     
-    //对原图进行旋转90度处理
-//    UIImage *rotatedImage = [self rotateImage:aImage];
-    
-//    NSLog(@"旋转之后的图片是%@",rotatedImage);
     int lowThreshold = 100;
     int ratio = 3;
     int kernel_size = 3;
@@ -159,149 +193,117 @@
           kernel_size);
     
     //使用 findContours 找轮廓
-    // std::vector<std::vector<Point>> contours;
     vector<vector<cv::Point>> contours;
     findContours(output, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     
-    //查找轮廓的最小旋转rect和椭圆包围盒
-    vector<RotatedRect> minRect( contours.size() );
-    vector<RotatedRect> minEllipse( contours.size() );
-    
-    for( int i = 0; i < contours.size(); i++ )
-    {
-        minRect[i] = minAreaRect( Mat(contours[i]) );
-        if( contours[i].size() > 5 )
-        { minEllipse[i] = fitEllipse( Mat(contours[i]) ); }
-    }
-    
-    //画轮廓和包围盒
-//    Mat drawing = Mat(output.size(),CV_8UC4,Scalar(255,255,255,0));
-    // Mat drawing(output.size(),CV_8UC4,Scalar(255,255,255,0));
-    
-    double area, maxArea = 0;
-    int maxIdx = 0;
+    double area = 0;
     
     for( int i = 0; i< contours.size(); i++ )
     {
         
         //找到面积最大的
         area = fabs(contourArea(contours[i]));
-        if(area > maxArea)
-        {
-            maxIdx = i;
-            maxArea = area;
-        }
-        
-//        Scalar color = Scalar(150);
-//        //轮廓
-//        drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, cv::Point() );
-//        
-//        Point2f rect_points[4];
-//        minRect[i].points(rect_points);//returns 4 vertices of the rectangle
-//        
-//        for( int j = 0; j < 4; j++ )
-//        {
-//            line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
-//            NSLog(@"------%f",rect_points[j].x);
-//            
-//        }
-        
-
-    }
-    
-    
-    if (maxArea > 10000) {
-        
-        
         //将倾斜角度算出来
-//        RotatedRect minRect = minAreaRect( Mat(contours[maxIdx]));
-        
-//        if (fabs(minRect.angle) < 5.0 ) {
-//            
-//            NSLog(@"倾斜角度是多少啊 ...%f",minRect.angle);
-//            
-//            //停止取景
-//            [ADCameraHelper stopRunning];
-//            [self capturePictureAutomaticlyWithImage:aImage];
-//            
-//        }
-        //
- 
         vector<cv::Point> approxCurve;
-         //将vector转换成Mat型，此时的Mat还是列向量，只不过是2个通道的列向量而已
-        Mat contourMat = Mat(contours[maxIdx]);
-        double eps = contours[maxIdx].size() * 0.05;
+        //将vector转换成Mat型，此时的Mat还是列向量，只不过是2个通道的列向量而已
+        Mat contourMat = Mat(contours[i]);
+        double eps = contours[i].size() * 0.05;
         approxPolyDP(contourMat, approxCurve, eps, YES);//求出轮廓的封闭的曲线，保存在approxCurve，轮廓和封闭曲线直接的最大距离为1
-        if (approxCurve.size() != 4)
-        {
-            return nil;
-        }
         
-        else{
-            // vector<cv::Point> c =  contours[maxIdx];
+        if ((area > MAX_AREA) && (4 == approxCurve.size()) && isContourConvex(approxCurve)) {
+            
             NSMutableArray *contourArray = [NSMutableArray arrayWithCapacity:1];
             for (int k = 0; k < approxCurve.size(); k++) {
                 
                 ADContours *contour = [[ADContours alloc] initWithPointX:approxCurve[k].x pointY:approxCurve[k].y];
                 [contourArray addObject:contour];
                 
-                NSLog(@"---------%d,%d",approxCurve[k].x,approxCurve[k].y);
             }
-            _drawView.modelArray = [NSArray arrayWithArray:contourArray];
+            _drawView.modelArray = contourArray;
             
             [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
                                         withObject:nil waitUntilDone:YES];
             
-            NSLog(@"绘制背景view是%@",contourArray);
-
+            if ([self shouldTakePhotoWithCoutours:contourArray]) {
+                
+                [self capturePictureAutomaticlyWithImage:aImage];
+                
+            }
+            break;
+        }
+        else{
+            continue;
         }
         
+        
     }
-    
-
-    
-    //    //画出轮廓
-    //
-    //    Mat result(output.size(),CV_8U,Scalar(0));//Scalar(0)为背景颜色
-    //
-    //    //画出轮廓，参数为：画板，轮廓，轮廓指示（这里画出所有轮廓），颜色，线粗
-    //
-    //    drawContours(result,contours,-1,Scalar(255),1);//Scalar(255)为线条颜色
-    
-    
-    // Display result
-//    UIImage *resultImage = [UIImage imageWithCVMat:output];
-    
+ 
     lastFrame.release();
     grayFrame.release();
     output.release();
-
+    
     contours.clear();
-    minEllipse.clear();
-    minRect.clear();
     
     return nil;
     
-  
+}
+
+
+#pragma mark - 计算两个坐标点之间的距离
+-(float)distanceFromPointX:(ADContours *)start distanceToPointY:(ADContours *)end{
+    float distance;
+    CGFloat xDist = (end.point_x - start.point_x);
+    CGFloat yDist = (end.point_y - start.point_y);
+    distance = sqrt((xDist * xDist) + (yDist * yDist));
+    return distance;
+}
+#pragma mark -判断是否达到拍照条件
+- (BOOL)shouldTakePhotoWithCoutours:(NSArray *)countours
+{
+    static int frameNumber = 0;
+    ADContours *contour1 = [countours objectAtIndex:0];
+    ADContours *contour2 = [countours objectAtIndex:1];
+    ADContours *contour3 = [countours objectAtIndex:2];
+    ADContours *contour4 = [countours objectAtIndex:3];
+    float distance1 = [self distanceFromPointX:contour1 distanceToPointY:contour2];
+    float distance2 = [self distanceFromPointX:contour3 distanceToPointY:contour4];
+    float distance3 = [self distanceFromPointX:contour2 distanceToPointY:contour3];
+    float distance4 = [self distanceFromPointX:contour1 distanceToPointY:contour4];
+    NSLog(@"四个距离分别是%.1f   %.1f   %.1f   %.1f",distance1,distance2,distance3,distance4);
+    if (fabs((distance1 - distance2)) < 50 && (fabs((distance3 - distance4)) < 50)) {
+        
+        frameNumber ++;
+        if ( 5 == frameNumber) {
+            NSLog(@"拿到的帧数是多少%d",frameNumber);
+            frameNumber = 0;
+            return YES;
+        }
+        else{
+            return NO;
+        }
+    }
+    
+    else{
+        return NO;
+    }
 }
 - (UIImage *)rotateImage:(UIImage *)aImage
 {
     
     
-    //    CGSize outputSize = aImage.size;
-    //    UIGraphicsBeginImageContext(aImage.size);
-    //    CGContextRef context = UIGraphicsGetCurrentContext();
-    //
-    //    CGContextTranslateCTM(context, outputSize.width / 2, outputSize.height / 2);
-    //
-    //    CGContextRotateCTM(context, ((90) / 180.0 * M_PI));
-    //
-    //    CGContextTranslateCTM(context, -outputSize.width / 2, -outputSize.height / 2);
-    //    [aImage drawInRect:CGRectMake(0, 0, outputSize.width, outputSize.height)];
-    //    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    //    UIGraphicsEndImageContext();
+    CGSize outputSize = aImage.size;
+    UIGraphicsBeginImageContext(aImage.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, outputSize.width / 2, outputSize.height / 2);
     
-    return aImage;
+    CGContextRotateCTM(context, ((90) / 180.0 * M_PI));
+    
+    CGContextTranslateCTM(context, -outputSize.width / 2, -outputSize.height / 2);
+    [aImage drawInRect:CGRectMake(0, 0, outputSize.width, outputSize.height)];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
     
     
 }
@@ -309,11 +311,27 @@
 - (void)capturePictureAutomaticlyWithImage:(UIImage *)aImage
 {
     NSLog(@"自动拍照了....");
-    ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
-    viewPhotoVc.photoImage = aImage;
-    [self.navigationController pushViewController:viewPhotoVc animated:YES];
+    [self capturePictureAutomaticly];
     
-    
+}
+- (void)capturePictureAutomaticly
+{
+    ADCameraHelper *helper = [ADCameraHelper sharedInstance];
+    if (helper.captureOutput == nil){
+        helper.captureOutput = [[AVCaptureStillImageOutput alloc] init];
+        NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecJPEG,AVVideoCodecKey,nil];
+        [helper.captureOutput  setOutputSettings:outputSettings];
+        
+    }
+    [helper.session removeOutput:helper.output];
+    [helper.session addOutput:helper.captureOutput ];
+    //    [ADCameraHelper startRunning];
+    if (self.whiteBalanceCount == 0) {
+        self.whiteBalanceCount = 1;
+        
+        
+        
+    }
     
 }
 - (void)viewWillAppear:(BOOL)animated
@@ -327,6 +345,17 @@
     [super viewWillDisappear:animated];
     //停止取景
     [ADCameraHelper stopRunning];
+    //改变output
+    ADCameraHelper *helper = [ADCameraHelper sharedInstance];
+    [helper.session removeOutput:helper.captureOutput];
+    [helper.session addOutput:helper.output];
+    self.whiteBalanceCount = 0;
+    
+    //清除绘制
+    [_drawView.modelArray removeAllObjects];
+    [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
+                                withObject:nil waitUntilDone:YES];
+    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -347,8 +376,8 @@
     //    [ADCameraHelper captureStillImage];
     //    [self performSelector:@selector(getImage) withObject:nil afterDelay:0.5];
     
-   // [ADCameraHelper captureStillImage];
-        [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+    // [ADCameraHelper captureStillImage];
+    [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
         
         ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
         viewPhotoVc.photoImage = captureImage;
