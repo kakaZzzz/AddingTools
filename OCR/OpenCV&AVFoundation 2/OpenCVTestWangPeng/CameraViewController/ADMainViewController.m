@@ -31,7 +31,7 @@ UIImagePickerControllerDelegate>
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     UIButton *takePhotoBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    takePhotoBtn.frame = CGRectMake(110, 100, 100, 40);
+    takePhotoBtn.frame = CGRectMake(110, 100, 200, 100);
     [takePhotoBtn setTitle:@"拍照" forState:UIControlStateNormal];
     [takePhotoBtn addTarget:self action:@selector(customPhotoTake:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:takePhotoBtn];

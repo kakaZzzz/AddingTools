@@ -10,5 +10,6 @@
 @class ADContours;
 @interface ADPreviewView : UIView
 @property(nonatomic,strong)NSMutableArray *modelArray;
+@property(nonatomic, assign)BOOL isRightStatus;
 - (void)display;
 @end

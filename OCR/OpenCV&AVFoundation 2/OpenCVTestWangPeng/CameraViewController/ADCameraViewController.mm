@@ -23,6 +23,7 @@
 
 @property(nonatomic,strong)UIImageView *drawImageView;
 @property(nonatomic,assign)int whiteBalanceCount;
+
 @end
 
 @implementation ADCameraViewController
@@ -55,6 +56,11 @@
     _drawImageView.backgroundColor = [UIColor redColor];
     // [_drawView addSubview:_drawImageView];
     
+    _centerLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 100, 100, 30)];
+    _centerLabel.text = @"检测中";
+    _centerLabel.backgroundColor = [UIColor blackColor];
+    _centerLabel.textColor = [UIColor whiteColor];
+    [self.view addSubview:_centerLabel];
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     backBtn.frame = CGRectMake(10, 410, 80, 40);
@@ -131,9 +137,9 @@
 {
     NSLog(@"add ob!!!!!!");
     
+    AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
     if ([keyPath isEqualToString:@"adjustingWhiteBalance"]) {
-        
-        AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
         
         NSLog(@"-------白平衡%hhd", device.isAdjustingWhiteBalance);
         
@@ -146,9 +152,9 @@
                 self.whiteBalanceCount = 2;
             }else if(self.whiteBalanceCount == 3){
                 
+                self.whiteBalanceCount = 4;
+                
                 self.whiteBalanceCount = 10;
-                
-                
                 [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
                     
                     ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
@@ -160,7 +166,25 @@
         }
     }
     
+    if ([keyPath isEqualToString:@"adjustingFocus"]) {
+        NSLog(@"-----对焦：%d", device.isAdjustingFocus);
+        
+//        if (self.whiteBalanceCount == 4) {
+//            self.whiteBalanceCount = 10;
+//            
+//            [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+//                
+//                ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
+//                viewPhotoVc.photoImage = captureImage;
+//                [self.navigationController pushViewController:viewPhotoVc animated:YES];
+//                
+//            }];
+//        }
+    }
     
+    if ([keyPath isEqualToString:@"adjustingExposure"]) {
+        NSLog(@"-----曝光：%d", device.isAdjustingExposure);
+    }
     
 }
 
@@ -210,7 +234,7 @@
         double eps = contours[i].size() * 0.05;
         approxPolyDP(contourMat, approxCurve, eps, YES);//求出轮廓的封闭的曲线，保存在approxCurve，轮廓和封闭曲线直接的最大距离为1
         
-        if ((area > MAX_AREA) && (4 == approxCurve.size()) && isContourConvex(approxCurve)) {
+        if ((area > MIN_DETECT_AREA) && (4 == approxCurve.size()) && isContourConvex(approxCurve)) {
             
             NSMutableArray *contourArray = [NSMutableArray arrayWithCapacity:1];
             for (int k = 0; k < approxCurve.size(); k++) {
@@ -224,7 +248,7 @@
             [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
                                         withObject:nil waitUntilDone:YES];
             
-            if ([self shouldTakePhotoWithCoutours:contourArray]) {
+            if ([self shouldTakePhotoWithCoutours:contourArray andArea:area]) {
                 
                 [self capturePictureAutomaticlyWithImage:aImage];
                 
@@ -258,7 +282,7 @@
     return distance;
 }
 #pragma mark -判断是否达到拍照条件
-- (BOOL)shouldTakePhotoWithCoutours:(NSArray *)countours
+- (BOOL)shouldTakePhotoWithCoutours:(NSArray *)countours andArea:(double)area
 {
     static int frameNumber = 0;
     ADContours *contour1 = [countours objectAtIndex:0];
@@ -269,11 +293,25 @@
     float distance2 = [self distanceFromPointX:contour3 distanceToPointY:contour4];
     float distance3 = [self distanceFromPointX:contour2 distanceToPointY:contour3];
     float distance4 = [self distanceFromPointX:contour1 distanceToPointY:contour4];
+    
+    NSLog(@"面积是：%f", area);
+    
+    if (_centerLabel) {
+        _centerLabel.text = [NSString stringWithFormat:@"%f", area];
+    }
+    
+    
+    
     NSLog(@"四个距离分别是%.1f   %.1f   %.1f   %.1f",distance1,distance2,distance3,distance4);
-    if (fabs((distance1 - distance2)) < 50 && (fabs((distance3 - distance4)) < 50)) {
+    
+    if (((fabs(distance1 - distance2) > 50 && fabs(distance1 - distance2) < 80) ||
+         (fabs(distance3 - distance4) >50 && fabs(distance3 - distance4) < 80)) &&
+          area > MIN_PHOTO_AREA) {
+        
+        _drawView.isRightStatus = YES;
         
         frameNumber ++;
-        if ( 5 == frameNumber) {
+        if ( 10 == frameNumber) {
             NSLog(@"拿到的帧数是多少%d",frameNumber);
             frameNumber = 0;
             return YES;
@@ -284,6 +322,8 @@
     }
     
     else{
+        
+        _drawView.isRightStatus = NO;
         return NO;
     }
 }

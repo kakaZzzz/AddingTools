@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#define MAX_AREA 10000
+#define MIN_DETECT_AREA         10000
+#define MIN_PHOTO_AREA          80000
+
 typedef enum{
     ISTCameraFlashModeAuto = 1,
     ISTCameraFlashModeOn,
@@ -18,5 +20,7 @@ typedef enum{
 @interface ADCameraViewController : UIViewController
 
 @property(nonatomic,strong)ADPreviewView *drawView;
+@property(nonatomic,strong)UILabel* centerLabel;
+
 
 @end

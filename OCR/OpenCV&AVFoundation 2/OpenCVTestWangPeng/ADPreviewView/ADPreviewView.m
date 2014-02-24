@@ -15,6 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.isRightStatus = NO;
     }
     return self;
 }
@@ -38,14 +39,30 @@
     
     CGContextSetLineWidth(ctx, 2.0);
     //CGContextSetRGBStrokeColor(ctx, 0.4f, 0.4f, 0.4f, 1.0f);
-    CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+    
+    if (self.isRightStatus) {
+        CGContextSetStrokeColorWithColor(ctx, [UIColor greenColor].CGColor);
+    }else{
+        CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+    }
+    
     
     if ([self.modelArray count] > 0) {
         for (int i=0; i<[self.modelArray count]; i++) {
             
+//            if (i ==0 ) {
+//                CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+//            }else if (i == 1){
+//                CGContextSetStrokeColorWithColor(ctx, [UIColor greenColor].CGColor);
+//            }else if (i == 2){
+//                CGContextSetStrokeColorWithColor(ctx, [UIColor yellowColor].CGColor);
+//            }else if(i ==3){
+//                CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
+//            }
+            
             NSLog(@"轮廓点数%d",[self.modelArray count]);
             ADContours *contours = [self.modelArray objectAtIndex:i];
-            //            CGContextMoveToPoint(ctx, contours.point_x  , contours.point_y  );
+
             CGContextMoveToPoint(ctx, 320 -  contours.point_y  , contours.point_x + yfix  );
             if (i == [self.modelArray count] - 1) {
                 ADContours *contourNext = [self.modelArray objectAtIndex:0];
@@ -53,7 +70,7 @@
             }
             else{
                 ADContours *contourNext = [self.modelArray objectAtIndex:i + 1];
-                //                CGContextAddLineToPoint(ctx, contourNext.point_x ,contourNext.point_y );
+
                 CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y  , contourNext.point_x + yfix);
                 NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
                 
