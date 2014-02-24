@@ -94,13 +94,15 @@
         if (captureImage) {
             
             //在此对图片用openCV作处理
+            
+            [self performSelectorOnMainThread:@selector(setCurrentImage:) withObject:captureImage waitUntilDone:NO];
+            
             UIImage *outImage = [self processFrameWithImage:captureImage];
             
         }
         
     }];
-    
-    //判断支持类别
+        //判断支持类别
     if ([ADCameraHelper isBackCameraFlashSupportAutoMode]) {
         [flashBtn setTitle:@"自动" forState:UIControlStateNormal];
         currentFlashMode = ISTCameraFlashModeAuto;
@@ -172,13 +174,15 @@
         if (self.whiteBalanceCount == 1 && device.isAdjustingFocus == 0) {
             self.whiteBalanceCount = 10;
             
-            [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
-                
-                ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
-                viewPhotoVc.photoImage = captureImage;
-                [self.navigationController pushViewController:viewPhotoVc animated:YES];
-                
-            }];
+//            [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+//                
+//                ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
+//                viewPhotoVc.photoImage = captureImage;
+//                [self.navigationController pushViewController:viewPhotoVc animated:YES];
+//                
+//            }];
+            
+            [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
         }
     }
     
@@ -243,16 +247,27 @@
                 [contourArray addObject:contour];
                 
             }
+            
+            NSLog(@"size: %zu", approxCurve.size());
+            NSLog(@"size: %zu", (unsigned long)[contourArray count]);
+            
             _drawView.modelArray = contourArray;
             
-            [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
-                                        withObject:nil waitUntilDone:YES];
+            if (contourArray.count == 0) {
+                continue;
+            }
+            
+
             
             if ([self shouldTakePhotoWithCoutours:contourArray andArea:area]) {
                 
-                [self capturePictureAutomaticlyWithImage:aImage];
+//
+                [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:aImage waitUntilDone:NO];
                 
             }
+            
+            [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
+                                        withObject:nil waitUntilDone:YES];
             break;
         }
         else{
@@ -314,6 +329,18 @@
         if ( 10 == frameNumber) {
             NSLog(@"拿到的帧数是多少%d",frameNumber);
             frameNumber = 0;
+            
+            if (self.whiteBalanceCount == 0) {
+                AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+                
+                if (device.isAdjustingFocus == 0) {
+                    [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
+                    self.whiteBalanceCount = 10;
+                }else{
+                    self.whiteBalanceCount = 1;
+                }
+            }
+            
             return YES;
         }
         else{
@@ -322,6 +349,10 @@
     }
     
     else{
+        frameNumber = 0;
+        if (self.whiteBalanceCount == 1) {
+            self.whiteBalanceCount = 0;
+        }
         
         _drawView.isRightStatus = NO;
         return NO;
@@ -351,8 +382,15 @@
 - (void)capturePictureAutomaticlyWithImage:(UIImage *)aImage
 {
     NSLog(@"自动拍照了....");
-    [self capturePictureAutomaticly];
+    //停止录制
+    [ADCameraHelper  stopRunning];
+    //初始化controller
+    ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
+    //图片赋值
     
+    UIImage *resultImage = [UIImage imageWithCGImage:aImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
+    viewPhotoVc.photoImage = resultImage;
+    [self.navigationController pushViewController:viewPhotoVc animated:YES];
 }
 - (void)capturePictureAutomaticly
 {
@@ -374,12 +412,7 @@
     [device unlockForConfiguration];
     
     //    [ADCameraHelper startRunning];
-    if (self.whiteBalanceCount == 0) {
-        self.whiteBalanceCount = 1;
-        
-        
-        
-    }
+    
     
 }
 - (void)viewWillAppear:(BOOL)animated
@@ -391,19 +424,12 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //停止取景
-    [ADCameraHelper stopRunning];
-    //改变output
-    ADCameraHelper *helper = [ADCameraHelper sharedInstance];
-    [helper.session removeOutput:helper.captureOutput];
-    [helper.session addOutput:helper.output];
     self.whiteBalanceCount = 0;
     
     //清除绘制
     [_drawView.modelArray removeAllObjects];
     [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
                                 withObject:nil waitUntilDone:YES];
-    
 }
 - (void)didReceiveMemoryWarning
 {
