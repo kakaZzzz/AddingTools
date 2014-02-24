@@ -143,43 +143,43 @@
         
         NSLog(@"-------白平衡%hhd", device.isAdjustingWhiteBalance);
         
-        if (device.adjustingWhiteBalance) {
-            if (self.whiteBalanceCount == 2) {
-                self.whiteBalanceCount = 3;
-            }
-        }else{
-            if (self.whiteBalanceCount == 1) {
-                self.whiteBalanceCount = 2;
-            }else if(self.whiteBalanceCount == 3){
-                
-                self.whiteBalanceCount = 4;
-                
-                self.whiteBalanceCount = 10;
-                [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
-                    
-                    ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
-                    viewPhotoVc.photoImage = captureImage;
-                    [self.navigationController pushViewController:viewPhotoVc animated:YES];
-                    
-                }];
-            }
-        }
+//        if (device.adjustingWhiteBalance) {
+//            if (self.whiteBalanceCount == 2) {
+//                self.whiteBalanceCount = 3;
+//            }
+//        }else{
+//            if (self.whiteBalanceCount == 1) {
+//                self.whiteBalanceCount = 2;
+//            }else if(self.whiteBalanceCount == 3){
+//                
+//                self.whiteBalanceCount = 4;
+//                
+////                self.whiteBalanceCount = 10;
+////                [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+////                    
+////                    ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
+////                    viewPhotoVc.photoImage = captureImage;
+////                    [self.navigationController pushViewController:viewPhotoVc animated:YES];
+////                    
+////                }];
+//            }
+//        }
     }
     
     if ([keyPath isEqualToString:@"adjustingFocus"]) {
         NSLog(@"-----对焦：%d", device.isAdjustingFocus);
         
-//        if (self.whiteBalanceCount == 4) {
-//            self.whiteBalanceCount = 10;
-//            
-//            [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
-//                
-//                ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
-//                viewPhotoVc.photoImage = captureImage;
-//                [self.navigationController pushViewController:viewPhotoVc animated:YES];
-//                
-//            }];
-//        }
+        if (self.whiteBalanceCount == 1 && device.isAdjustingFocus == 0) {
+            self.whiteBalanceCount = 10;
+            
+            [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+                
+                ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
+                viewPhotoVc.photoImage = captureImage;
+                [self.navigationController pushViewController:viewPhotoVc animated:YES];
+                
+            }];
+        }
     }
     
     if ([keyPath isEqualToString:@"adjustingExposure"]) {
@@ -365,6 +365,14 @@
     }
     [helper.session removeOutput:helper.output];
     [helper.session addOutput:helper.captureOutput ];
+    
+    AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    NSError *deviceError;
+    [device lockForConfiguration:&deviceError];
+    device.torchMode = AVCaptureTorchModeOn;
+    [device unlockForConfiguration];
+    
     //    [ADCameraHelper startRunning];
     if (self.whiteBalanceCount == 0) {
         self.whiteBalanceCount = 1;

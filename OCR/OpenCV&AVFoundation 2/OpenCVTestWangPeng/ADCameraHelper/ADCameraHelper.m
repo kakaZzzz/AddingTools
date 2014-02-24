@@ -97,7 +97,11 @@ static ADCameraHelper *sharedInstance = nil;
     if (device.hasFlash) {
         NSLog(@"device.hasFlash turning flash mode on");
         [device lockForConfiguration:&deviceError];
-        device.flashMode = AVCaptureFlashModeOn;
+        device.flashMode = AVCaptureFlashModeOff;
+        
+        [device setTorchMode:AVCaptureTorchModeOn];
+//      [device setFlashMode:AVCaptureFlashModeOn];
+
         [device unlockForConfiguration];
     }
     else {
