@@ -15,7 +15,7 @@
 		7242E7EC18AF590300BB0C0C /* ADCameraHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7242E7EB18AF590300BB0C0C /* ADCameraHelper.m */; };
 		7242E7F418AF591000BB0C0C /* ADCameraViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7242E7EF18AF591000BB0C0C /* ADCameraViewController.mm */; };
 		7242E7F518AF591000BB0C0C /* ADMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7242E7F118AF591000BB0C0C /* ADMainViewController.m */; };
-		7242E7F618AF591000BB0C0C /* ADTViewPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7242E7F318AF591000BB0C0C /* ADTViewPhotoViewController.m */; };
+		7242E7F618AF591000BB0C0C /* ADTViewPhotoViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7242E7F318AF591000BB0C0C /* ADTViewPhotoViewController.mm */; };
 		729CCD1A18AA52F400CD2566 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD1918AA52F400CD2566 /* Foundation.framework */; };
 		729CCD1C18AA52F400CD2566 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD1B18AA52F400CD2566 /* CoreGraphics.framework */; };
 		729CCD1E18AA52F400CD2566 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD1D18AA52F400CD2566 /* UIKit.framework */; };
@@ -64,7 +64,7 @@
 		7242E7F018AF591000BB0C0C /* ADMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMainViewController.h; sourceTree = "<group>"; };
 		7242E7F118AF591000BB0C0C /* ADMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMainViewController.m; sourceTree = "<group>"; };
 		7242E7F218AF591000BB0C0C /* ADViewPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADViewPhotoViewController.h; sourceTree = "<group>"; };
-		7242E7F318AF591000BB0C0C /* ADTViewPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTViewPhotoViewController.m; sourceTree = "<group>"; };
+		7242E7F318AF591000BB0C0C /* ADTViewPhotoViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ADTViewPhotoViewController.mm; sourceTree = "<group>"; };
 		729CCD1618AA52F400CD2566 /* OpenCVTestWangPeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenCVTestWangPeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		729CCD1918AA52F400CD2566 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		729CCD1B18AA52F400CD2566 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -160,7 +160,7 @@
 				7242E7F018AF591000BB0C0C /* ADMainViewController.h */,
 				7242E7F118AF591000BB0C0C /* ADMainViewController.m */,
 				7242E7F218AF591000BB0C0C /* ADViewPhotoViewController.h */,
-				7242E7F318AF591000BB0C0C /* ADTViewPhotoViewController.m */,
+				7242E7F318AF591000BB0C0C /* ADTViewPhotoViewController.mm */,
 			);
 			path = CameraViewController;
 			sourceTree = "<group>";
@@ -352,7 +352,7 @@
 				723863AC18B3352700475D07 /* ADPreviewView.m in Sources */,
 				7242E7F418AF591000BB0C0C /* ADCameraViewController.mm in Sources */,
 				729CCD2C18AA52F500CD2566 /* BTAppDelegate.mm in Sources */,
-				7242E7F618AF591000BB0C0C /* ADTViewPhotoViewController.m in Sources */,
+				7242E7F618AF591000BB0C0C /* ADTViewPhotoViewController.mm in Sources */,
 				729CCD2F18AA52F500CD2566 /* OpenCVTestWangPeng.xcdatamodeld in Sources */,
 				729CCD5018AA532200CD2566 /* BTRootViewController.mm in Sources */,
 				7242E7EC18AF590300BB0C0C /* ADCameraHelper.m in Sources */,

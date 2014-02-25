@@ -16,8 +16,8 @@ typedef enum{
     ISTCameraFlashModeOff,
 }ISTCameraFlashMode;
 
-@class ADPreviewView;
-@interface ADCameraViewController : UIViewController
+#import "ADPreviewView.h"
+@interface ADCameraViewController : UIViewController<ADPreviewViewDelegate>
 
 @property(nonatomic,strong)ADPreviewView *drawView;
 @property(nonatomic,strong)UILabel* centerLabel;

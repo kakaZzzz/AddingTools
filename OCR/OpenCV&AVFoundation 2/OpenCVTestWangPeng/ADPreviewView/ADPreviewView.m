@@ -16,6 +16,8 @@
     if (self) {
         // Initialization code
         self.isRightStatus = NO;
+        
+    [self.layer addSublayer:self.focusBox];
     }
     return self;
 }
@@ -23,10 +25,6 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)display
-{
-    [self setNeedsDisplay];
-}
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
@@ -83,6 +81,78 @@
     
     
 }
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"点击屏幕 实现聚焦");
+    
+    [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        UITouch *touch = obj;
+        CGPoint touchPoint = [touch locationInView:touch.view];
+        
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        double  screenWidth = screenRect.size.width;
+        double  screenHeight = screenRect.size.height;
+        double focus_x = touchPoint.x/screenWidth;
+        double focus_y = touchPoint.y/screenHeight;
+        CGPoint resultPoint = CGPointMake(touchPoint.x, touchPoint.y);
+        //CGPoint resultPoint = CGPointMake(focus_x, focus_y);
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(previewView:focusAtPoint:)]) {
+            
+            [_delegate previewView:self focusAtPoint:resultPoint];
+        }
+        
+        // NSLog(@"x = %f, y = %f", touchPoint.x, touchPoint.y);
+    }];
+}
 
+#pragma mark - Focus / Expose Box
+
+- (CALayer *) focusBox
+{
+    if ( !_focusBox ) {
+        _focusBox = [[CALayer alloc] init];
+        [_focusBox setCornerRadius:45.0f];
+        [_focusBox setBounds:CGRectMake(0.0f, 0.0f, 90, 90)];
+        [_focusBox setBorderWidth:5.f];
+        [_focusBox setBorderColor:[UIColor blueColor].CGColor];
+        [_focusBox setOpacity:0];
+    }
+    
+    return _focusBox;
+}
+
+- (void)draw:(CALayer *)layer atPointOfInterest:(CGPoint)point andRemove:(BOOL)remove
+{
+    if ( remove )
+        [layer removeAllAnimations];
+    
+    if ( [layer animationForKey:@"transform.scale"] == nil && [layer animationForKey:@"opacity"] == nil ) {
+        [CATransaction begin];
+        [CATransaction setValue: (id) kCFBooleanTrue forKey: kCATransactionDisableActions];
+        [layer setPosition:point];
+        [CATransaction commit];
+        
+        CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        [scale setFromValue:[NSNumber numberWithFloat:1]];
+        [scale setToValue:[NSNumber numberWithFloat:0.7]];
+        [scale setDuration:0.8];
+        [scale setRemovedOnCompletion:YES];
+        
+        CABasicAnimation *opacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        [opacity setFromValue:[NSNumber numberWithFloat:1]];
+        [opacity setToValue:[NSNumber numberWithFloat:0]];
+        [opacity setDuration:0.8];
+        [opacity setRemovedOnCompletion:YES];
+        
+        [layer addAnimation:scale forKey:@"transform.scale"];
+        [layer addAnimation:opacity forKey:@"opacity"];
+    }
+}
+
+- (void) drawFocusBoxAtPointOfInterest:(CGPoint)point andRemove:(BOOL)remove
+{
+    [self draw:_focusBox atPointOfInterest:point andRemove:remove];
+}
 
 @end

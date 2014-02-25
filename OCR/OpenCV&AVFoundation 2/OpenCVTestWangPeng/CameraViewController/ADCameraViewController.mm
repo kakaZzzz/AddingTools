@@ -11,7 +11,6 @@
 #import "ADViewPhotoViewController.h"
 #import "UIImage+OpenCV.h"
 #import "ADContours.h"
-#import "ADPreviewView.h"
 #import "opencv2/opencv.hpp"
 @interface ADCameraViewController ()
 {
@@ -23,7 +22,7 @@
 
 @property(nonatomic,strong)UIImageView *drawImageView;
 @property(nonatomic,assign)int whiteBalanceCount;
-
+@property(nonatomic,assign)BOOL isCompleteFocus;
 @end
 
 @implementation ADCameraViewController
@@ -50,6 +49,7 @@
     
     self.drawView = [[ADPreviewView alloc] initWithFrame:_previewView.bounds];
     _drawView.backgroundColor = [UIColor clearColor];
+    _drawView.delegate = self;
     [self.view addSubview:_drawView];
     
     self.drawImageView = [[UIImageView alloc] initWithFrame:_previewView.bounds];
@@ -126,8 +126,9 @@
     
     [device addObserver:self forKeyPath:@"adjustingWhiteBalance" options:(NSKeyValueObservingOptionNew |
                                                                           NSKeyValueObservingOptionOld) context:nil];
-    [device addObserver:self forKeyPath:@"adjustingFocus" options:(NSKeyValueObservingOptionNew |
-                                                                   NSKeyValueObservingOptionOld) context:nil];
+    
+    [device addObserver:self forKeyPath:@"adjustingFocus" options:NSKeyValueObservingOptionNew context:nil];
+    
     [device addObserver:self forKeyPath:@"adjustingExposure" options:(NSKeyValueObservingOptionNew |
                                                                       NSKeyValueObservingOptionOld) context:nil];
     
@@ -169,20 +170,17 @@
     }
     
     if ([keyPath isEqualToString:@"adjustingFocus"]) {
-        NSLog(@"-----对焦：%d", device.isAdjustingFocus);
-        
-        if (self.whiteBalanceCount == 1 && device.isAdjustingFocus == 0) {
-            self.whiteBalanceCount = 10;
-            
-//            [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
-//                
-//                ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
-//                viewPhotoVc.photoImage = captureImage;
-//                [self.navigationController pushViewController:viewPhotoVc animated:YES];
-//                
-//            }];
-            
-            [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
+        NSLog(@"-----对焦：%d", device.adjustingFocus);
+        BOOL adjustedFocus =[[change objectForKey:NSKeyValueChangeNewKey] isEqualToNumber:[NSNumber numberWithInt:0]];
+        NSLog(@"是否对焦 %d",adjustedFocus);
+        if (adjustedFocus) {
+//            self.whiteBalanceCount = 10;
+//    
+//            [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
+            _isCompleteFocus = YES;
+        }
+        else{
+            _isCompleteFocus = NO;
         }
     }
     
@@ -296,6 +294,7 @@
     distance = sqrt((xDist * xDist) + (yDist * yDist));
     return distance;
 }
+
 #pragma mark -判断是否达到拍照条件
 - (BOOL)shouldTakePhotoWithCoutours:(NSArray *)countours andArea:(double)area
 {
@@ -315,31 +314,20 @@
         _centerLabel.text = [NSString stringWithFormat:@"%f", area];
     }
     
-    
-    
     NSLog(@"四个距离分别是%.1f   %.1f   %.1f   %.1f",distance1,distance2,distance3,distance4);
     
     if (((fabs(distance1 - distance2) > 50 && fabs(distance1 - distance2) < 80) ||
          (fabs(distance3 - distance4) >50 && fabs(distance3 - distance4) < 80)) &&
-          area > MIN_PHOTO_AREA) {
+        area > MIN_PHOTO_AREA) {
         
         _drawView.isRightStatus = YES;
         
         frameNumber ++;
-        if ( 10 == frameNumber) {
+        
+        NSLog(@"哈哈哈哈哈%d   %d",frameNumber,_isCompleteFocus);
+        if ( 10 < frameNumber && _isCompleteFocus) {
             NSLog(@"拿到的帧数是多少%d",frameNumber);
             frameNumber = 0;
-            
-            if (self.whiteBalanceCount == 0) {
-                AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-                
-                if (device.isAdjustingFocus == 0) {
-                    [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
-                    self.whiteBalanceCount = 10;
-                }else{
-                    self.whiteBalanceCount = 1;
-                }
-            }
             
             return YES;
         }
@@ -350,14 +338,74 @@
     
     else{
         frameNumber = 0;
-        if (self.whiteBalanceCount == 1) {
-            self.whiteBalanceCount = 0;
-        }
-        
         _drawView.isRightStatus = NO;
         return NO;
     }
 }
+
+//#pragma mark -判断是否达到拍照条件
+//- (BOOL)shouldTakePhotoWithCoutours:(NSArray *)countours andArea:(double)area
+//{
+//    static int frameNumber = 0;
+//    ADContours *contour1 = [countours objectAtIndex:0];
+//    ADContours *contour2 = [countours objectAtIndex:1];
+//    ADContours *contour3 = [countours objectAtIndex:2];
+//    ADContours *contour4 = [countours objectAtIndex:3];
+//    float distance1 = [self distanceFromPointX:contour1 distanceToPointY:contour2];
+//    float distance2 = [self distanceFromPointX:contour3 distanceToPointY:contour4];
+//    float distance3 = [self distanceFromPointX:contour2 distanceToPointY:contour3];
+//    float distance4 = [self distanceFromPointX:contour1 distanceToPointY:contour4];
+//    
+//    NSLog(@"面积是：%f", area);
+//    
+//    if (_centerLabel) {
+//        _centerLabel.text = [NSString stringWithFormat:@"%f", area];
+//    }
+//    
+//    
+//    
+//    NSLog(@"四个距离分别是%.1f   %.1f   %.1f   %.1f",distance1,distance2,distance3,distance4);
+//    
+//    if (((fabs(distance1 - distance2) > 50 && fabs(distance1 - distance2) < 80) ||
+//         (fabs(distance3 - distance4) >50 && fabs(distance3 - distance4) < 80)) &&
+//          area > MIN_PHOTO_AREA) {
+//        
+//        _drawView.isRightStatus = YES;
+//        
+//        frameNumber ++;
+//        if ( 10 == frameNumber) {
+//            NSLog(@"拿到的帧数是多少%d",frameNumber);
+//            frameNumber = 0;
+//            
+//            if (self.whiteBalanceCount == 0) {
+//                AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+//                
+//                if (device.isAdjustingFocus == 0) {
+////                    [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
+//                    self.whiteBalanceCount = 10;
+//                    return YES;
+//                }else{
+//                    self.whiteBalanceCount = 1;
+//                }
+//            }
+//            
+//            return YES;
+//        }
+//        else{
+//            return NO;
+//        }
+//    }
+//    
+//    else{
+//        frameNumber = 0;
+//        if (self.whiteBalanceCount == 1) {
+//            self.whiteBalanceCount = 0;
+//        }
+//        
+//        _drawView.isRightStatus = NO;
+//        return NO;
+//    }
+//}
 - (UIImage *)rotateImage:(UIImage *)aImage
 {
     
@@ -430,6 +478,67 @@
     [_drawView.modelArray removeAllObjects];
     [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
                                 withObject:nil waitUntilDone:YES];
+}
+#pragma mark - previewView  delegate
+- (void) previewView:(UIView *)preview focusAtPoint:(CGPoint)point
+{
+    //  focusLayer.frame = CGRectMake((touchPoint.x-25), (touchPoint.y-25), 50, 50);
+    
+    //确定对焦点
+    CGPoint  pointOfInterest;
+    CGSize frameSize = preview.frame.size;
+    AVCaptureDeviceInput *videoInput = [[ADCameraHelper sharedInstance] videoInput];
+    AVCaptureVideoPreviewLayer *videoPreviewLayer = [[ADCameraHelper sharedInstance] preview];
+    
+    for (AVCaptureInputPort *port in videoInput.ports) {
+        if ([port mediaType] == AVMediaTypeVideo) {
+            CGRect cleanAperture = CMVideoFormatDescriptionGetCleanAperture([port formatDescription], YES);
+            CGSize apertureSize = cleanAperture.size;
+            CGFloat apertureRatio = apertureSize.height / apertureSize.width;
+            CGFloat viewRatio = frameSize.width / frameSize.height;
+            CGFloat xc = 0.5f;
+            CGFloat yc = 0.5f;
+            
+            if ([[videoPreviewLayer videoGravity] isEqualToString:AVLayerVideoGravityResizeAspectFill]) {
+                if (viewRatio > apertureRatio) {
+                    CGFloat y2 = apertureSize.width * (frameSize.width / apertureSize.height);
+                    xc = (point.y + ((y2 - frameSize.height) / 2.0f)) / y2;
+                    yc = (frameSize.width - point.x) / frameSize.width;
+                } else {
+                    CGFloat x2 = apertureSize.height * (frameSize.height / apertureSize.width);
+                    yc = 1.0f - ((point.x + ((x2 - frameSize.width) / 2)) / x2);
+                    xc = point.y / frameSize.height;
+                }
+                
+            }
+            
+            pointOfInterest = (CGPoint){ xc, yc };
+            break;
+            
+        }
+        
+    }
+    
+    //实现对焦
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    if ([device isFocusPointOfInterestSupported]) {
+        NSError *error;
+        if ([device lockForConfiguration:&error]) {
+            [device setFocusPointOfInterest:CGPointMake(pointOfInterest.x, pointOfInterest.y)];
+            [device setExposurePointOfInterest:CGPointMake(pointOfInterest.x, pointOfInterest.y)];
+            
+            [device setFocusMode:AVCaptureFocusModeAutoFocus];
+            if ([device isExposureModeSupported:AVCaptureExposureModeAutoExpose]){
+                [device setExposureMode:AVCaptureExposureModeAutoExpose];
+            }
+            [device unlockForConfiguration];
+        }
+    }
+    //动画显示聚焦点
+     [(ADPreviewView *)preview drawFocusBoxAtPointOfInterest:point andRemove:YES];
+    
+    
 }
 - (void)didReceiveMemoryWarning
 {
