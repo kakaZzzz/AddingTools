@@ -31,7 +31,6 @@
 		729CCD3B18AA52F500CD2566 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD1F18AA52F500CD2566 /* CoreData.framework */; };
 		729CCD4318AA52F500CD2566 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 729CCD4118AA52F500CD2566 /* InfoPlist.strings */; };
 		729CCD4518AA52F500CD2566 /* OpenCVTestWangPengTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 729CCD4418AA52F500CD2566 /* OpenCVTestWangPengTests.m */; };
-		729CCD5018AA532200CD2566 /* BTRootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729CCD4F18AA532200CD2566 /* BTRootViewController.mm */; };
 		729CCD5218AA535400CD2566 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD5118AA535400CD2566 /* ImageIO.framework */; };
 		729CCD5818AA53D900CD2566 /* testimage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 729CCD5518AA53D900CD2566 /* testimage.jpg */; };
 		729CCD5918AA53D900CD2566 /* UIImage+OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729CCD5718AA53D900CD2566 /* UIImage+OpenCV.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -83,8 +82,6 @@
 		729CCD4018AA52F500CD2566 /* OpenCVTestWangPengTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OpenCVTestWangPengTests-Info.plist"; sourceTree = "<group>"; };
 		729CCD4218AA52F500CD2566 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		729CCD4418AA52F500CD2566 /* OpenCVTestWangPengTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpenCVTestWangPengTests.m; sourceTree = "<group>"; };
-		729CCD4E18AA532200CD2566 /* BTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTRootViewController.h; sourceTree = "<group>"; };
-		729CCD4F18AA532200CD2566 /* BTRootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BTRootViewController.mm; sourceTree = "<group>"; };
 		729CCD5118AA535400CD2566 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		729CCD5518AA53D900CD2566 /* testimage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = testimage.jpg; sourceTree = "<group>"; };
 		729CCD5618AA53D900CD2566 /* UIImage+OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+OpenCV.h"; sourceTree = "<group>"; };
@@ -211,8 +208,6 @@
 				7242E7E918AF590300BB0C0C /* ADCameraHelper */,
 				729CCD2A18AA52F500CD2566 /* BTAppDelegate.h */,
 				729CCD2B18AA52F500CD2566 /* BTAppDelegate.mm */,
-				729CCD4E18AA532200CD2566 /* BTRootViewController.h */,
-				729CCD4F18AA532200CD2566 /* BTRootViewController.mm */,
 				729CCD3018AA52F500CD2566 /* Images.xcassets */,
 				729CCD2D18AA52F500CD2566 /* OpenCVTestWangPeng.xcdatamodeld */,
 				729CCD2218AA52F500CD2566 /* Supporting Files */,
@@ -354,7 +349,6 @@
 				729CCD2C18AA52F500CD2566 /* BTAppDelegate.mm in Sources */,
 				7242E7F618AF591000BB0C0C /* ADTViewPhotoViewController.mm in Sources */,
 				729CCD2F18AA52F500CD2566 /* OpenCVTestWangPeng.xcdatamodeld in Sources */,
-				729CCD5018AA532200CD2566 /* BTRootViewController.mm in Sources */,
 				7242E7EC18AF590300BB0C0C /* ADCameraHelper.m in Sources */,
 				723863B318B337FD00475D07 /* ADContours.m in Sources */,
 				729CCD2818AA52F500CD2566 /* main.m in Sources */,

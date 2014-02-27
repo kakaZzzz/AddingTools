@@ -58,27 +58,21 @@
 //                CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
 //            }
             
-            NSLog(@"轮廓点数%d",[self.modelArray count]);
+            NSLog(@"轮廓点数 %d",[self.modelArray count]);
             ADContours *contours = [self.modelArray objectAtIndex:i];
-
+            NSLog(@"画线划线  %f  %f---%d",contours.point_x,contours.point_y,i);
             CGContextMoveToPoint(ctx, 320 -  contours.point_y  , contours.point_x + yfix  );
-            if (i == [self.modelArray count] - 1) {
-                ADContours *contourNext = [self.modelArray objectAtIndex:0];
-                CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y  , contourNext.point_x + yfix );
-            }
-            else{
-                ADContours *contourNext = [self.modelArray objectAtIndex:i + 1];
-
-                CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y  , contourNext.point_x + yfix);
-                NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
-                
-            }
+            //          CGContextMoveToPoint(ctx, contours.point_x  , contours.point_y);
+            
+            ADContours *contourNext = [self.modelArray objectAtIndex:(i + 1)%4];
+            CGContextAddLineToPoint(ctx, 320 -  contourNext.point_y  , contourNext.point_x + yfix);
+            //          CGContextAddLineToPoint(ctx, contourNext.point_x  , contourNext.point_y );
+            //NSLog(@"画线划线  %f  %f",contourNext.point_x,contourNext.point_y);
+            
             CGContextStrokePath(ctx);
         }
         
     }
-    
-    
     
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -88,12 +82,6 @@
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         UITouch *touch = obj;
         CGPoint touchPoint = [touch locationInView:touch.view];
-        
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        double  screenWidth = screenRect.size.width;
-        double  screenHeight = screenRect.size.height;
-        double focus_x = touchPoint.x/screenWidth;
-        double focus_y = touchPoint.y/screenHeight;
         CGPoint resultPoint = CGPointMake(touchPoint.x, touchPoint.y);
         //CGPoint resultPoint = CGPointMake(focus_x, focus_y);
         
