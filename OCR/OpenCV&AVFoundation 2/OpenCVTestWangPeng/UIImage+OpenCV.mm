@@ -14,11 +14,11 @@
 
 #import "UIImage+OpenCV.h"
 
-static void ProviderReleaseDataNOP(void *info, const void *data, size_t size)
-{
-    // Do not release memory
-    return;
-}
+//static void ProviderReleaseDataNOP(void *info, const void *data, size_t size)
+//{
+//    // Do not release memory
+//    return;
+//}
 
 
 

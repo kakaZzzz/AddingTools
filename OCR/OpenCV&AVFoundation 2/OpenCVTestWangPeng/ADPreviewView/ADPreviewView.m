@@ -82,12 +82,6 @@
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         UITouch *touch = obj;
         CGPoint touchPoint = [touch locationInView:touch.view];
-        
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        double  screenWidth = screenRect.size.width;
-        double  screenHeight = screenRect.size.height;
-        double focus_x = touchPoint.x/screenWidth;
-        double focus_y = touchPoint.y/screenHeight;
         CGPoint resultPoint = CGPointMake(touchPoint.x, touchPoint.y);
         //CGPoint resultPoint = CGPointMake(focus_x, focus_y);
         

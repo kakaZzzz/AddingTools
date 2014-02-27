@@ -10,11 +10,6 @@
 #define MIN_DETECT_AREA         10000
 #define MIN_PHOTO_AREA          50000
 
-typedef enum{
-    ISTCameraFlashModeAuto = 1,
-    ISTCameraFlashModeOn,
-    ISTCameraFlashModeOff,
-}ISTCameraFlashMode;
 
 #import "ADPreviewView.h"
 @interface ADCameraViewController : UIViewController<ADPreviewViewDelegate>

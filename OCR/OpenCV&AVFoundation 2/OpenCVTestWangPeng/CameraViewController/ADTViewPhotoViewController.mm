@@ -34,7 +34,7 @@
     [super viewDidLoad];
     //预览图片
     NSLog(@"图片宽高%f,%f",_photoImage.size.width,_photoImage.size.height);
-    self.photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    self.photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, _photoImage.size.width/3.38, _photoImage.size.height/3.38)];
     _photoImageView.image = _photoImage;
     [self.view addSubview:_photoImageView];
     
@@ -43,7 +43,7 @@
     _drawView.backgroundColor = [UIColor clearColor];
     
     [self.view addSubview:_drawView];
-
+    
     // Do any additional setup after loading the view.
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     backBtn.frame = CGRectMake(10, 10, 80, 30);
@@ -56,10 +56,10 @@
     [processBtn setTitle:@"矫正" forState:UIControlStateNormal];
     [processBtn addTarget:self action:@selector(processImage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:processBtn];
-
     
-  
-  }
+    
+    
+}
 
 - (void)backToCamera
 {
@@ -68,8 +68,12 @@
 - (void)processImage
 {
     UIImage *processImage = [self getDesimageWithTransformFromSourceImage:_photoImage];
+    
+    NSLog(@"pro %f, %f", processImage.size.width, processImage.size.height);
+    _photoImageView.frame = CGRectMake(0, 0, processImage.size.width/3.38,processImage.size.height/3.38 );
+    
     _photoImageView.image = processImage;
-
+    
 }
 - (UIImage *)getDesimageWithTransformFromSourceImage:(UIImage *)srcImage
 {
@@ -79,10 +83,10 @@
     int ratio = 3;
     int kernel_size = 3;
     
-//    UIImage *resultImage2 = [UIImage imageWithCGImage:srcImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
-//    UIImage *resultImage3 = [UIImage imageWithCGImage:resultImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
+    //    UIImage *resultImage2 = [UIImage imageWithCGImage:srcImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
+    //    UIImage *resultImage3 = [UIImage imageWithCGImage:resultImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
     
-//    NSLog(@"yuanshi size: %f, %f , %f, %f", resultImage2.size.width, resultImage2.size.height, srcImage.size.width, srcImage.size.height);
+    //    NSLog(@"yuanshi size: %f, %f , %f, %f", resultImage2.size.width, resultImage2.size.height, srcImage.size.width, srcImage.size.height);
     
     
     Mat srcFrmae = [srcImage CVMat];
@@ -137,6 +141,7 @@
     
     
     cv::Point2f src[4];
+    cv::Point2f chg[4];
     cv::Point2f dst[4];
     cv::Point2f lin[4];
     cv::Point2f test[4];
@@ -144,9 +149,22 @@
     
     for(int i=0; i<4; i++)
     {
-        src[i] = approxCurve[i];
+        chg[i] = approxCurve[i];
         NSLog(@"啦啦啦啦逼近的四个顶点分别是%d %d",approxCurve[i].x,approxCurve[i].y);
     }
+    
+    src[0].x = 568-chg[0].y*1.78;
+    src[0].y = chg[0].x*0.56;
+    
+    src[1].x = 568-chg[1].y*1.78 ;
+    src[1].y = chg[1].x*0.56 ;
+    
+    src[2].x = 568-chg[2].y*1.78 ;
+    src[2].y = chg[2].x*0.56 ;
+    
+    src[3].x = 568-chg[3].y*1.78 ;
+    src[3].y = chg[3].x*0.56 ;
+    
     //画框
     NSMutableArray *contourArray = [NSMutableArray arrayWithCapacity:1];
     for (int k = 0; k < 4; k++) {
@@ -159,9 +177,9 @@
     NSLog(@"size: %zu", approxCurve.size());
     NSLog(@"size: %zu", (unsigned long)[contourArray count]);
     
-    _drawView.modelArray = contourArray;
-    [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
-                                withObject:nil waitUntilDone:YES];
+    //    _drawView.modelArray = contourArray;
+    //    [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
+    //                                withObject:nil waitUntilDone:YES];
     
     
     
@@ -269,19 +287,19 @@
     
     lin[3].x = ceilf(lin[3].x * 3.38) ;
     lin[3].y = ceilf(lin[3].y * 3.38) ;
-
+    
     
     float b[4] = {0};
     
     for(int i = 0;i < 4;i++){
-       
-         NSLog(@"行的顶点分别是  %f  %f",lin[i].x,lin[i].y);
+        
+        NSLog(@"行的顶点分别是  %f  %f",lin[i].x/3.38,lin[i].y/3.38);
     }
-
+    
     
     for(int i = 0;i < 4;i++){
         b[i] = [self distanceFromPointX:lin[i] distanceToPointY:lin[(i + 1)%4]];
-       
+        
     }
     
     float averageDistance3 = ceilf((b[0] + b[2])/2);
@@ -305,45 +323,56 @@
         NSLog(@"ahuanhuanhou 行的顶点分别是  %f  %f",dst[i].x,dst[i].y);
     }
     
-    test[0].x = 1920 - lin[0].x;
-    test[0].y = 1080 - lin[0].y;
+    test[0].x = 1920-lin[0].y*1.78;
+    test[0].y = lin[0].x*0.56;
     
-    test[1].x = 1920 - lin[1].x ;
-    test[1].y = 1080 - lin[1].y ;
+    test[1].x = 1920-lin[1].y*1.78 ;
+    test[1].y = lin[1].x*0.56 ;
     
-    test[2].x = 1920 - lin[2].x ;
-    test[2].y = 1080 - lin[2].y ;
+    test[2].x = 1920-lin[2].y*1.78 ;
+    test[2].y = lin[2].x*0.56 ;
     
-    test[3].x = 1920 - lin[3].x ;
-    test[3].y = 1080 - lin[3].y ;
-
+    test[3].x = 1920-lin[3].y*1.78 ;
+    test[3].y = lin[3].x*0.56 ;
+    
     
     Mat dstImg;    //通过4个点得到变换矩阵,然后进行变换
     Mat outImg;
-    Mat warpMat = getPerspectiveTransform(test,dst);
+    Mat warpMat = getPerspectiveTransform(lin,dst);
     
     NSLog(@"SIZE: %d, %d", largeFrame.size().width, largeFrame.size().height);
     warpPerspective(largeFrame, dstImg, warpMat, largeFrame.size());
     
-   // cvLaplace(&dstImg, &outImg);
+    // cvLaplace(&dstImg, &outImg);
     
-    line(dstImg, dst[0], dst[1], Scalar(0,255,0), 20);
-    line(dstImg, dst[1], dst[2], Scalar(0,255,0), 20);
-    line(dstImg, dst[2], dst[3], Scalar(0,255,0), 20);
-    line(dstImg, dst[3], dst[0], Scalar(0,255,0), 20);
+    //    line(dstImg, dst[0], dst[1], Scalar(0,255,0), 20);
+    //    line(dstImg, dst[1], dst[2], Scalar(0,255,0), 20);
+    //    line(dstImg, dst[2], dst[3], Scalar(0,255,0), 20);
+    //    line(dstImg, dst[3], dst[0], Scalar(0,255,0), 20);
+    //
+    //    line(dstImg, lin[0], lin[1], Scalar(0,0,255), 20);
+    //    line(dstImg, lin[1], lin[2], Scalar(0,0,255), 20);
+    //    line(dstImg, lin[2], lin[3], Scalar(0,0,255), 20);
+    //    line(dstImg, lin[3], lin[0], Scalar(0,0,255), 20);
+    //
+    //    line(dstImg, test[0], test[1], Scalar(255,0,0), 20);
+    //    line(dstImg, test[1], test[2], Scalar(255,0,0), 20);
+    //    line(dstImg, test[2], test[3], Scalar(255,0,0), 20);
+    //    line(dstImg, test[3], test[0], Scalar(255,0,0), 20);
+    //裁剪ROI区域
+    IplImage ipl_img = dstImg;
+    cvSetImageROI(&ipl_img, cvRect(dst[0].x + 25, dst[0].y + 25,averageDistance4-50, averageDistance3-50));
+    cvCreateImage(cvSize(averageDistance4-50,averageDistance3-50),ipl_img.depth,4);
     
-    line(dstImg, lin[0], lin[1], Scalar(0,0,255), 20);
-    line(dstImg, lin[1], lin[2], Scalar(0,0,255), 20);
-    line(dstImg, lin[2], lin[3], Scalar(0,0,255), 20);
-    line(dstImg, lin[3], lin[0], Scalar(0,0,255), 20);
+    IplImage *dstOut = cvCreateImage(cvSize(averageDistance4-50, averageDistance3-50),ipl_img.depth,4);
+    cvSetZero(dstOut);
     
-    line(dstImg, test[0], test[1], Scalar(255,0,0), 20);
-    line(dstImg, test[1], test[2], Scalar(255,0,0), 20);
-    line(dstImg, test[2], test[3], Scalar(255,0,0), 20);
-    line(dstImg, test[3], test[0], Scalar(255,0,0), 20);
+    //    cvCopy(&ipl_img,dstOut);
+    cvCopy(&ipl_img, dstOut);
+    cvResetImageROI(&ipl_img);
     
-    
-    UIImage *resultImage = [UIImage imageWithCVMat:dstImg];
+    Mat outImage = dstOut;
+    UIImage *resultImage = [UIImage imageWithCVMat:outImage];
     UIImage *resultImage3 = [UIImage imageWithCGImage:resultImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
     
     NSLog(@"bianlede size: %f, %f , %f, %f", resultImage.size.width, resultImage.size.height, resultImage3.size.width, resultImage3.size.height);
@@ -351,7 +380,7 @@
     lastFrame.release();
     grayFrame.release();
     output.release();
-   
+    
     contours.clear();
     
     return resultImage;

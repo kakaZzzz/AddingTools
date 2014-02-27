@@ -7,7 +7,6 @@
 //
 
 #import "BTAppDelegate.h"
-#import "BTRootViewController.h"
 #import "ADMainViewController.h"
 @implementation BTAppDelegate
 

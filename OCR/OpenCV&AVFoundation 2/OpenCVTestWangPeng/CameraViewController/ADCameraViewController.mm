@@ -15,8 +15,6 @@
 @interface ADCameraViewController ()
 {
     
-    UIButton *flashBtn;
-    ISTCameraFlashMode currentFlashMode;
 }
 @property(nonatomic,strong)UIView *previewView;
 
@@ -69,20 +67,6 @@
     
     [self.view addSubview:backBtn];
     
-    UIButton *takePhotoBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    takePhotoBtn.frame = CGRectMake(110, 410, 100, 40);
-    [takePhotoBtn setTitle:@"拍照" forState:UIControlStateNormal];
-    [takePhotoBtn addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:takePhotoBtn];
-    UIButton *toggleCameraBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    toggleCameraBtn.frame = CGRectMake(230, 20, 80, 30);
-    [toggleCameraBtn setTitle:@"前后" forState:UIControlStateNormal];
-    [toggleCameraBtn addTarget:self action:@selector(toggleCamera:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:toggleCameraBtn];
-    flashBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    flashBtn.frame = CGRectMake(10, 20, 80, 30);
-    [flashBtn addTarget:self action:@selector(changeFlashMode) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:flashBtn];
     
     
     //小窗口显示图片
@@ -97,26 +81,11 @@
             
             [self performSelectorOnMainThread:@selector(setCurrentImage:) withObject:captureImage waitUntilDone:NO];
             
-            UIImage *outImage = [self processFrameWithImage:captureImage];
+            [self processFrameWithImage:captureImage];
             
         }
         
     }];
-        //判断支持类别
-    if ([ADCameraHelper isBackCameraFlashSupportAutoMode]) {
-        [flashBtn setTitle:@"自动" forState:UIControlStateNormal];
-        currentFlashMode = ISTCameraFlashModeAuto;
-    }else if ([ADCameraHelper isBackCameraFlashSupportOnMode]){
-        [flashBtn setTitle:@"打开" forState:UIControlStateNormal];
-        currentFlashMode = ISTCameraFlashModeOn;
-    }else if ([ADCameraHelper isBackCameraFlashSupportOffMode]){
-        [flashBtn setTitle:@"关闭" forState:UIControlStateNormal];
-        currentFlashMode = ISTCameraFlashModeOff;
-    }
-    //后置摄像头若不支持闪光灯隐藏按钮
-    if (![ADCameraHelper isBackCameraSupportFlash]) {
-        flashBtn.hidden = YES;
-    }
     //预览窗口
     
     [ADCameraHelper embedPreviewInView:_previewView];
@@ -441,29 +410,6 @@
     viewPhotoVc.photoImage = resultImage;
     [self.navigationController pushViewController:viewPhotoVc animated:YES];
 }
-- (void)capturePictureAutomaticly
-{
-    ADCameraHelper *helper = [ADCameraHelper sharedInstance];
-    if (helper.captureOutput == nil){
-        helper.captureOutput = [[AVCaptureStillImageOutput alloc] init];
-        NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys:AVVideoCodecJPEG,AVVideoCodecKey,nil];
-        [helper.captureOutput  setOutputSettings:outputSettings];
-        
-    }
-    [helper.session removeOutput:helper.output];
-    [helper.session addOutput:helper.captureOutput ];
-    
-    AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    
-    NSError *deviceError;
-    [device lockForConfiguration:&deviceError];
-    device.torchMode = AVCaptureTorchModeOn;
-    [device unlockForConfiguration];
-    
-    //    [ADCameraHelper startRunning];
-    
-    
-}
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -577,54 +523,5 @@
     ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
     viewPhotoVc.photoImage = [ADCameraHelper image];
     [self.navigationController pushViewController:viewPhotoVc animated:YES];
-}
-//切换镜头
-- (void)toggleCamera:(UIButton *)btn
-{
-    btn.enabled = NO;
-    [ADCameraHelper toggleCamera];
-    btn.enabled = YES;
-    if ([ADCameraHelper isBackFacingCamera]) {
-        if ([ADCameraHelper isBackCameraSupportFlash]) {
-            flashBtn.hidden = NO;
-        }
-    }else{
-        flashBtn.hidden = YES;
-    }
-}
-//切换闪光灯
-- (void)changeFlashMode
-{
-    if (currentFlashMode == ISTCameraFlashModeAuto) {
-        //切换到闪光灯为开
-        if ([ADCameraHelper isBackCameraFlashSupportOnMode]) {
-            [ADCameraHelper changeBackCameraFlashModeToOn];
-            currentFlashMode = ISTCameraFlashModeOn;
-        }else if ([ADCameraHelper isBackCameraFlashSupportOffMode]){
-            //切换到闪光灯为关
-            [ADCameraHelper changeBackCameraFlashModeToOff];
-            currentFlashMode = ISTCameraFlashModeOff;
-        }
-    }else if (currentFlashMode == ISTCameraFlashModeOn) {
-        //切换到闪光灯为关
-        if ([ADCameraHelper isBackCameraFlashSupportOffMode]) {
-            [ADCameraHelper changeBackCameraFlashModeToOff];
-            currentFlashMode = ISTCameraFlashModeOff;
-        }else if ([ADCameraHelper isBackCameraFlashSupportAutoMode]){
-            //切换到闪光灯为自动
-            [ADCameraHelper changeBackCameraFlashModeToAuto];
-            currentFlashMode = ISTCameraFlashModeAuto;
-        }
-    }else if (currentFlashMode == ISTCameraFlashModeOff) {
-        //切换到闪光灯为自动
-        if ([ADCameraHelper isBackCameraFlashSupportAutoMode]) {
-            [ADCameraHelper changeBackCameraFlashModeToAuto];
-            currentFlashMode = ISTCameraFlashModeAuto;
-        }else if ([ADCameraHelper isBackCameraFlashSupportOnMode]){
-            //切换到闪光灯为开
-            [ADCameraHelper changeBackCameraFlashModeToOn];
-            currentFlashMode = ISTCameraFlashModeOn;
-        }
-    }
 }
 @end

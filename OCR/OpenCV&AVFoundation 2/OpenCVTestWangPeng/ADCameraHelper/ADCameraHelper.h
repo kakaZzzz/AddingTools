@@ -72,48 +72,4 @@ typedef void (^CaptureReallyImageBlock)(UIImage *aImage);//实时取景
  *
  *	@return	是否翻转成功
  */
-+ (BOOL)toggleCamera;
-/**
- *	是否在使用后置摄像头取景
- *
- *	@return	当前是否正使用后置摄像头
- */
-+ (BOOL)isBackFacingCamera;
-/**
- *	设备后置摄像头是否支持闪光灯
- *
- *	@return	设备后置摄像头是否支持闪光灯
- */
-+ (BOOL)isBackCameraSupportFlash;
-/**
- *	设备后置摄像头闪光灯是否支持自动模式
- *
- *	@return	设备后置摄像头闪光灯是否支持自动模式
- */
-+ (BOOL)isBackCameraFlashSupportAutoMode;
-/**
- *	设备后置摄像头闪光灯是否支持开启模式
- *
- *	@return	设备后置摄像头闪光灯是否支持开启模式
- */
-+ (BOOL)isBackCameraFlashSupportOnMode;
-/**
- *	设备后置摄像头闪光灯是否支持关闭模式
- *
- *	@return	设备后置摄像头闪光灯是否支持关闭模式
- */
-+ (BOOL)isBackCameraFlashSupportOffMode;
-/**
- *	将设备后置摄像头闪光灯模式置为自动
- */
-+ (void)changeBackCameraFlashModeToAuto;
-/**
- *	将设备后置摄像头闪光灯模式置为开启
- */
-+ (void)changeBackCameraFlashModeToOn;
-/**
- *	将设备后置摄像头闪光灯模式置为关闭
- */
-+ (void)changeBackCameraFlashModeToOff;
-
 @end
