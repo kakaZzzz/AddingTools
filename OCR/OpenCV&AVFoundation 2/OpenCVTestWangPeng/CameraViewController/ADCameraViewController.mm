@@ -260,6 +260,7 @@
             if ([self shouldTakePhotoWithCoutours:contourArray andArea:area]) {
                 
 //
+               // UIImage *reultImage = [UIImage imageWithCVMat:grayFrame];
                 [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:aImage waitUntilDone:NO];
                 
             }
