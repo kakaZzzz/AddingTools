@@ -70,8 +70,7 @@
     UIImage *processImage = [self getDesimageWithTransformFromSourceImage:_photoImage];
     
     NSLog(@"pro %f, %f", processImage.size.width, processImage.size.height);
-    _photoImageView.frame = CGRectMake(0, 0, processImage.size.width/3.38,processImage.size.height/3.38 );
-    
+    _photoImageView.frame = CGRectMake(0, 0,processImage.size.height/3.38 ,processImage.size.width/3.38);
     _photoImageView.image = processImage;
     
 }
@@ -87,8 +86,6 @@
     //    UIImage *resultImage3 = [UIImage imageWithCGImage:resultImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
     
     //    NSLog(@"yuanshi size: %f, %f , %f, %f", resultImage2.size.width, resultImage2.size.height, srcImage.size.width, srcImage.size.height);
-    
-    
     Mat srcFrmae = [srcImage CVMat];
     Mat grayFrame,output,lastFrame, largeFrame, tempFrame;
     
