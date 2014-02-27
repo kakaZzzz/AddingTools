@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #define MIN_DETECT_AREA         10000
-#define MIN_PHOTO_AREA          50000
+#define MIN_PHOTO_AREA          80000
 
 typedef enum{
     ISTCameraFlashModeAuto = 1,
