@@ -70,8 +70,7 @@
     UIImage *processImage = [self getDesimageWithTransformFromSourceImage:_photoImage];
     
     NSLog(@"pro %f, %f", processImage.size.width, processImage.size.height);
-    _photoImageView.frame = CGRectMake(0, 0, processImage.size.width/3.38,processImage.size.height/3.38 );
-    
+    _photoImageView.frame = CGRectMake(0, 0,processImage.size.height/3.38 ,processImage.size.width/3.38);
     _photoImageView.image = processImage;
     
 }
@@ -86,6 +85,8 @@
     // 转换图像格式，这时候图像被旋转90度
     Mat srcFrmae = [srcImage CVMat2];
     
+    //    NSLog(@"yuanshi size: %f, %f , %f, %f", resultImage2.size.width, resultImage2.size.height, srcImage.size.width, srcImage.size.height);
+
     Mat grayFrame,output,lastFrame, largeFrame, tempFrame;
     
     NSLog(@"yuanshi size: %f, %f , %d, %d", srcImage.size.width, srcImage.size.height, srcFrmae.size().width, srcFrmae.size().height);
