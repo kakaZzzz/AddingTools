@@ -20,6 +20,7 @@
 -(id)initWithCVMat:(const cv::Mat&)cvMat;
 
 @property(nonatomic, readonly) cv::Mat CVMat;
+@property(nonatomic, readonly) cv::Mat CVMat2;
 @property(nonatomic, readonly) cv::Mat CVGrayscaleMat;
 
 @end

@@ -46,13 +46,13 @@
     
     // Do any additional setup after loading the view.
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    backBtn.frame = CGRectMake(10, 10, 80, 30);
+    backBtn.frame = CGRectMake(10, 10, 100, 100);
     [backBtn setTitle:@"返回" forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(backToCamera) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
     
     UIButton *processBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    processBtn.frame = CGRectMake(backBtn.frame.origin.x + backBtn.frame.size.width + 50, backBtn.frame.origin.y, 200, 100);
+    processBtn.frame = CGRectMake(backBtn.frame.origin.x + backBtn.frame.size.width + 50, backBtn.frame.origin.y, 100, 100);
     [processBtn setTitle:@"矫正" forState:UIControlStateNormal];
     [processBtn addTarget:self action:@selector(processImage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:processBtn];
@@ -83,19 +83,22 @@
     int ratio = 3;
     int kernel_size = 3;
     
-    //    UIImage *resultImage2 = [UIImage imageWithCGImage:srcImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
-    //    UIImage *resultImage3 = [UIImage imageWithCGImage:resultImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
+    // 转换图像格式，这时候图像被旋转90度
+    Mat srcFrmae = [srcImage CVMat2];
     
-    //    NSLog(@"yuanshi size: %f, %f , %f, %f", resultImage2.size.width, resultImage2.size.height, srcImage.size.width, srcImage.size.height);
-    
-    
-    Mat srcFrmae = [srcImage CVMat];
     Mat grayFrame,output,lastFrame, largeFrame, tempFrame;
     
-    resize(srcFrmae, lastFrame, cv::Size(568,320));
+    NSLog(@"yuanshi size: %f, %f , %d, %d", srcImage.size.width, srcImage.size.height, srcFrmae.size().width, srcFrmae.size().height);
     
+    
+    //图像旋转90度，变正
     transpose(srcFrmae,tempFrame);
     flip(tempFrame,largeFrame,1);
+    
+    NSLog(@"bianhua size: %d, %d , %d, %d", largeFrame.size().width, largeFrame.size().height, srcFrmae.size().width, srcFrmae.size().height);
+    
+    //把图像缩小，用来做轮廓检测
+    resize(largeFrame, lastFrame, cv::Size(320,568));
     
     //打印图像尺寸
     //  Convert captured frame to grayscale  灰度图
@@ -137,52 +140,19 @@
         return nil;
     }
     
-    
-    
-    
     cv::Point2f src[4];
-    cv::Point2f chg[4];
     cv::Point2f dst[4];
     cv::Point2f lin[4];
-    cv::Point2f test[4];
-    cv::Size imgSize = largeFrame.size();
     
+    //将找到的顶点存入缓存
     for(int i=0; i<4; i++)
     {
-        chg[i] = approxCurve[i];
+        src[i] = approxCurve[i];
         NSLog(@"啦啦啦啦逼近的四个顶点分别是%d %d",approxCurve[i].x,approxCurve[i].y);
     }
+
     
-    src[0].x = 568-chg[0].y*1.78;
-    src[0].y = chg[0].x*0.56;
-    
-    src[1].x = 568-chg[1].y*1.78 ;
-    src[1].y = chg[1].x*0.56 ;
-    
-    src[2].x = 568-chg[2].y*1.78 ;
-    src[2].y = chg[2].x*0.56 ;
-    
-    src[3].x = 568-chg[3].y*1.78 ;
-    src[3].y = chg[3].x*0.56 ;
-    
-    //画框
-    NSMutableArray *contourArray = [NSMutableArray arrayWithCapacity:1];
-    for (int k = 0; k < 4; k++) {
-        
-        ADContours *contour = [[ADContours alloc] initWithPointX:approxCurve[k].x pointY:approxCurve[k].y];
-        [contourArray addObject:contour];
-        
-    }
-    
-    NSLog(@"size: %zu", approxCurve.size());
-    NSLog(@"size: %zu", (unsigned long)[contourArray count]);
-    
-    //    _drawView.modelArray = contourArray;
-    //    [_drawView performSelectorOnMainThread:@selector(setNeedsDisplay)
-    //                                withObject:nil waitUntilDone:YES];
-    
-    
-    
+    //计算各边的长度
     float a[4] = {0};
     
     for(int i = 0;i < 4;i++){
@@ -192,21 +162,22 @@
     float averageDistance1 = (a[0] + a[2])/2;
     float averageDistance2 = (a[1] + a[3])/2;
     
-    if (averageDistance1 > averageDistance2) {
+    //寻找左上角顶点
+    if (averageDistance1 < averageDistance2) {
         if ((src[0].y + src[1].y) < (src[2].y + src[3].y)) {
             
             if (src[0].x < src[1].x) {
                 lin[0] = src[0];
-                lin[1] = src[3];
+                lin[1] = src[1];
                 lin[2] = src[2];
-                lin[3] = src[1];
+                lin[3] = src[3];
                 
             }
             else{
                 lin[0] = src[1];
-                lin[1] = src[2];
+                lin[1] = src[0];
                 lin[2] = src[3];
-                lin[3] = src[0];
+                lin[3] = src[2];
                 
             }
         }
@@ -215,33 +186,9 @@
             
             if (src[2].x < src[3].x) {
                 lin[0] = src[2];
-                lin[1] = src[1];
+                lin[1] = src[3];
                 lin[2] = src[0];
-                lin[3] = src[3];
-                
-            }
-            else{
-                lin[0] = src[3];
-                lin[1] = src[0];
-                lin[2] = src[1];
-                lin[3] = src[2];
-                
-            }
-            
-        }
-        
-    }
-    
-    
-    
-    
-    else {
-        if ((src[0].y + src[3].y) < (src[1].y + src[2].y)) {
-            if (src[0].x < src[3].x) {
-                lin[0] = src[0];
-                lin[1] = src[1];
-                lin[2] = src[2];
-                lin[3] = src[3];
+                lin[3] = src[1];
                 
             }
             else{
@@ -253,20 +200,41 @@
             }
             
         }
+        
+    }
+    
+    else {
+        if ((src[0].y + src[3].y) < (src[1].y + src[2].y)) {
+            if (src[0].x < src[3].x) {
+                lin[0] = src[0];
+                lin[1] = src[3];
+                lin[2] = src[2];
+                lin[3] = src[1];
+                
+            }
+            else{
+                lin[0] = src[3];
+                lin[1] = src[0];
+                lin[2] = src[1];
+                lin[3] = src[2];
+                
+            }
+            
+        }
         else{
             
             if (src[1].x < src[2].x) {
                 lin[0] = src[1];
-                lin[1] = src[0];
+                lin[1] = src[2];
                 lin[2] = src[3];
-                lin[3] = src[2];
+                lin[3] = src[0];
                 
             }
             else{
                 lin[0] = src[2];
-                lin[1] = src[3];
+                lin[1] = src[1];
                 lin[2] = src[0];
-                lin[3] = src[1];
+                lin[3] = src[3];
                 
             }
             
@@ -275,7 +243,7 @@
         
     }
     
-    
+    //从缩略图的坐标系转到正常大小
     lin[0].x =ceilf(lin[0].x * 3.38) ;
     lin[0].y = ceilf(lin[0].y * 3.38);
     
@@ -288,7 +256,7 @@
     lin[3].x = ceilf(lin[3].x * 3.38) ;
     lin[3].y = ceilf(lin[3].y * 3.38) ;
     
-    
+    //计算长边和短边
     float b[4] = {0};
     
     for(int i = 0;i < 4;i++){
@@ -305,39 +273,26 @@
     float averageDistance3 = ceilf((b[0] + b[2])/2);
     float averageDistance4 = ceilf((b[1] + b[3])/2);
     
-    
+    //计算正矩形
     dst[0].x = lin[0].x;
     dst[0].y = lin[0].y;
     
-    dst[1].x = lin[0].x ;
-    dst[1].y = lin[0].y + averageDistance3 ;
+    dst[1].x = lin[0].x + averageDistance3  ;
+    dst[1].y = lin[0].y ;
     
-    dst[2].x = dst[1].x + averageDistance4 ;
-    dst[2].y = dst[1].y ;
+    dst[2].x = dst[1].x;
+    dst[2].y = dst[1].y  + averageDistance4 ;
     
-    dst[3].x = lin[0].x + averageDistance4 ;
-    dst[3].y = lin[0].y ;
+    dst[3].x = lin[0].x;
+    dst[3].y = lin[0].y  + averageDistance4 ;
     
     for(int i = 0;i < 4;i++){
         
-        NSLog(@"ahuanhuanhou 行的顶点分别是  %f  %f",dst[i].x,dst[i].y);
+        NSLog(@"ahuanhuanhou 行的顶点分别是 %d  %f  %f",i, dst[i].x,dst[i].y);
     }
     
-    test[0].x = 1920-lin[0].y*1.78;
-    test[0].y = lin[0].x*0.56;
-    
-    test[1].x = 1920-lin[1].y*1.78 ;
-    test[1].y = lin[1].x*0.56 ;
-    
-    test[2].x = 1920-lin[2].y*1.78 ;
-    test[2].y = lin[2].x*0.56 ;
-    
-    test[3].x = 1920-lin[3].y*1.78 ;
-    test[3].y = lin[3].x*0.56 ;
-    
-    
     Mat dstImg;    //通过4个点得到变换矩阵,然后进行变换
-    Mat outImg;
+//    Mat outImg;
     Mat warpMat = getPerspectiveTransform(lin,dst);
     
     NSLog(@"SIZE: %d, %d", largeFrame.size().width, largeFrame.size().height);
@@ -345,26 +300,22 @@
     
     // cvLaplace(&dstImg, &outImg);
     
-    //    line(dstImg, dst[0], dst[1], Scalar(0,255,0), 20);
-    //    line(dstImg, dst[1], dst[2], Scalar(0,255,0), 20);
-    //    line(dstImg, dst[2], dst[3], Scalar(0,255,0), 20);
-    //    line(dstImg, dst[3], dst[0], Scalar(0,255,0), 20);
-    //
-    //    line(dstImg, lin[0], lin[1], Scalar(0,0,255), 20);
-    //    line(dstImg, lin[1], lin[2], Scalar(0,0,255), 20);
-    //    line(dstImg, lin[2], lin[3], Scalar(0,0,255), 20);
-    //    line(dstImg, lin[3], lin[0], Scalar(0,0,255), 20);
-    //
-    //    line(dstImg, test[0], test[1], Scalar(255,0,0), 20);
-    //    line(dstImg, test[1], test[2], Scalar(255,0,0), 20);
-    //    line(dstImg, test[2], test[3], Scalar(255,0,0), 20);
-    //    line(dstImg, test[3], test[0], Scalar(255,0,0), 20);
+//        line(largeFrame, dst[0], dst[1], Scalar(255,0,0), 20);
+//        line(largeFrame, dst[1], dst[2], Scalar(0,255,0), 20);
+//        line(largeFrame, dst[2], dst[3], Scalar(0,0,255), 20);
+//        line(largeFrame, dst[3], dst[0], Scalar(255,255,255), 20);
+//    
+//        line(largeFrame, lin[0], lin[1], Scalar(0,0,255), 20);
+//        line(largeFrame, lin[1], lin[2], Scalar(0,0,255), 20);
+//        line(largeFrame, lin[2], lin[3], Scalar(0,0,255), 20);
+//        line(largeFrame, lin[3], lin[0], Scalar(0,0,255), 20);
+    
     //裁剪ROI区域
     IplImage ipl_img = dstImg;
-    cvSetImageROI(&ipl_img, cvRect(dst[0].x + 25, dst[0].y + 25,averageDistance4-50, averageDistance3-50));
-    cvCreateImage(cvSize(averageDistance4-50,averageDistance3-50),ipl_img.depth,4);
+    cvSetImageROI(&ipl_img, cvRect(dst[0].x + 25, dst[0].y + 25, averageDistance3-50, averageDistance4-50));
+    cvCreateImage(cvSize(averageDistance3-50,averageDistance4-50),ipl_img.depth,4);
     
-    IplImage *dstOut = cvCreateImage(cvSize(averageDistance4-50, averageDistance3-50),ipl_img.depth,4);
+    IplImage *dstOut = cvCreateImage(cvSize(averageDistance3-50, averageDistance4-50),ipl_img.depth,4);
     cvSetZero(dstOut);
     
     //    cvCopy(&ipl_img,dstOut);
@@ -373,15 +324,21 @@
     
     Mat outImage = dstOut;
     UIImage *resultImage = [UIImage imageWithCVMat:outImage];
-    UIImage *resultImage3 = [UIImage imageWithCGImage:resultImage.CGImage scale:1.0 orientation:UIImageOrientationRight];
     
-    NSLog(@"bianlede size: %f, %f , %f, %f", resultImage.size.width, resultImage.size.height, resultImage3.size.width, resultImage3.size.height);
+    NSLog(@"bianlede size: %f, %f ", resultImage.size.width, resultImage.size.height);
     
     lastFrame.release();
     grayFrame.release();
     output.release();
+    srcFrmae.release();
+    outImage.release();
+    dstImg.release();
+    warpMat.release();
+    largeFrame.release();
+    tempFrame.release();
     
     contours.clear();
+    
     
     return resultImage;
     
