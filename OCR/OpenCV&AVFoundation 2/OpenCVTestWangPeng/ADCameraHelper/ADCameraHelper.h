@@ -16,11 +16,9 @@ typedef void (^CaptureReallyImageBlock)(UIImage *aImage);//实时取景
 @interface ADCameraHelper : NSObject
 <AVCaptureVideoDataOutputSampleBufferDelegate>
 {
-  
     UIImage *image;
-   
-    
 }
+
 @property (nonatomic,strong) AVCaptureSession *session;
 @property (nonatomic,strong) AVCaptureStillImageOutput *captureOutput;
 @property (nonatomic,strong)AVCaptureVideoDataOutput *output;
