@@ -65,12 +65,13 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 - (void)processImage
 {
     UIImage *processImage = [self getDesimageWithTransformFromSourceImage:_photoImage];
     
     NSLog(@"pro %f, %f", processImage.size.width, processImage.size.height);
-    _photoImageView.frame = CGRectMake(0, 0,processImage.size.width/3.38 ,processImage.size.height/3.38);
+    _photoImageView.frame = CGRectMake((self.view.bounds.size.width - processImage.size.width/3.38)/2, (self.view.bounds.size.height - processImage.size.height/3.38)/2,processImage.size.width/3.38 ,processImage.size.height/3.38);
     _photoImageView.image = processImage;
     
 }
@@ -144,14 +145,39 @@
     cv::Point2f src[4];
     cv::Point2f dst[4];
     cv::Point2f lin[4];
+    Point2f lines[4];
+    Point2f ends[2];
     
     //将找到的顶点存入缓存
     for(int i=0; i<4; i++)
     {
         src[i] = approxCurve[i];
         NSLog(@"啦啦啦啦逼近的四个顶点分别是%d %d",approxCurve[i].x,approxCurve[i].y);
+        
     }
-
+    
+    //计算各边的长度
+    float agl[4] = {0}, offset = 0, maxOffset = 0;
+    
+    for(int i = 0;i < 4;i++){
+        agl[i] = [self angle:src[i] second:src[(i+1)%4] third:src[(i+2)%4]];
+        NSLog(@"------------angle: %f", agl[i]);
+        
+        offset += abs(agl[i] - 90);
+        
+        if (abs(agl[i] - 90) > maxOffset) {
+            maxOffset = abs(agl[i] - 90);
+        }
+        
+        
+        
+    }
+    
+    
+    
+    offset /= 4;
+    
+    
     
     //计算各边的长度
     float a[4] = {0};
@@ -262,17 +288,81 @@
     
     for(int i = 0;i < 4;i++){
         
-        NSLog(@"行的顶点分别是  %f  %f",lin[i].x/3.38,lin[i].y/3.38);
+        agl[i] = [self angle:lin[i] second:lin[(i+1)%4] third:lin[(i+2)%4]];
+        NSLog(@"------------angle: %f", agl[i]);
+        
+        NSLog(@"行的顶点分别是  %f  %f  %f",lin[i].x,lin[i].y ,agl[i]);
+        
+        
+        //计算直线方程
+        lines[i] = [self linearEquation:lin[i] with:lin[(i+1)%4]];
     }
     
+    Point2f newLines[2], newPoints[2], newEnds[2];
+    
+    NSLog(@"消失点！！！！");
+    
+    ends[0] = [self endPoint:lines[0] with:lines[2]];
+    ends[1] = [self endPoint:lines[1] with:lines[3]];
+    
+    //球两个消失点
+    if (ends[0].x > lin[0].x) {
+        newEnds[0].x = lin[0].x + 1920;
+    }else{
+        newEnds[0].x = lin[0].x - 1920;
+    }
+    newEnds[0].y = lin[0].y;
+    
+    if (ends[1].y > lin[0].y) {
+        newEnds[1].y = lin[0].y + 1920;
+    }else{
+        newEnds[1].y = lin[0].y - 1920;
+    }
+    newEnds[1].x = lin[0].x;
+    
+    
+    
+    newLines[0] = [self linearEquation:lin[0] with:newEnds[0]];
+    newLines[1] = [self linearEquation:lin[0] with:newEnds[1]];
+    
+    newPoints[0] = [self endPoint:newLines[0] with:lines[1]];
+    newPoints[1] = [self endPoint:newLines[1] with:lines[2]];
+    
+    
+    float longSide, shortSide;
+    
+    shortSide = ceilf([self distanceFromPointX:lin[0] distanceToPointY:newPoints[0]]);
+    longSide = ceilf([self distanceFromPointX:lin[0] distanceToPointY:newPoints[1]]);
+    
+    NSLog(@"-----长边 %f 短边 %f 比例 %f", longSide, shortSide, longSide/shortSide);
     
     for(int i = 0;i < 4;i++){
         b[i] = [self distanceFromPointX:lin[i] distanceToPointY:lin[(i + 1)%4]];
+        
+        NSLog(@"---------边长 %f", b[i]);
         
     }
     
     float averageDistance3 = ceilf((b[0] + b[2])/2);
     float averageDistance4 = ceilf((b[1] + b[3])/2);
+    
+    NSLog(@"---------angle %f side %f %f rate %f", agl[3], b[2], b[3], b[2]/b[3 ]);
+    
+    NSLog(@"---------offset %f", offset);
+    
+    NSLog(@"---------max offset %f", maxOffset);
+    
+    NSLog(@"---------rate %f", averageDistance4/averageDistance3);
+    
+    NSLog(@"---------e %f", powf(averageDistance4/averageDistance3 - 0.63183, 1/offset));
+    
+    float ce = powf(1.008 + offset/1000 - 2*sqrtf(maxOffset)/1000, offset);
+    
+    NSLog(@"---------ce %f", ce);
+    
+    NSLog(@"---------a %f", averageDistance4/averageDistance3 - ce);
+    
+    averageDistance4 = averageDistance3* (1 + averageDistance4/averageDistance3 - ce);
     
     //计算正矩形
     dst[0].x = lin[0].x;
@@ -290,6 +380,13 @@
     for(int i = 0;i < 4;i++){
         
         NSLog(@"ahuanhuanhou 行的顶点分别是 %d  %f  %f",i, dst[i].x,dst[i].y);
+    }
+    
+    //计算各边的长度
+    
+    for(int i = 0;i < 4;i++){
+        agl[i] = [self angle:dst[i] second:dst[(i+1)%4] third:dst[(i+2)%4]];
+        NSLog(@"------------angle: %f", agl[i]);
     }
     
     Mat dstImg;    //通过4个点得到变换矩阵,然后进行变换
@@ -325,7 +422,25 @@
     
     
     Mat outImage = dstOut;
-    cvtColor(outImage, outImage,COLOR_RGB2GRAY);
+
+   // cvtColor(outImage, outImage,COLOR_RGB2GRAY);
+
+
+    
+    cvtColor(outImage, outImage, COLOR_RGB2GRAY);
+    
+//    threshold(outImage, outImage, 100, 255, CV_THRESH_BINARY);
+    
+//    morphologyEx(outImage,outImage,MORPH_OPEN,Mat(5,5,CV_8U),Point2d(-1,-1),2);
+    
+//    dilate(outImage, outImage, Mat(3,3,CV_8U,cv::Scalar(1)), Point2d(-1,-1), 1);
+    erode(outImage, outImage, Mat(16,2,CV_8U,cv::Scalar(1)), Point2d(-1,-1), 5);
+    
+    Canny(outImage, outImage,
+          50,
+          150,
+          3);
+    
 
     UIImage *resultImage = [UIImage imageWithCVMat:outImage];
     
@@ -535,6 +650,77 @@ void AdjustContrast(const IplImage* src, IplImage* dst, int contrast)
     CGFloat yDist = (end.y - start.y);
     distance = sqrt((xDist * xDist) + (yDist * yDist));
     return distance;
+}
+
+-(float)angle:(cv::Point2f)first second:(cv::Point2f)second third:(cv::Point2f)third
+{
+    double cosfi = 0, fi = 0, norm = 0, pi = 3.141592653589793;
+    double dsx = first.x - second.x;
+    double dsy = first.y - second.y;
+    double dex = third.x - second.x;
+    double dey = third.y - second.y;
+    cosfi = dsx * dex + dsy * dey;
+    norm = (dsx * dsx + dsy * dsy) * (dex * dex + dey * dey);
+    cosfi /= sqrt(norm);
+    if (cosfi >= 1.0) return 0;
+    if (cosfi <= -1.0) return pi;
+    fi = acos(cosfi);
+    if (180 * fi / pi < 180)
+    {
+        return 180 * fi / pi;
+    }
+    else
+    {
+        return 360 - 180 * fi / pi;
+    }
+}
+
+-(cv::Point2f)linearEquation:(cv::Point2f)p1 with:(cv::Point2f)p2{
+    
+    cv::Point2f res;
+    
+    if (p1.x == p2.x) {
+        res.x = p1.x;
+        res.y = 0;
+    }else{
+        //球斜率
+        res.x = (p1.y - p2.y)/(p1.x - p2.x);
+        
+        
+        //球截距
+        res.y = p1.y - res.x * p1.x;
+    }
+    
+    
+    
+    NSLog(@"----斜率 %f 截距 %f", res.x, res.y);
+    return res;
+    
+}
+
+-(cv::Point2f)endPoint:(cv::Point2f)p1 with:(cv::Point2f)p2{
+    
+    cv::Point2f res;
+    
+    if (p1.y == 0) {
+        res.x = p1.x;
+        res.y = p2.x*res.x + p2.y;
+    }else if(p2.y == 0){
+        res.x = p2.x;
+        res.y = p1.x*res.x + p1.y;
+    }else{
+        //球x
+        res.x = (p1.y - p2.y)/(p2.x - p1.x);
+        
+        //球y
+        res.y = p1.x*res.x + p1.y;
+    }
+    
+    
+    
+    NSLog(@"----x %f y %f", res.x, res.y);
+    return res;
+    
 }
 
 - (void)didReceiveMemoryWarning

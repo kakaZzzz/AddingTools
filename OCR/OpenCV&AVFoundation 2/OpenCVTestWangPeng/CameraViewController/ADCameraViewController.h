@@ -12,11 +12,18 @@
 
 
 #import "ADPreviewView.h"
+#import "ADCameraViewController.h"
+#import "ADCameraHelper.h"
+#import "ADViewPhotoViewController.h"
+
+#import "ADContours.h"
+
+
 @interface ADCameraViewController : UIViewController<ADPreviewViewDelegate>
 
 @property(nonatomic,strong)ADPreviewView *drawView;
 @property(nonatomic,strong)UILabel* centerLabel;
 @property(nonatomic, strong)UIImage* currentImage;
-
+@property(nonatomic, strong)ADCameraHelper* helper;
 
 @end

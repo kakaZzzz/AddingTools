@@ -1,4 +1,4 @@
-//
+ //
 //  ADCameraViewController.m
 //  AVFoundationCamera
 //
@@ -7,11 +7,9 @@
 //
 
 #import "ADCameraViewController.h"
-#import "ADCameraHelper.h"
-#import "ADViewPhotoViewController.h"
 #import "UIImage+OpenCV.h"
-#import "ADContours.h"
 #import "opencv2/opencv.hpp"
+
 @interface ADCameraViewController ()
 {
     
@@ -21,9 +19,7 @@
 @property(nonatomic,strong)UIImageView *drawImageView;
 @property(nonatomic,assign)int whiteBalanceCount;
 @property(nonatomic,assign)BOOL isCompleteFocus;
-@property(nonatomic,assign)BOOL isCompleteWhiteBalance;
 @property(nonatomic,assign)BOOL isComplete2Frame;
-@property(nonatomic,assign)BOOL isTakePhoto;
 @property(nonatomic,strong)AVCaptureDevice* device;
 @end
 
@@ -71,7 +67,7 @@
     
     [self.view addSubview:backBtn];
     
-    
+    self.helper = [ADCameraHelper sharedInstance];
     
     //小窗口显示图片
     UIImageView *littleWidow = [[UIImageView alloc] initWithFrame:CGRectMake(-70, self.view.frame.size.height - 390, 460, 320)];
@@ -93,8 +89,7 @@
     //预览窗口
     
     [ADCameraHelper embedPreviewInView:_previewView];
-    //[ADCameraHelper startRunning];
-    
+
     _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
     [_device addObserver:self forKeyPath:@"adjustingWhiteBalance" options:NSKeyValueObservingOptionNew  context:nil];
@@ -105,7 +100,7 @@
                                                                       NSKeyValueObservingOptionOld) context:nil];
     
     _isComplete2Frame = NO;
-    _isTakePhoto = NO;
+    _isCompleteFocus = NO;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -141,35 +136,18 @@
         BOOL adjustedWhiteBalance =[[change objectForKey:NSKeyValueChangeNewKey] isEqualToNumber:[NSNumber numberWithInt:0]];
         NSLog(@"是否白平衡结束 %d",adjustedWhiteBalance);
         
-        if (adjustedWhiteBalance && _drawView.isRightStatus ) {
-            _isCompleteWhiteBalance = YES;
-        }else{
-            _isCompleteWhiteBalance = NO;
-        }
     }
     
     if ([keyPath isEqualToString:@"adjustingFocus"]) {
+        
         NSLog(@"---------------------------对焦：%d", _device.adjustingFocus);
         BOOL adjustedFocus =[[change objectForKey:NSKeyValueChangeNewKey] isEqualToNumber:[NSNumber numberWithInt:0]];
         NSLog(@"是否对焦 %d",adjustedFocus);
-//        if (adjustedFocus && _drawView.isRightStatus && _isCompleteWhiteBalance) {
-////            self.whiteBalanceCount = 10;
-////    
-////            [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
-//            
-//            
-//            [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:_currentImage waitUntilDone:NO];
-//            
-//            _isCompleteFocus = YES;
-//        }
-//        else{
-//            _isCompleteFocus = NO;
-//        }
         
-        if (adjustedFocus && _isComplete2Frame) {
-            _isTakePhoto = YES;
-            
-            _isComplete2Frame = NO;
+        if (adjustedFocus) {
+            _isCompleteFocus = YES;
+        }else{
+            _isCompleteFocus = NO;
         }
     }
     
@@ -185,12 +163,6 @@
 - (UIImage *)processFrameWithImage:(UIImage *)aImage
 {
     
-    if (_isTakePhoto) {
-        [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:_currentImage waitUntilDone:NO];
-        
-        _isTakePhoto = NO;
-    }
-    
     using namespace cv;
     
     int lowThreshold = 100;
@@ -203,8 +175,8 @@
     resize(lastFrame, lastFrame, cv::Size(568,320));
     
     //打印图像尺寸
-    NSLog(@"原图像的行是 %f  列是  %f",aImage.size.width, aImage.size.height);
-    NSLog(@"行是 %d  列是  %d",lastFrame.rows,lastFrame.cols);
+//    NSLog(@"原图像的行是 %f  列是  %f",aImage.size.width, aImage.size.height);
+//    NSLog(@"行是 %d  列是  %d",lastFrame.rows,lastFrame.cols);
     // Convert captured frame to grayscale  灰度图
     cvtColor(lastFrame, grayFrame,COLOR_RGB2GRAY);
     
@@ -225,8 +197,10 @@
         
         //找到面积最大的
         area = fabs(contourArea(contours[i]));
+        
         //将倾斜角度算出来
         vector<cv::Point> approxCurve;
+        
         //将vector转换成Mat型，此时的Mat还是列向量，只不过是2个通道的列向量而已
         Mat contourMat = Mat(contours[i]);
         double eps = contours[i].size() * 0.05;
@@ -252,14 +226,8 @@
             }
             
 
-            
+            //判断是否达到拍照条件
             if ([self shouldTakePhotoWithCoutours:contourArray andArea:area]) {
-                
-
-//                [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:aImage waitUntilDone:NO];
-
-               // UIImage *reultImage = [UIImage imageWithCVMat:grayFrame];
-
                 
             }
             
@@ -316,8 +284,9 @@
 //    if (((fabs(distance1 - distance2) > 50 && fabs(distance1 - distance2) < 80) ||
 //         (fabs(distance3 - distance4) >50 && fabs(distance3 - distance4) < 80)) &&
 //        area > MIN_PHOTO_AREA) {
-    if ((fabs(distance1 - distance2) < 50 ||
-         fabs(distance3 - distance4) < 50) &&
+    
+    if ((fabs(distance1 - distance2) < 80 ||
+         fabs(distance3 - distance4) < 80) &&
         area > MIN_PHOTO_AREA) {
         
         _drawView.isRightStatus = YES;
@@ -326,114 +295,56 @@
         
         NSLog(@"哈哈哈哈哈%d   %d",frameNumber,_isCompleteFocus);
         
+        if (_isCompleteFocus && _isComplete2Frame) {
+            [self performSelectorOnMainThread:@selector(takePhoto:) withObject:Nil waitUntilDone:NO];
+        }
+        
 //        static dispatch_once_t onceToken;
 //        dispatch_once(&onceToken, ^{
 //            
 //        });
         
-        if (5 < frameNumber) {
-            if ([_device isFocusPointOfInterestSupported]) {
-                NSError *error;
-                if ([_device lockForConfiguration:&error]) {
-                    [_device setFocusPointOfInterest:CGPointMake(self.view.bounds.size.height/2, self.view.bounds.size.width/2)];
-//                    [_device setExposurePointOfInterest:CGPointMake(self.view.bounds.size.height/2, self.view.bounds.size.width/2)];
-                    
-                    //                    [_device setFocusMode:AVCaptureFocusModeAutoFocus];
-                    //                    if ([_device isExposureModeSupported:AVCaptureExposureModeAutoExpose]){
-                    //                        [_device setExposureMode:AVCaptureExposureModeAutoExpose];
-                    //                    }
-                    [_device unlockForConfiguration];
-                }
-            }
+        if (frameNumber > 20) {
+            
+            //中心对焦
+//            if ([_device isFocusPointOfInterestSupported]) {
+//                NSError *error;
+//                if ([_device lockForConfiguration:&error]) {
+//                    [_device setFocusPointOfInterest:CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2)];
+//                    
+//                    NSLog(@"the interest point: %f %f",
+//                          self.view.bounds.size.width/2, self.view.bounds.size.height/2);
+//                    
+////                    [_device setExposurePointOfInterest:CGPointMake(self.view.bounds.size.height/2, self.view.bounds.size.width/2)];
+//                    
+//                    //                    [_device setFocusMode:AVCaptureFocusModeAutoFocus];
+//                    //                    if ([_device isExposureModeSupported:AVCaptureExposureModeAutoExpose]){
+//                    //                        [_device setExposureMode:AVCaptureExposureModeAutoExpose];
+//                    //                    }
+//                    [_device unlockForConfiguration];
+//                }
+//            }
             
             _isComplete2Frame = YES;
             
             frameNumber = 0;
+            
         }
         
         return YES;
         
-//        if ( 10 < frameNumber) {
-//            NSLog(@"拿到的帧数是多少%d",frameNumber);
-//            frameNumber = 0;
-//            
-//            return YES;
-//        }
-//        else{
-//            return NO;
-//        }
     }
     
     else{
+        
+        _isComplete2Frame = NO;
+        
         frameNumber = 0;
         _drawView.isRightStatus = NO;
         return NO;
     }
 }
 
-//#pragma mark -判断是否达到拍照条件
-//- (BOOL)shouldTakePhotoWithCoutours:(NSArray *)countours andArea:(double)area
-//{
-//    static int frameNumber = 0;
-//    ADContours *contour1 = [countours objectAtIndex:0];
-//    ADContours *contour2 = [countours objectAtIndex:1];
-//    ADContours *contour3 = [countours objectAtIndex:2];
-//    ADContours *contour4 = [countours objectAtIndex:3];
-//    float distance1 = [self distanceFromPointX:contour1 distanceToPointY:contour2];
-//    float distance2 = [self distanceFromPointX:contour3 distanceToPointY:contour4];
-//    float distance3 = [self distanceFromPointX:contour2 distanceToPointY:contour3];
-//    float distance4 = [self distanceFromPointX:contour1 distanceToPointY:contour4];
-//    
-//    NSLog(@"面积是：%f", area);
-//    
-//    if (_centerLabel) {
-//        _centerLabel.text = [NSString stringWithFormat:@"%f", area];
-//    }
-//    
-//    
-//    
-//    NSLog(@"四个距离分别是%.1f   %.1f   %.1f   %.1f",distance1,distance2,distance3,distance4);
-//    
-//    if (((fabs(distance1 - distance2) > 50 && fabs(distance1 - distance2) < 80) ||
-//         (fabs(distance3 - distance4) >50 && fabs(distance3 - distance4) < 80)) &&
-//          area > MIN_PHOTO_AREA) {
-//        
-//        _drawView.isRightStatus = YES;
-//        
-//        frameNumber ++;
-//        if ( 10 == frameNumber) {
-//            NSLog(@"拿到的帧数是多少%d",frameNumber);
-//            frameNumber = 0;
-//            
-//            if (self.whiteBalanceCount == 0) {
-//                AVCaptureDevice *  device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-//                
-//                if (device.isAdjustingFocus == 0) {
-////                    [self performSelectorOnMainThread:@selector(capturePictureAutomaticlyWithImage:) withObject:self.currentImage waitUntilDone:NO];
-//                    self.whiteBalanceCount = 10;
-//                    return YES;
-//                }else{
-//                    self.whiteBalanceCount = 1;
-//                }
-//            }
-//            
-//            return YES;
-//        }
-//        else{
-//            return NO;
-//        }
-//    }
-//    
-//    else{
-//        frameNumber = 0;
-//        if (self.whiteBalanceCount == 1) {
-//            self.whiteBalanceCount = 0;
-//        }
-//        
-//        _drawView.isRightStatus = NO;
-//        return NO;
-//    }
-//}
 - (UIImage *)rotateImage:(UIImage *)aImage
 {
     
@@ -459,7 +370,7 @@
 {
     NSLog(@"自动拍照了....");
     //停止录制
-    [ADCameraHelper  stopRunning];
+//    [ADCameraHelper  stopRunning];
     //初始化controller
     ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
     //图片赋值
@@ -484,7 +395,7 @@
     
     NSError *deviceError;
     [_device lockForConfiguration:&deviceError];
-    _device.torchMode = AVCaptureTorchModeOn;
+//    _device.torchMode = AVCaptureTorchModeOn;
     [_device unlockForConfiguration];
     
     //    [ADCameraHelper startRunning];
@@ -495,8 +406,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //开始实时取景
-    [ADCameraHelper startRunning];
+    
+    _isComplete2Frame = NO;
+    _isCompleteFocus = NO;
+    
+    [_helper.session startRunning];
     
     NSError *deviceError;
     [_device lockForConfiguration:&deviceError];
@@ -507,6 +421,8 @@
 {
     [super viewWillDisappear:animated];
     self.whiteBalanceCount = 0;
+    
+    [_helper.session stopRunning];
     
     //清除绘制
     [_drawView.modelArray removeAllObjects];
@@ -589,11 +505,11 @@
 //拍照
 - (void)takePhoto:(UIButton *)btn
 {
-    //    [ADCameraHelper captureStillImage];
-    //    [self performSelector:@selector(getImage) withObject:nil afterDelay:0.5];
     
-    // [ADCameraHelper captureStillImage];
     [ADCameraHelper captureStillImageWithBlock:^(UIImage *captureImage){
+        
+        _isCompleteFocus = NO;
+        _isComplete2Frame = NO;
         
         ADViewPhotoViewController *viewPhotoVc = [[ADViewPhotoViewController alloc] init];
         viewPhotoVc.photoImage = captureImage;
@@ -610,4 +526,7 @@
     viewPhotoVc.photoImage = [ADCameraHelper image];
     [self.navigationController pushViewController:viewPhotoVc animated:YES];
 }
+
+
+
 @end

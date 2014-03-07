@@ -27,27 +27,13 @@ static ADCameraHelper *sharedInstance = nil;
     self.session = [[AVCaptureSession alloc] init];
     [self.session setSessionPreset:AVCaptureSessionPresetHigh];//丫的这个几个级别不一样还会导致程序crash
     
-    
     [self configurateTakePhote];
     
-    
-    
-    //2.创建、配置输入设备
-//  AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-//	NSError *error;
-//	AVCaptureDeviceInput *captureInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
-//	if (!captureInput)
-//	{
-//		NSLog(@"Error: %@", error);
-//		return;
-//	}
-//    [self.session addInput:captureInput];
-    
+    // 创建input
     self.videoInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self backFacingCamera] error:nil];
     if ([self.session canAddInput:_videoInput]) {
         [self.session addInput:_videoInput];
     }
-   // self.videoInput = newVideoInput;
    
     //3.创建、配置输出  image输出
     self.captureOutput = [[AVCaptureStillImageOutput alloc] init];
@@ -58,6 +44,7 @@ static ADCameraHelper *sharedInstance = nil;
     self.output = [[AVCaptureVideoDataOutput alloc] init];
     
     // Configure your output.
+    // 子线程中处理视频流
     dispatch_queue_t queue = dispatch_queue_create("myQueue", NULL);
     [_output setSampleBufferDelegate:self queue:queue];
     
@@ -70,19 +57,15 @@ static ADCameraHelper *sharedInstance = nil;
                                 forKey:(id)kCVPixelBufferPixelFormatTypeKey];
     
     [_output setAlwaysDiscardsLateVideoFrames:YES];//丢弃延迟的影格
-    // If you wish to cap the frame rate to a known value, such as 15 fps, set
-    // minFrameDuration.
-    //output.minFrameDuration = CMTimeMake(1, 15);
     
 //    AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
 //    [connection setVideoMaxFrameDuration:CMTimeMake(1, 20)];
 //    [connection setVideoMinFrameDuration:CMTimeMake(1, 10)];
+    
 
+    [self.session addOutput:self.captureOutput];
+    [self.session addOutput:self.output];
 
-	[self.session addOutput:_output];
-    
-    
-    
 }
 - (id) init
 {
@@ -97,7 +80,7 @@ static ADCameraHelper *sharedInstance = nil;
     if (device.hasFlash) {
         NSLog(@"device.hasFlash turning flash mode on");
         [device lockForConfiguration:&deviceError];
-        device.flashMode = AVCaptureFlashModeOff;
+        device.flashMode = AVCaptureFlashModeAuto;
         [device unlockForConfiguration];
     }
     else {
@@ -145,6 +128,8 @@ static ADCameraHelper *sharedInstance = nil;
     if (!_session) return;
     NSLog(@"实时显示的镜头内容");
     self.preview = [AVCaptureVideoPreviewLayer layerWithSession: _session];
+    
+    
     _preview.frame = aView.bounds;
     _preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
     [aView.layer addSublayer: _preview];
@@ -268,7 +253,6 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     return outImage;
 }
 
-    //
 -(void)captureimage
 {
     //将处理图片状态值置为YES
@@ -315,6 +299,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 //#endif
      }];
 }
+
 - (void)captureImage:(CaptureImageBlock)block{
     
     
@@ -330,8 +315,13 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     self.isProcessingImage = YES;
     //get connection
     
+//    sleep(1);
+    
     AVCaptureConnection *videoConnection = nil;
     for (AVCaptureConnection *connection in _captureOutput.connections) {
+        
+        NSLog(@"connection %@", connection);
+        
         for (AVCaptureInputPort *port in [connection inputPorts]) {
             if ([[port mediaType] isEqual:AVMediaTypeVideo] ) {
                 videoConnection = connection;
@@ -341,10 +331,15 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
         if (videoConnection) { break; }
     }
     
+    NSLog(@"connection %@", videoConnection);
+    
     //get UIImage
     __block ADCameraHelper *objSelf = self;
     [_captureOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:
      ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
+         
+         NSLog(@"buffer %@ error %@", imageSampleBuffer, error);
+         
          if (imageSampleBuffer != NULL) {
              NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
              NSLog(@"开始生成图片");
