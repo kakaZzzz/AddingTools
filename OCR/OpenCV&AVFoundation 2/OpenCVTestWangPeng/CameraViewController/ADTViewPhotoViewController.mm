@@ -323,7 +323,10 @@
     cvCopy(&ipl_img, dstOut);
     cvResetImageROI(&ipl_img);
     
+    
     Mat outImage = dstOut;
+    cvtColor(outImage, outImage,COLOR_RGB2GRAY);
+
     UIImage *resultImage = [UIImage imageWithCVMat:outImage];
     
     NSLog(@"bianlede size: %f, %f ", resultImage.size.width, resultImage.size.height);
@@ -344,6 +347,181 @@
     return resultImage;
     
 }
+
+void UnsharpMask(const IplImage* src, IplImage* dst, float amount=80, float radius=5, uchar threshold=0, int contrast=100)
+{
+    if(!src)return ;
+    
+    int imagewidth = src->width;
+    int imageheight = src->height;
+    int channel = src->nChannels;
+    
+    IplImage* blurimage = cvCreateImage(cvSize(imagewidth,imageheight), src->depth, channel);
+    IplImage* DiffImage = cvCreateImage(cvSize(imagewidth,imageheight), 8, channel);
+    
+    //原图的高对比度图像
+    IplImage* highcontrast = cvCreateImage(cvSize(imagewidth,imageheight), 8, channel);
+    AdjustContrast(src, highcontrast, contrast);
+    
+    //原图的模糊图像
+    cvSmooth(src, blurimage, CV_GAUSSIAN, radius);
+    
+    //原图与模糊图作差
+    for (int y=0; y<imageheight; y++)
+    {
+        for (int x=0; x<imagewidth; x++)
+        {
+            CvScalar ori = cvGet2D(src, y, x);
+            CvScalar blur = cvGet2D(blurimage, y, x);
+            CvScalar val;
+            val.val[0] = abs(ori.val[0] - blur.val[0]);
+            val.val[1] = abs(ori.val[1] - blur.val[1]);
+            val.val[2] = abs(ori.val[2] - blur.val[2]);
+            
+            cvSet2D(DiffImage, y, x, val);
+        }
+    }
+    
+    //锐化
+    for (int y=0; y<imageheight; y++)
+    {
+        for (int x=0; x<imagewidth; x++)
+        {
+            CvScalar hc = cvGet2D(highcontrast, y, x);
+            CvScalar diff = cvGet2D(DiffImage, y, x);
+            CvScalar ori = cvGet2D(src, y, x);
+            CvScalar val;
+            
+            for (int k=0; k<channel; k++)
+            {
+                if (diff.val[k] > threshold)
+                {
+                    //最终图像 = 原始*(1-r) + 高对比*r
+                    val.val[k] = ori.val[k] *(100-amount) + hc.val[k] *amount;
+                    val.val[k] /= 100;
+                }
+                else
+                {
+                    val.val[k] = ori.val[k];
+                }
+            }
+            cvSet2D(dst, y, x, val);
+        }
+    }
+    cvReleaseImage(&blurimage);
+    cvReleaseImage(&DiffImage);
+}
+//调整图像的对比度，contrast的范围[-255,255]
+void AdjustContrast(const IplImage* src, IplImage* dst, int contrast)
+{
+    if (!src)return ;
+    
+    int imagewidth = src->width;
+    int imageheight = src->height;
+    int channel = src->nChannels;
+    
+    //求原图均值
+    CvScalar mean = {0,0,0,0};
+    for (int y=0; y<imageheight; y++)
+    {
+        for (int x=0; x<imagewidth; x++)
+        {
+            for (int k=0; k<channel; k++)
+            {
+                CvScalar ori = cvGet2D(src, y, x);
+                for (int k=0; k<channel; k++)
+                {
+                    mean.val[k] += ori.val[k];
+                }
+            }
+        }
+    }
+    for (int k=0; k<channel; k++)
+    {
+        mean.val[k] /= imagewidth * imageheight;
+    }
+    
+    //调整对比度
+    if (contrast <= -255)
+    {
+        //当增量等于-255时，是图像对比度的下端极限，此时，图像RGB各分量都等于阀值，图像呈全灰色，灰度图上只有1条线，即阀值灰度；
+        for (int y=0; y<imageheight; y++)
+        {
+            for (int x=0; x<imagewidth; x++)
+            {
+                cvSet2D(dst, y, x, mean);
+            }
+        }
+    }
+    else if(contrast > -255 &&  contrast <= 0)
+    {
+        //(1)nRGB = RGB + (RGB - Threshold) * Contrast / 255
+        // 当增量大于-255且小于0时，直接用上面的公式计算图像像素各分量
+        //公式中，nRGB表示调整后的R、G、B分量，RGB表示原图R、G、B分量，Threshold为给定的阀值，Contrast为处理过的对比度增量。
+        for (int y=0; y<imageheight; y++)
+        {
+            for (int x=0; x<imagewidth; x++)
+            {
+                CvScalar nRGB;
+                CvScalar ori = cvGet2D(src, y, x);
+                for (int k=0; k<channel; k++)
+                {
+                    nRGB.val[k] = ori.val[k] + (ori.val[k] - mean.val[k]) *contrast /255;
+                }
+                cvSet2D(dst, y, x, nRGB);
+            }
+        }
+    }
+    else if(contrast >0 && contrast <255)
+    {
+        //当增量大于0且小于255时，则先按下面公式(2)处理增量，然后再按上面公式(1)计算对比度：
+        //(2)、nContrast = 255 * 255 / (255 - Contrast) - 255
+        //公式中的nContrast为处理后的对比度增量，Contrast为给定的对比度增量。
+        
+        CvScalar nRGB;
+        int nContrast = 255 *255 /(255 - contrast) - 255;
+        
+        for (int y=0; y<imageheight; y++)
+        {
+            for (int x=0; x<imagewidth; x++)
+            {
+                CvScalar ori = cvGet2D(src, y, x);
+                for (int k=0; k<channel; k++)
+                {
+                    nRGB.val[k] = ori.val[k] + (ori.val[k] - mean.val[k]) *nContrast /255;
+                }
+                cvSet2D(dst, y, x, nRGB);
+            }
+        }
+    }
+    else
+    {
+        //当增量等于 255时，是图像对比度的上端极限，实际等于设置图像阀值，图像由最多八种颜色组成，灰度图上最多8条线，
+        //即红、黄、绿、青、蓝、紫及黑与白；
+        for (int y=0; y<imageheight; y++)
+        {
+            for (int x=0; x<imagewidth; x++)
+            {
+                CvScalar rgb;
+                CvScalar ori = cvGet2D(src, y, x);
+                for (int k=0; k<channel; k++)
+                {
+                    if (ori.val[k] > mean.val[k])
+                    {
+                        rgb.val[k] = 255;
+                    }
+                    else
+                    {
+                        rgb.val[k] = 0;
+                    }
+                }
+                cvSet2D(dst, y, x, rgb);
+            }
+        }
+    }
+}
+
+
 
 #pragma mark - 对四个点进行处理
 - (void)processFourvertexsWith
