@@ -38,7 +38,7 @@ int currentlyCloser;
 - (void)commenInit
 {
     self.labelFont = [UIFont systemFontOfSize:12];//横坐标刻度字体
-    self.colorXaxisLabel = [UIColor colorWithRed:255/255.0 green:176/255.0 blue:170/255.0 alpha:1.0];
+    self.colorXaxisLabel = kXaxisColor;
     
 }
 
@@ -277,7 +277,7 @@ int currentlyCloser;
         firstLabel.text = [self.delegate labelOnXAxisForIndex:0];
         firstLabel.font = self.labelFont;
         firstLabel.textAlignment = 0;
-        firstLabel.textColor =[UIColor colorWithRed:255/255.0 green:176/255.0 blue:170/255.0 alpha:1.0];
+        firstLabel.textColor =kXaxisColor;
         firstLabel.backgroundColor = [UIColor redColor];
         [self addSubview:firstLabel];
         
@@ -285,7 +285,7 @@ int currentlyCloser;
         lastLabel.text = [self.delegate labelOnXAxisForIndex:(numberOfPoints - 1)];
         lastLabel.font = self.labelFont;
         lastLabel.textAlignment = 2;
-        lastLabel.textColor = [UIColor colorWithRed:255/255.0 green:176/255.0 blue:170/255.0 alpha:1.0];
+        lastLabel.textColor =kXaxisColor;
         lastLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:lastLabel];
     } else {
@@ -296,7 +296,7 @@ int currentlyCloser;
             [labelXAxis setCenter:CGPointMake(kXMargin + (kCustomeWidth/(numberOfPoints))*(i*numberOfGaps - 1) - 5 , self.frame.size.height - labelYaxisOffset +5)];
             labelXAxis.font = self.labelFont;
             labelXAxis.textAlignment = 1;
-            labelXAxis.textColor = [UIColor colorWithRed:255/255.0 green:176/255.0 blue:170/255.0 alpha:1.0];
+            labelXAxis.textColor = kXaxisColor;
             labelXAxis.backgroundColor = [UIColor clearColor];
             labelXAxis.transform = CGAffineTransformMakeRotation(-45*M_PI/180);
             [self addSubview:labelXAxis];
@@ -316,7 +316,7 @@ int currentlyCloser;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     CGContextSetLineWidth(ctx, 1.0);
-    CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithRed:255/255.0 green:176/255.0 blue:170/255.0 alpha:1.0].CGColor);
+    CGContextSetStrokeColorWithColor(ctx, kXaxisColor.CGColor);
     
     CGContextMoveToPoint(ctx,0, kXaxisHeight);
     CGContextAddLineToPoint(ctx,kXMargin, kXaxisHeight );

@@ -23,6 +23,8 @@
 		723A5C5718CABDDE00CDE19A /* milestone_medal_image14@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5518CABDDE00CDE19A /* milestone_medal_image14@2x.png */; };
 		723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5818CB01ED00CDE19A /* milestone_cload_bg@2x.png */; };
 		723A5C5B18CB177000CDE19A /* back_button_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5A18CB176F00CDE19A /* back_button_bg@2x.png */; };
+		723A5CB918CDB6CD00CDE19A /* triangle_button_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5CB718CDB6CD00CDE19A /* triangle_button_bg@2x.png */; };
+		723A5CBA18CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5CB818CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png */; };
 		725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */; };
 		725A6A0218C2CE18000FA35A /* ADTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A0118C2CE18000FA35A /* ADTabBarView.m */; };
 		725A6A2518C2D209000FA35A /* ADFetalPrimaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A2418C2D209000FA35A /* ADFetalPrimaryVC.m */; };
@@ -30,6 +32,9 @@
 		725A6A2E18C2DD5D000FA35A /* ADSecondVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A2D18C2DD5D000FA35A /* ADSecondVC.m */; };
 		725A6A3218C2DEA6000FA35A /* ADNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A3118C2DEA6000FA35A /* ADNavigationController.m */; };
 		725A6A3918C2FB01000FA35A /* ADBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A3818C2FB01000FA35A /* ADBaseViewController.m */; };
+		725A7EC318CDBC340058C4CF /* ADScrollCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A7EC218CDBC340058C4CF /* ADScrollCalendar.m */; };
+		725A7EC618CDBC3C0058C4CF /* CalendarDateUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A7EC518CDBC3C0058C4CF /* CalendarDateUtil.m */; };
+		725A7EC818CDBF1A0058C4CF /* calendar_selected_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 725A7EC718CDBF1A0058C4CF /* calendar_selected_bg@2x.png */; };
 		72B78CB718C3003900F9D608 /* ADNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B78CB618C3003900F9D608 /* ADNavigationView.m */; };
 		72B78CBB18C317CB00F9D608 /* ADThirdVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B78CBA18C317CB00F9D608 /* ADThirdVC.m */; };
 		72B78CC218C339C600F9D608 /* ADLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 72B78CC118C339C600F9D608 /* ADLineGraphView.m */; };
@@ -116,6 +121,8 @@
 		723A5C5518CABDDE00CDE19A /* milestone_medal_image14@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_medal_image14@2x.png"; sourceTree = "<group>"; };
 		723A5C5818CB01ED00CDE19A /* milestone_cload_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_cload_bg@2x.png"; sourceTree = "<group>"; };
 		723A5C5A18CB176F00CDE19A /* back_button_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_button_bg@2x.png"; sourceTree = "<group>"; };
+		723A5CB718CDB6CD00CDE19A /* triangle_button_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangle_button_bg@2x.png"; sourceTree = "<group>"; };
+		723A5CB818CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangle_button_selected_bg@2x.png"; sourceTree = "<group>"; };
 		725A69F918C2CCFF000FA35A /* ADMacroDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMacroDefine.h; sourceTree = "<group>"; };
 		725A69FD18C2CDFC000FA35A /* ADTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADTabBarViewController.h; sourceTree = "<group>"; };
 		725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTabBarViewController.m; sourceTree = "<group>"; };
@@ -131,6 +138,11 @@
 		725A6A3118C2DEA6000FA35A /* ADNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNavigationController.m; sourceTree = "<group>"; };
 		725A6A3718C2FB01000FA35A /* ADBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADBaseViewController.h; sourceTree = "<group>"; };
 		725A6A3818C2FB01000FA35A /* ADBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADBaseViewController.m; sourceTree = "<group>"; };
+		725A7EC118CDBC340058C4CF /* ADScrollCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADScrollCalendar.h; sourceTree = "<group>"; };
+		725A7EC218CDBC340058C4CF /* ADScrollCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADScrollCalendar.m; sourceTree = "<group>"; };
+		725A7EC418CDBC3C0058C4CF /* CalendarDateUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarDateUtil.h; sourceTree = "<group>"; };
+		725A7EC518CDBC3C0058C4CF /* CalendarDateUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarDateUtil.m; sourceTree = "<group>"; };
+		725A7EC718CDBF1A0058C4CF /* calendar_selected_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calendar_selected_bg@2x.png"; sourceTree = "<group>"; };
 		72B78CB518C3003900F9D608 /* ADNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNavigationView.h; sourceTree = "<group>"; };
 		72B78CB618C3003900F9D608 /* ADNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNavigationView.m; sourceTree = "<group>"; };
 		72B78CB818C30B2B00F9D608 /* ADAppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADAppConfig.h; sourceTree = "<group>"; };
@@ -342,9 +354,21 @@
 			name = CustomeViewController;
 			sourceTree = "<group>";
 		};
+		725A7EC018CDBC160058C4CF /* CustomeScrollCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				725A7EC418CDBC3C0058C4CF /* CalendarDateUtil.h */,
+				725A7EC518CDBC3C0058C4CF /* CalendarDateUtil.m */,
+				725A7EC118CDBC340058C4CF /* ADScrollCalendar.h */,
+				725A7EC218CDBC340058C4CF /* ADScrollCalendar.m */,
+			);
+			path = CustomeScrollCalendar;
+			sourceTree = "<group>";
+		};
 		72B78CBE18C3398800F9D608 /* CustomLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				725A7EC018CDBC160058C4CF /* CustomeScrollCalendar */,
 				72F258ED18C730B0004B05A6 /* CustomeTimeLabel */,
 				72B78CBF18C3398800F9D608 /* CustomeLineGraph */,
 			);
@@ -452,6 +476,9 @@
 		72EF993418C5C6E4005D3D21 /* HomeImages */ = {
 			isa = PBXGroup;
 			children = (
+				725A7EC718CDBF1A0058C4CF /* calendar_selected_bg@2x.png */,
+				723A5CB718CDB6CD00CDE19A /* triangle_button_bg@2x.png */,
+				723A5CB818CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png */,
 				72DE3FE618C6C4B8008B4803 /* mark_link_line@2x.png */,
 				72D5DCE018C62B6B003B7CC8 /* mark_bgImage@2x.png */,
 				72D5DCD518C6201E003B7CC8 /* share_button_selected@2x.png */,
@@ -639,6 +666,7 @@
 				72F0C4B018C195FB006ABEB1 /* InfoPlist.strings in Resources */,
 				72EF993C18C5F3D8005D3D21 /* bar_bg_2@2x.png in Resources */,
 				72F0C4BB18C195FB006ABEB1 /* Images.xcassets in Resources */,
+				725A7EC818CDBF1A0058C4CF /* calendar_selected_bg@2x.png in Resources */,
 				723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */,
 				72EF993018C5B8F3005D3D21 /* tab_fetalData_selected@2x.png in Resources */,
 				72EF993A18C5F3D8005D3D21 /* bar_bg_3@2x.png in Resources */,
@@ -648,9 +676,11 @@
 				72D5DCDC18C6201E003B7CC8 /* share_button@2X.png in Resources */,
 				72EF993B18C5F3D8005D3D21 /* bar_bg_1@2x.png in Resources */,
 				72EF993218C5B8F3005D3D21 /* tab_setting@2x.png in Resources */,
+				723A5CB918CDB6CD00CDE19A /* triangle_button_bg@2x.png in Resources */,
 				72D5DCDA18C6201E003B7CC8 /* historydata_button_selected@2x.png in Resources */,
 				72EC187F18C7209E00862D50 /* record_complete_button_sel@2x.png in Resources */,
 				72EF993118C5B8F3005D3D21 /* tab_record@2x.png in Resources */,
+				723A5CBA18CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png in Resources */,
 				72DE3FE718C6C4B8008B4803 /* mark_link_line@2x.png in Resources */,
 				72EF992F18C5B8F3005D3D21 /* tab_fetalData@2x.png in Resources */,
 				723A5C5318CA150000CDE19A /* milestone_mark_bg@2x.png in Resources */,
@@ -693,6 +723,7 @@
 				72B78CB718C3003900F9D608 /* ADNavigationView.m in Sources */,
 				723A5C4818C9CC8A00CDE19A /* ADMilestoneModel.m in Sources */,
 				723A5C3F18C9CB8500CDE19A /* ADMilestoneVC.m in Sources */,
+				725A7EC618CDBC3C0058C4CF /* CalendarDateUtil.m in Sources */,
 				72EDD17118C4DB3B0042292B /* FetalMovementModel.m in Sources */,
 				72382A4F18C3569100B37993 /* ADBar.m in Sources */,
 				72D5DCDF18C62ADC003B7CC8 /* ADMarkView.m in Sources */,
@@ -709,6 +740,7 @@
 				72B78CC218C339C600F9D608 /* ADLineGraphView.m in Sources */,
 				725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */,
 				72F258F518C82CF2004B05A6 /* ADSortModel.m in Sources */,
+				725A7EC318CDBC340058C4CF /* ADScrollCalendar.m in Sources */,
 				723A5C4418C9CBF100CDE19A /* ADMilestoneContentCell.m in Sources */,
 				72382A6E18C4390B00B37993 /* NSDate+DateHelper.m in Sources */,
 				72B78CBB18C317CB00F9D608 /* ADThirdVC.m in Sources */,

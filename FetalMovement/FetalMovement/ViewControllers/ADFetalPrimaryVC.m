@@ -15,10 +15,13 @@
 #import "UILabel+CustomeLabel.h"
 #import "ADSortModel.h"
 #import "ADMilestoneVC.h"
+#import "ADScrollCalendar.h"
+
+#define kScrollCalendarAnimationDurarion 0.3f
 @interface ADFetalPrimaryVC ()
 {
     NSTimeInterval seconds1970;
-   
+    BOOL isSelectingDate;
     
 }
 @property (strong, nonatomic)UIImageView *cloadImageView;
@@ -37,6 +40,12 @@
 @property(nonatomic,strong)UILabel *hourlyPredicationLabel;
 //tabelView dataArray
 @property (strong, nonatomic) NSMutableArray *dataArray;
+
+//
+@property (strong, nonatomic) UIButton *triangleButton;
+
+//scroll calendar
+@property (strong, nonatomic)ADScrollCalendar *calendarScroll;
 @end
 
 @implementation ADFetalPrimaryVC
@@ -60,13 +69,18 @@
 //可用来更新页面数据
 - (void)viewWillAppear:(BOOL)animated{
     
-        [self updateUI];
+    [self updateUI];
     
 }
 //invoke the method  update UI when need to refresh the view
 - (void)updateUI
 {
     seconds1970 = [[NSDate localdate] timeIntervalSince1970];
+    
+    //导航栏上日期显示
+    NSString *dateSring = [NSDate stringFromDate:[NSDate localdate] withFormat:@"yyyy.MM.dd"];
+    self.navigationView.titleLabel.text = dateSring;
+    
     //显示的数字需要更新
     int count1 = [[ADFetalMovementManager sharedADFetalMovementManager] getTotalCountByDate:seconds1970];
     int count2 = [[ADFetalMovementManager sharedADFetalMovementManager] getPredictDailyCountByDate:seconds1970];
@@ -87,7 +101,7 @@
         [self.ArrayOfBarValues addObject:[dic objectForKey:kFetalCount]];
         [self.ArrayOfBarXAxis addObject:[dic objectForKey:kStartTimeStamp]];
     }
-
+    
     [self.lineGraph reloadGraph];
     
     //更新列表数据
@@ -110,55 +124,9 @@
     [self addLineGraphView];
     [self addFetalMovementCountScrollView];
     [self addTypicalRecordView];
-    UIButton *thirdButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    thirdButton.frame = CGRectMake(100, 300, 100, 100);
-    thirdButton.backgroundColor = [UIColor redColor];
-    [thirdButton setTitle:@"Enter" forState:UIControlStateNormal];
-    [thirdButton addTarget:self action:@selector(pushNextView) forControlEvents:UIControlEventTouchUpInside];
-    //[self.view addSubview:thirdButton];
-    
-  	// Do any additional setup after loading the view.
-
     
     
-//    NSDictionary *dic1 = [[NSDictionary alloc] initWithObjectsAndKeys:@"03:00",kStartTimeStamp, @"04:00",kEndTimeStamp,@"5",kFetalCount,nil];
-//    NSDictionary *dic2 = [[NSDictionary alloc] initWithObjectsAndKeys:@"06:00",kStartTimeStamp, @"07:00",kEndTimeStamp,@"12",kFetalCount, nil];
-//    NSDictionary *dic3 = [[NSDictionary alloc] initWithObjectsAndKeys:@"10:00",kStartTimeStamp, @"11:00",kEndTimeStamp,@"8",kFetalCount, nil];
-//
-//    NSArray *array = [NSArray arrayWithObjects:dic1,dic2,dic3, nil];
-//    
-//    
-//    
-//    NSLog(@"原始数据是%@",array);
-//    
-//    NSMutableArray *array1 = [NSMutableArray arrayWithCapacity:1];
-//    for (int i = 0; i <3; i++) {
-//        
-//        NSDictionary *dic = [array objectAtIndex:i];
-//        NSString *str1 = [dic objectForKey:kStartTimeStamp];
-//        NSString *str2 = [dic objectForKey:kEndTimeStamp];
-//        NSString *str3 = [dic objectForKey:kFetalCount];
-//
-//        
-//        ADSortModel *model = [ADSortModel modelWithCount:[str3 intValue] withStartTime:str1 withEndTime:str2];
-//        [array1 addObject:model];
-//    }
-//    //然后再对tansferArray 数组进行排序，按照胎动次数高低排序
-//    NSSortDescriptor *carNameDesc = [NSSortDescriptor sortDescriptorWithKey:@"count" ascending:NO];
-//
-//    NSArray *descriptorArray = [NSArray arrayWithObjects:carNameDesc, nil];
-//    NSArray *sortedArray = [array1 sortedArrayUsingDescriptors: descriptorArray];
-//    NSLog(@"排序之后的数据是什%@",sortedArray);
-//
-//
-//    for (int i = 0; i < 3; i ++) {
-//        ADSortModel *model = [sortedArray objectAtIndex:i];
-//        
-//        NSLog(@"次数是%d",model.count);
-//    }
-
-
-
+    
 }
 - (void)pushNextView
 {
@@ -166,7 +134,7 @@
     [self.navigationController pushViewController:secondVC animated:YES];
 }
 
-#pragma mark - configure navigationView 
+#pragma mark - configure navigationView
 - (void)configureNavigationView
 {
     [self.navigationView.backButton setBackgroundImage:[UIImage imageNamed:@"historydata_button@2x"] forState:UIControlStateNormal];
@@ -176,7 +144,20 @@
     [self.navigationView.rightButton setBackgroundImage:[UIImage imageNamed:@"share_button@2x"] forState:UIControlStateNormal];
     [self.navigationView.rightButton setBackgroundImage:[UIImage imageNamed:@"share_button_selected@2x"] forState:UIControlStateHighlighted];
     [self.navigationView.rightButton setBackgroundImage:[UIImage imageNamed:@"share_button_selected@2x"] forState:UIControlStateSelected];
-
+    
+    
+    //
+    self.navigationView.titleLabel.text = @"2014.3.10";
+    self.navigationView.titleLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selecteDate:)];
+    [self.navigationView.titleLabel addGestureRecognizer:tap];
+    
+    self.triangleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _triangleButton.frame = CGRectMake(self.navigationView.titleLabel.frame.origin.x + self.navigationView.titleLabel.frame.size.width - 8, self.navigationView.frame.size.height - 18, 19/2, 11/2);
+    [_triangleButton setBackgroundImage:[UIImage imageNamed:@"triangle_button_bg@2x"] forState:UIControlStateNormal];
+    
+    [self.navigationView addSubview:_triangleButton];
+    
 }
 #pragma mark - navigation button event
 - (void)clickLeftButton
@@ -190,6 +171,109 @@
     NSLog(@"点击分享按钮");
 }
 
+- (void)selecteDate:(UITapGestureRecognizer *)tap
+{
+    if (isSelectingDate) {
+        
+        
+        [self removeScrollCalendarView];
+        
+        
+        
+    }else{
+        
+        [self showScrollCalendarView];
+    }
+    
+    
+    //
+    
+    
+}
+- (void)showScrollCalendarView
+{
+    self.navigationView.titleLabel.textColor = [UIColor colorWithRed:217/255.0 green:0/255.0 blue:66/255.0 alpha:0.6];
+    [self.triangleButton setBackgroundImage:[UIImage imageNamed:@"triangle_button_selected_bg@2x"] forState:UIControlStateNormal];
+
+    //
+    int yAxias = 0;
+    if (IOS7_OR_LATER) {
+        yAxias = 20;
+    }
+    self.calendarScroll = [[ADScrollCalendar alloc] initWithFrame:CGRectMake(0, -100, SCREEN_WIDTH, 100)];
+    _calendarScroll.backgroundColor = [UIColor colorWithRed:217/255.0 green:0/255.0 blue:66/255.0 alpha:0.6];
+    _calendarScroll.alpha = 0;
+    //block 回调
+    
+    __block double seconds;
+    __weak ADFetalPrimaryVC *primeVC  = self;
+    _calendarScroll.chooseDateBlock = ^(NSDate *date){
+        
+        NSDate *loacalDate = [NSDate localdateByDate:date];
+        seconds = [loacalDate timeIntervalSince1970];
+        
+        //update graph
+        primeVC.ArrayOfValues.array = [[ADFetalMovementManager sharedADFetalMovementManager] getHourlyStatDataByDate:seconds];
+        primeVC.ArrayOfDates.array  = [[ADFetalMovementManager sharedADFetalMovementManager] getTwentyfourHours];
+        
+        [primeVC.ArrayOfBarValues removeAllObjects];
+        [primeVC.ArrayOfBarXAxis removeAllObjects];
+        NSArray *arrayBar = [[ADFetalMovementManager sharedADFetalMovementManager] getTypicalRecordByDate:seconds];
+        for (NSDictionary *dic in arrayBar) {
+            [primeVC.ArrayOfBarValues addObject:[dic objectForKey:kFetalCount]];
+            [primeVC.ArrayOfBarXAxis addObject:[dic objectForKey:kStartTimeStamp]];
+        }
+        
+        [primeVC.lineGraph reloadGraph];
+        
+        NSString *dateSring = [NSDate stringFromDate:loacalDate withFormat:@"yyyy.MM.dd"];
+        primeVC.navigationView.titleLabel.text = dateSring;
+        [primeVC removeScrollCalendarView];
+        
+    };
+    
+    [self.view addSubview:_calendarScroll];
+    [self.view bringSubviewToFront:self.navigationView];
+    //[self.view insertSubview:_calendarScroll belowSubview:self.navigationView];
+
+    [UIView animateWithDuration:kScrollCalendarAnimationDurarion animations:^{
+        _calendarScroll.alpha = 1.0;
+        _calendarScroll.frame = CGRectMake(0, 90/2 + yAxias, SCREEN_WIDTH, 100);
+
+    } completion:^(BOOL finished) {
+        
+          }];
+
+//    [UIView animateWithDuration:0.1 animations:^{
+//        _calendarScroll.frame = CGRectMake(0, 90/2 + yAxias, SCREEN_WIDTH, 100);
+//    }];
+        isSelectingDate = YES;
+
+    
+}
+//移除日历选择View
+- (void)removeScrollCalendarView
+{
+    if (_calendarScroll) {
+        
+        
+        [UIView animateWithDuration:kScrollCalendarAnimationDurarion animations:^{
+            _calendarScroll.alpha = 0;
+            _calendarScroll.frame = CGRectMake(0, -100, SCREEN_WIDTH, 100);
+            
+        } completion:^(BOOL finished) {
+            [_calendarScroll removeFromSuperview];
+        }];
+  
+        
+    }
+    
+    self.navigationView.titleLabel.textColor = [UIColor whiteColor];
+    [self.triangleButton setBackgroundImage:[UIImage imageNamed:@"triangle_button_bg@2x"] forState:UIControlStateNormal];
+    isSelectingDate = NO;
+    
+}
+
 #pragma mark - line graph
 - (void)addLineGraphView
 {
@@ -197,7 +281,7 @@
     self.ArrayOfValues = [[NSMutableArray alloc] init];
     self.ArrayOfDates = [[NSMutableArray alloc] init];
     
-   
+    
     self.ArrayOfValues.array = [[ADFetalMovementManager sharedADFetalMovementManager] getHourlyStatDataByDate:seconds1970];
     self.ArrayOfDates.array  = [[ADFetalMovementManager sharedADFetalMovementManager] getTwentyfourHours];
     
@@ -212,7 +296,7 @@
         [self.ArrayOfBarValues addObject:[dic objectForKey:kFetalCount]];
         [self.ArrayOfBarXAxis addObject:[dic objectForKey:kStartTimeStamp]];
     }
-   
+    
     int yAxias = 0;
     if (IOS7_OR_LATER) {
         yAxias = 20;
@@ -254,7 +338,7 @@
 - (int)numberOfPointsInGraph {
     
     return (int)[self.ArrayOfValues count];
-
+    
 }
 
 - (float)valueForIndex:(NSInteger)index {
@@ -332,11 +416,11 @@
     NSTimeInterval seconds = [localDate timeIntervalSince1970];
     int count = [[ADFetalMovementManager sharedADFetalMovementManager] getTotalCountByDate:seconds];
     self.todayCountLabel = [UILabel labelWithTitle:[NSString stringWithFormat:@"%d",count]
-                                            frame:CGRectMake((SCREEN_WIDTH - 70)/2, todayTitle.frame.origin.y + todayTitle.frame.size.height + 30/2, 70, 50)
-                                        textColor:kRedFontColor
-                                    textAlignment:NSTextAlignmentCenter
-                                             font:[UIFont systemFontOfSize:120/2]
-                                        superView:_fetalMovementScrollView];
+                                             frame:CGRectMake((SCREEN_WIDTH - 70)/2, todayTitle.frame.origin.y + todayTitle.frame.size.height + 30/2, 70, 50)
+                                         textColor:kRedFontColor
+                                     textAlignment:NSTextAlignmentCenter
+                                              font:[UIFont systemFontOfSize:120/2]
+                                         superView:_fetalMovementScrollView];
     
     
     UILabel *unitLable1 = [UILabel labelWithTitle:@"次"
@@ -345,68 +429,68 @@
                                     textAlignment:NSTextAlignmentLeft
                                              font:[UIFont systemFontOfSize:28/2]
                                         superView:_fetalMovementScrollView];
-
+    
     
     
     self.todayContentLabel = [UILabel labelWithTitle:@"2222222位妈妈记录超过20次"
-                                            frame:CGRectMake((SCREEN_WIDTH - 300)/2, _todayCountLabel.frame.origin.y + _todayCountLabel.frame.size.height + 24/2, 300, 24/2)
-                                        textColor:kRedFontColor
-                                    textAlignment:NSTextAlignmentCenter
-                                             font:kMacroFontSize
-                                        superView:_fetalMovementScrollView];
-
-
-    UILabel *totalPredicationTitle = [UILabel labelWithTitle:@"推算今日胎动总数"
-                                               frame:CGRectMake( 320 + 48/2, todayTitle.frame.origin.y, 150, todayTitle.frame.size.height)
-                                           textColor:todayTitle.textColor
-                                       textAlignment:NSTextAlignmentLeft
-                                                font:todayTitle.font
+                                               frame:CGRectMake((SCREEN_WIDTH - 300)/2, _todayCountLabel.frame.origin.y + _todayCountLabel.frame.size.height + 24/2, 300, 24/2)
+                                           textColor:kRedFontColor
+                                       textAlignment:NSTextAlignmentCenter
+                                                font:kMacroFontSize
                                            superView:_fetalMovementScrollView];
-
+    
+    
+    UILabel *totalPredicationTitle = [UILabel labelWithTitle:@"推算今日胎动总数"
+                                                       frame:CGRectMake( 320 + 48/2, todayTitle.frame.origin.y, 150, todayTitle.frame.size.height)
+                                                   textColor:todayTitle.textColor
+                                               textAlignment:NSTextAlignmentLeft
+                                                        font:todayTitle.font
+                                                   superView:_fetalMovementScrollView];
+    
     
     count = [[ADFetalMovementManager sharedADFetalMovementManager] getPredictDailyCountByDate:seconds];
     self.totalPredicationLabel = [UILabel labelWithTitle:[NSString stringWithFormat:@"%d",count]
-                                                       frame:CGRectMake(totalPredicationTitle.frame.origin.x, totalPredicationTitle.frame.origin.y + totalPredicationTitle.frame.size.height + 40/2, 70, 50)
-                                                   textColor:kRedFontColor
-                                               textAlignment:NSTextAlignmentCenter
-                                                        font:[UIFont systemFontOfSize:120/2]
-                                                   superView:_fetalMovementScrollView];
-
+                                                   frame:CGRectMake(totalPredicationTitle.frame.origin.x, totalPredicationTitle.frame.origin.y + totalPredicationTitle.frame.size.height + 40/2, 70, 50)
+                                               textColor:kRedFontColor
+                                           textAlignment:NSTextAlignmentCenter
+                                                    font:[UIFont systemFontOfSize:120/2]
+                                               superView:_fetalMovementScrollView];
+    
     
     UILabel *unitLable2 = [UILabel labelWithTitle: @"次"
-                                                   frame:CGRectMake(_totalPredicationLabel.frame.origin.x + _totalPredicationLabel.frame.size.width, _totalPredicationLabel.frame.origin.y + _totalPredicationLabel.frame.size.height - 20, 20, 20)
-                                               textColor:kRedFontColor
-                                           textAlignment:NSTextAlignmentLeft
-                                                    font:[UIFont systemFontOfSize:28/2]
-                                               superView:_fetalMovementScrollView];
-
+                                            frame:CGRectMake(_totalPredicationLabel.frame.origin.x + _totalPredicationLabel.frame.size.width, _totalPredicationLabel.frame.origin.y + _totalPredicationLabel.frame.size.height - 20, 20, 20)
+                                        textColor:kRedFontColor
+                                    textAlignment:NSTextAlignmentLeft
+                                             font:[UIFont systemFontOfSize:28/2]
+                                        superView:_fetalMovementScrollView];
+    
     
     UILabel *hourlyPredicationTitle = [UILabel labelWithTitle:@"推算每小时平均胎动"
-                                            frame:CGRectMake( SCREEN_WIDTH + 356/2, todayTitle.frame.origin.y, 150, todayTitle.frame.size.height)
-                                        textColor:todayTitle.textColor
-                                    textAlignment:NSTextAlignmentLeft
-                                             font:todayTitle.font
-                                        superView:_fetalMovementScrollView];
-
+                                                        frame:CGRectMake( SCREEN_WIDTH + 356/2, todayTitle.frame.origin.y, 150, todayTitle.frame.size.height)
+                                                    textColor:todayTitle.textColor
+                                                textAlignment:NSTextAlignmentLeft
+                                                         font:todayTitle.font
+                                                    superView:_fetalMovementScrollView];
+    
     
     count = [[ADFetalMovementManager sharedADFetalMovementManager] getPredictHourlyCountByDate:seconds];
     self.hourlyPredicationLabel = [UILabel labelWithTitle:[NSString stringWithFormat:@"%d",count]
-                                                        frame:CGRectMake(hourlyPredicationTitle.frame.origin.x, _totalPredicationLabel.frame.origin.y, 70, 50)
-                                                    textColor:kRedFontColor
-                                                textAlignment:NSTextAlignmentCenter
-                                                         font:[UIFont systemFontOfSize:120/2]
-                                                    superView:_fetalMovementScrollView];
-
+                                                    frame:CGRectMake(hourlyPredicationTitle.frame.origin.x, _totalPredicationLabel.frame.origin.y, 70, 50)
+                                                textColor:kRedFontColor
+                                            textAlignment:NSTextAlignmentCenter
+                                                     font:[UIFont systemFontOfSize:120/2]
+                                                superView:_fetalMovementScrollView];
+    
     
     
     UILabel *unitLable3 = [UILabel labelWithTitle:@"次/每小时"
-                                                    frame:CGRectMake(_hourlyPredicationLabel.frame.origin.x + _hourlyPredicationLabel.frame.size.width, _hourlyPredicationLabel.frame.origin.y + _hourlyPredicationLabel.frame.size.height - 20, 80, 20)
-                                                textColor:kRedFontColor
-                                            textAlignment:NSTextAlignmentLeft
-                                                     font:[UIFont systemFontOfSize:28/2]
-                                                superView:_fetalMovementScrollView];
-
-
+                                            frame:CGRectMake(_hourlyPredicationLabel.frame.origin.x + _hourlyPredicationLabel.frame.size.width, _hourlyPredicationLabel.frame.origin.y + _hourlyPredicationLabel.frame.size.height - 20, 80, 20)
+                                        textColor:kRedFontColor
+                                    textAlignment:NSTextAlignmentLeft
+                                             font:[UIFont systemFontOfSize:28/2]
+                                        superView:_fetalMovementScrollView];
+    
+    
 }
 
 #pragma mark - total fetalCount && Prediction

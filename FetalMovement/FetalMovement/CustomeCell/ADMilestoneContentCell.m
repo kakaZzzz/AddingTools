@@ -33,7 +33,7 @@
 
     //日期
     self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,(CELL_HEIGHT - 20)/2, 60/2, 20)];
-    _dateLabel.textColor = [UIColor colorWithRed:255/255.0 green:176/255.0 blue:170/255.0 alpha:1.0];//
+    _dateLabel.textColor = kXaxisColor;//
     _dateLabel.font = [UIFont systemFontOfSize:28/2];
     _dateLabel.textAlignment = NSTextAlignmentCenter;
     _dateLabel.backgroundColor = [UIColor clearColor];
