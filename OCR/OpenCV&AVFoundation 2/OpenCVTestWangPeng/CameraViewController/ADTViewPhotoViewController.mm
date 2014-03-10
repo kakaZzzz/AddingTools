@@ -57,7 +57,7 @@
     [processBtn addTarget:self action:@selector(processImage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:processBtn];
     
-    
+    UIImageWriteToSavedPhotosAlbum(_photoImage, self, nil, NULL);
     
 }
 
@@ -69,6 +69,24 @@
 - (void)processImage
 {
     UIImage *processImage = [self getDesimageWithTransformFromSourceImage:_photoImage];
+    
+    UIImageWriteToSavedPhotosAlbum(processImage, self, nil, NULL);
+
+    
+//    CFDictionaryRef attachments = CMCopyDictionaryOfAttachments(kCFAllocatorDefault,
+//                                                                imageDataSampleBuffer,
+//                                                                kCMAttachmentMode_ShouldPropagate);
+//    
+//    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+//    NSLog(@"SCATTO: Inizio salvataggio in library...");
+//    [library writeImageToSavedPhotosAlbum:[processImage CGImage] metadata:exifAttachments_dictionary completionBlock:^(NSURL *newURL, NSError *error) {
+//        if (error){
+//            NSLog(@"SCATTO: Salvataggio in library: ERRORE");
+//        } else {
+//            NSLog(@"SCATTO: Salvataggio in library: OK");
+//            [self loadNewestPhoto];
+//        }
+//    }];
     
     NSLog(@"pro %f, %f", processImage.size.width, processImage.size.height);
     _photoImageView.frame = CGRectMake((self.view.bounds.size.width - processImage.size.width/3.38)/2, (self.view.bounds.size.height - processImage.size.height/3.38)/2,processImage.size.width/3.38 ,processImage.size.height/3.38);
@@ -136,7 +154,8 @@
     Mat contourMat = Mat(contours[maxIdx]);
     double eps = contours[maxIdx].size() * 0.05;
     approxPolyDP(contourMat, approxCurve, eps, YES);
-    NSLog(@"多边形逼近后的顶点数是%ld",approxCurve.size());
+    
+    NSLog(@"多边形逼近后的顶点数是%ld %f",approxCurve.size(), eps);
     if (approxCurve.size() != 4)
     {
         return nil;
@@ -422,20 +441,63 @@
     
     
     Mat outImage = dstOut;
+    Mat temp;
     
-//    cvtColor(outImage, outImage, COLOR_RGB2GRAY);
-//    
+    cvtColor(outImage, temp, COLOR_RGB2GRAY);
+//
 ////    threshold(outImage, outImage, 100, 255, CV_THRESH_BINARY);
 //    
-////    morphologyEx(outImage,outImage,MORPH_OPEN,Mat(5,5,CV_8U),Point2d(-1,-1),2);
-//    
+//    morphologyEx(outImage,outImage,MORPH_CLOSE,Mat(3,3,CV_8U),Point2d(-1,-1),5);
+//
 ////    dilate(outImage, outImage, Mat(3,3,CV_8U,cv::Scalar(1)), Point2d(-1,-1), 1);
-//    erode(outImage, outImage, Mat(16,2,CV_8U,cv::Scalar(1)), Point2d(-1,-1), 5);
+//    erode(temp, temp, Mat(2,10,CV_8U,cv::Scalar(1)), Point2d(-1,-1), 2);
+////
+    Canny(temp, temp,
+          1,
+          500,
+          3);
+    
+    
+    vector<Vec4i> hhlines;
+    HoughLinesP( temp, hhlines, 1, CV_PI/180, 50, 20);
+    
+    NSLog(@"hough find %zu", hhlines.size());
+    
+//    for( size_t i = 0; i < hhlines.size(); i++ )
+//    {
+//        line( outImage, Point2i(hhlines[i][0], hhlines[i][1]),
+//             Point2i(hhlines[i][2], hhlines[i][3]), Scalar(255,255,255  ), 2 );
+//    }
+    
+    
+    //使用 findContours 找轮廓
+//    vector<vector<cv::Point>> newContours;
+//    findContours(temp, newContours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 //    
-//    Canny(outImage, outImage,
-//          50,
-//          150,
-//          3);
+//    NSLog(@"COUNT %zu", newContours.size());
+//    
+////    vector<cv::Point> newApproxCurve;
+////    
+////    //将vector转换成Mat型，此时的Mat还是列向量，只不过是2个通道的列向量而
+//    
+//    for( int i = 0; i< contours.size(); i++ )
+//    {
+////        double eps2 = newContours[i].size() * 0.05;
+////        approxPolyDP(newContours[i], newContours[i], eps2, YES);
+//        
+//        minAreaRect(newContours[i]);
+//        
+////        if (newContours[i].size() != 4) {
+////            newContours.pop_back();
+////        }
+//    }
+//    
+//    drawContours(outImage, newContours, -1, Scalar(255), 2);
+    
+//    threshold(outImage, outImage, 50, 255, CV_THRESH_BINARY);
+    
+//    cvtColor(outImage, outImage, COLOR_RGB2GRAY);
+//    threshold(outImage, outImage, 175, 255, CV_THRESH_BINARY);
     
     UIImage *resultImage = [UIImage imageWithCVMat:outImage];
     

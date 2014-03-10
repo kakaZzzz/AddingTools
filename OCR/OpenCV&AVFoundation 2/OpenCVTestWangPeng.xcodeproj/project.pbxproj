@@ -36,6 +36,7 @@
 		729CCD5918AA53D900CD2566 /* UIImage+OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729CCD5718AA53D900CD2566 /* UIImage+OpenCV.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		729CCD5B18AA565900CD2566 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD5A18AA565900CD2566 /* AVFoundation.framework */; };
 		729CCD5D18AA566900CD2566 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 729CCD5C18AA566900CD2566 /* CoreMedia.framework */; };
+		72C2B20018C721EC00D9222F /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C2B1FF18C721EC00D9222F /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		729CCD5718AA53D900CD2566 /* UIImage+OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIImage+OpenCV.mm"; sourceTree = "<group>"; };
 		729CCD5A18AA565900CD2566 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		729CCD5C18AA566900CD2566 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		72C2B1FF18C721EC00D9222F /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72C2B20018C721EC00D9222F /* AssetsLibrary.framework in Frameworks */,
 				723863BB18B36B9F00475D07 /* libstdc++.6.0.9.dylib in Frameworks */,
 				723863B918B36B8800475D07 /* libc++.1.dylib in Frameworks */,
 				729CCD5D18AA566900CD2566 /* CoreMedia.framework in Frameworks */,
@@ -184,6 +187,7 @@
 		729CCD1818AA52F400CD2566 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				72C2B1FF18C721EC00D9222F /* AssetsLibrary.framework */,
 				723863BA18B36B9F00475D07 /* libstdc++.6.0.9.dylib */,
 				723863B818B36B8800475D07 /* libc++.1.dylib */,
 				729CCD5C18AA566900CD2566 /* CoreMedia.framework */,
