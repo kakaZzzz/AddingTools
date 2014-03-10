@@ -14,6 +14,7 @@
 #import "ADTypitalRecordCell.h"
 #import "UILabel+CustomeLabel.h"
 #import "ADSortModel.h"
+#import "ADMilestoneVC.h"
 @interface ADFetalPrimaryVC ()
 {
     NSTimeInterval seconds1970;
@@ -181,6 +182,8 @@
 - (void)clickLeftButton
 {
     NSLog(@"点击里程碑按钮");
+    ADMilestoneVC *milestoneVC = [[ADMilestoneVC alloc] initWithNavigationViewWithTitle:@"胎动里程碑"];
+    [self.navigationController pushViewController:milestoneVC animated:YES];
 }
 - (void)clickRightButton
 {

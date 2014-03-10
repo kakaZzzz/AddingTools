@@ -12,6 +12,7 @@
 #import "NSDate+DateHelper.h"
 #import "ADSortModel.h"
 
+#define ONEDAY_SECONDS 24*60*60
 @interface ADFetalMovementManager ()
 {
     NSArray *typitalArray;
@@ -61,14 +62,17 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
     NSNumber *month = [NSDate getMonth:date];
     NSNumber *day = [NSDate getDay:date];
     
+    NSLog(@"哈哈哈  %@    %@   %@",year,month,day);
     //设置查询条件
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year == %@ AND month == %@ AND day = %@",year, month, day];
     NSArray *dataArray = [self getDatasFromCoreDataWithPredicate:predicate entityName:@"FetalMovementModel" sortMainKey:nil sortViceKey:nil];
-    for (int i = 0; i < [dataArray count]; i++) {
-        NSLog(@"每条数据的内容%@",[dataArray objectAtIndex:i]);
-
-    }
-       return (int)[dataArray count];
+//    for (int i = 0; i < [dataArray count]; i++) {
+//        NSLog(@"每条数据的内容%@",[dataArray objectAtIndex:i]);
+//        
+//    }
+    
+    NSLog(@"++++++++%d",[dataArray count]);
+    return (int)[dataArray count];
     
     //return 25;
 }
@@ -97,11 +101,11 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
         count = count + [[dic objectForKey:kFetalCount] intValue];
     }
     NSLog(@"典型记录胎动次数是%d",count);
-   
+    
     int average =  round(count/(float)arrayCount);
     NSLog(@"典型记录胎动次数是%d",average);
     return average;
-      //  return 60;
+    //  return 60;
 }
 
 /**
@@ -128,9 +132,9 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
     
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"year == %@ AND month == %@ AND day = %@ ",year, month, day];
-//    NSDictionary *sortDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"hour",@"sortHour",@"minute",@"srotMinute", nil];
+    //    NSDictionary *sortDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"hour",@"sortHour",@"minute",@"srotMinute", nil];
     NSArray *srcArray = [self getDatasFromCoreDataWithPredicate:predicate entityName:@"FetalMovementModel" sortMainKey:@"hour" sortViceKey:@"minute"];
-   
+    
     
     //遍历数组元素
     int count = (int)[srcArray count];
@@ -141,7 +145,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
         int fetalCount = 1;
         
         FetalMovementModel *model = [srcArray objectAtIndex:i];
-       
+        
         for (j =i + 1; j < count; j ++) {
             
             FetalMovementModel *secondModel = [srcArray objectAtIndex:j];
@@ -153,7 +157,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
             }
             
         }
-         NSLog(@"跳出循环之后j是%d",j);
+        NSLog(@"跳出循环之后j是%d",j);
         i = j -1;
         //将时间转化成 00:00的格式
         NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:[model.seconds1970 doubleValue]];
@@ -173,7 +177,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
     //然后再对tansferArray 数组进行排序，按照胎动次数高低排序
     
     NSSortDescriptor *countDesc = [NSSortDescriptor sortDescriptorWithKey:@"count" ascending:NO];
-    NSSortDescriptor *countStartTime = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:NO];
+    NSSortDescriptor *countStartTime = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
     NSArray *descriptorArray = [NSArray arrayWithObjects:countDesc, countStartTime,nil];
     NSArray *sortedArray = [transferArray sortedArrayUsingDescriptors: descriptorArray];
     //sortedArray是排序之后的数组
@@ -264,7 +268,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
         NSMutableArray *sortDescriptors = [NSMutableArray arrayWithCapacity:1];
         [sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:mainKey ascending:YES] ];
         if (viceKey) {
-        [sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:viceKey ascending:YES] ];
+            [sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:viceKey ascending:YES] ];
         }
         
         [request setSortDescriptors:sortDescriptors];
@@ -297,19 +301,92 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
     }
     return resultArray;
 }
+/**
+ *  返回时间段之间的胎动数据
+ *
+ *  @param startTimestamp 开始日期(需要是当天00点00分得秒数)
+ *  @param endTimestamp   结束日期
+ *
+ *  @return [{'date':(NSString *), 'count':(NSString *), 'gestationalWeeks':(NSString *),'medal':(NSString *),'tag':(NSString *),'isSection':(NSString *)}]
+ */
+- (NSArray *)getMilestonsDataWithStartDate:(double)startTimestamp endDate:(double)endTimestamp
+{
+    
+    NSMutableArray *resultArray = [NSMutableArray arrayWithCapacity:1];
+    
+    int totalCount,gestationalWeeks,medal;
+    int stepNumber = 0;
+    NSString *tagString;
+    double i = startTimestamp;
+    
+    static int threeMetal = 0;
+    static int fourteenMetal = 0;
+    
+    while (i <= endTimestamp) {
+        //totalCount = [self getTotalCountByDate:i];
+        totalCount = arc4random()%70;
+        gestationalWeeks = 0;//孕周根据日期进行计算出来
+        
+        //根据胎动次数，判断勋章类型
+        if (totalCount != 0) {
+            stepNumber = stepNumber + 1;
+        }else{
+            stepNumber = 0;
+        }
+        
+        if (stepNumber == 0) {
+            medal = 0;
+        }
+        else if (stepNumber == 3 && !threeMetal)
+        {
+            medal = 3;
+            stepNumber = 0;
+            threeMetal = 1;
+            
+        }
+        else if (stepNumber == 14 && !fourteenMetal)
+        {
+            medal = 14;
+            stepNumber = 0;
+            fourteenMetal = 1;
+          
+        }
+        
+        NSLog(@"这个数字是%d",stepNumber);
+        //第一次记录怎么判断？？？？？方案一：在userdefault里面存一条数据，用来记录第一次记录的时间
+        if (i == [[[NSUserDefaults standardUserDefaults] objectForKey:kFirstRecordFetal] doubleValue]) {
+      
+            tagString = @"第一次记录";
+        }else{
+            if (totalCount > 60) {
+                tagString = @"最活跃宝宝";
+            }else{
+                tagString = nil;
+                
+            }
 
-//- (void)bubbleSort:(NSMutableArray *)array
-//{
-//    int i,y;
-//    BOOL bFinish = YES;
-//    int count = [array count];
-//    for (i = 1; i < count; i ++) {
-//        bFinish = NO;
-//        for (y = count -1; y >= i; y--) {
-//            if ([[array objectAtIndex:y] ob]) {
-//                <#statements#>
-//            }
-//        }
-//    }
-//}
+        }
+        
+        
+        //如果这一天居然是 一个月的第一天的话，那在他前面再插一条数据（空数据）
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:i];
+        NSNumber *day = [NSDate getDay:date];
+        
+        if (([day intValue] == 1) || (i == [[[NSUserDefaults standardUserDefaults] objectForKey:kFirstRecordFetal] doubleValue])) {
+            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",i],kMilestoneDate,@"",kMilestoneCount,@"",kMilestoneGestationalWeeks,@"",kMilestoneMedal,tagString,kMilestoneTag, [NSString stringWithFormat:@"%d",1],kMilestoneIsSection, nil];
+            [resultArray addObject:dic];
+
+        }
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",i],kMilestoneDate,[NSString stringWithFormat:@"%d",totalCount],kMilestoneCount,[NSString stringWithFormat:@"%d",gestationalWeeks],kMilestoneGestationalWeeks,[NSString stringWithFormat:@"%d",medal],kMilestoneMedal,tagString,kMilestoneTag, [NSString stringWithFormat:@"%d",0],kMilestoneIsSection, nil];
+        [resultArray addObject:dic];
+        
+        i += ONEDAY_SECONDS;
+        medal = 0;//一次循环之后，将medal置为0
+    }
+    
+    NSLog(@"=========%@",resultArray);
+    return  resultArray;
+}
+
+
 @end

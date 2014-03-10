@@ -10,6 +10,19 @@
 		72382A4F18C3569100B37993 /* ADBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 72382A4E18C3569100B37993 /* ADBar.m */; };
 		72382A5718C424AE00B37993 /* ADFetalMovementManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 72382A5618C424AE00B37993 /* ADFetalMovementManager.m */; };
 		72382A6E18C4390B00B37993 /* NSDate+DateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 72382A6D18C4390B00B37993 /* NSDate+DateHelper.m */; };
+		723A5C3F18C9CB8500CDE19A /* ADMilestoneVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 723A5C3E18C9CB8500CDE19A /* ADMilestoneVC.m */; };
+		723A5C4418C9CBF100CDE19A /* ADMilestoneContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 723A5C4118C9CBF100CDE19A /* ADMilestoneContentCell.m */; };
+		723A5C4518C9CBF100CDE19A /* ADMilestoneSectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 723A5C4318C9CBF100CDE19A /* ADMilestoneSectionCell.m */; };
+		723A5C4818C9CC8A00CDE19A /* ADMilestoneModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 723A5C4718C9CC8A00CDE19A /* ADMilestoneModel.m */; };
+		723A5C4F18CA150000CDE19A /* milestone_section_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C4A18CA150000CDE19A /* milestone_section_bg@2x.png */; };
+		723A5C5018CA150000CDE19A /* milestone_scal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C4B18CA150000CDE19A /* milestone_scal@2x.png */; };
+		723A5C5118CA150000CDE19A /* milestone_yellow_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C4C18CA150000CDE19A /* milestone_yellow_line@2x.png */; };
+		723A5C5218CA150000CDE19A /* milestone_content_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C4D18CA150000CDE19A /* milestone_content_bg@2x.png */; };
+		723A5C5318CA150000CDE19A /* milestone_mark_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C4E18CA150000CDE19A /* milestone_mark_bg@2x.png */; };
+		723A5C5618CABDDE00CDE19A /* milestone_medal_image3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5418CABDDE00CDE19A /* milestone_medal_image3@2x.png */; };
+		723A5C5718CABDDE00CDE19A /* milestone_medal_image14@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5518CABDDE00CDE19A /* milestone_medal_image14@2x.png */; };
+		723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5818CB01ED00CDE19A /* milestone_cload_bg@2x.png */; };
+		723A5C5B18CB177000CDE19A /* back_button_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 723A5C5A18CB176F00CDE19A /* back_button_bg@2x.png */; };
 		725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */; };
 		725A6A0218C2CE18000FA35A /* ADTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A0118C2CE18000FA35A /* ADTabBarView.m */; };
 		725A6A2518C2D209000FA35A /* ADFetalPrimaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A2418C2D209000FA35A /* ADFetalPrimaryVC.m */; };
@@ -86,6 +99,23 @@
 		72382A5C18C42B2F00B37993 /* ADSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADSingleton.h; sourceTree = "<group>"; };
 		72382A6C18C4390B00B37993 /* NSDate+DateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+DateHelper.h"; sourceTree = "<group>"; };
 		72382A6D18C4390B00B37993 /* NSDate+DateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+DateHelper.m"; sourceTree = "<group>"; };
+		723A5C3D18C9CB8500CDE19A /* ADMilestoneVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMilestoneVC.h; sourceTree = "<group>"; };
+		723A5C3E18C9CB8500CDE19A /* ADMilestoneVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMilestoneVC.m; sourceTree = "<group>"; };
+		723A5C4018C9CBF100CDE19A /* ADMilestoneContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMilestoneContentCell.h; sourceTree = "<group>"; };
+		723A5C4118C9CBF100CDE19A /* ADMilestoneContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMilestoneContentCell.m; sourceTree = "<group>"; };
+		723A5C4218C9CBF100CDE19A /* ADMilestoneSectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMilestoneSectionCell.h; sourceTree = "<group>"; };
+		723A5C4318C9CBF100CDE19A /* ADMilestoneSectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMilestoneSectionCell.m; sourceTree = "<group>"; };
+		723A5C4618C9CC8A00CDE19A /* ADMilestoneModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMilestoneModel.h; sourceTree = "<group>"; };
+		723A5C4718C9CC8A00CDE19A /* ADMilestoneModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMilestoneModel.m; sourceTree = "<group>"; };
+		723A5C4A18CA150000CDE19A /* milestone_section_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_section_bg@2x.png"; sourceTree = "<group>"; };
+		723A5C4B18CA150000CDE19A /* milestone_scal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_scal@2x.png"; sourceTree = "<group>"; };
+		723A5C4C18CA150000CDE19A /* milestone_yellow_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_yellow_line@2x.png"; sourceTree = "<group>"; };
+		723A5C4D18CA150000CDE19A /* milestone_content_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_content_bg@2x.png"; sourceTree = "<group>"; };
+		723A5C4E18CA150000CDE19A /* milestone_mark_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_mark_bg@2x.png"; sourceTree = "<group>"; };
+		723A5C5418CABDDE00CDE19A /* milestone_medal_image3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_medal_image3@2x.png"; sourceTree = "<group>"; };
+		723A5C5518CABDDE00CDE19A /* milestone_medal_image14@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_medal_image14@2x.png"; sourceTree = "<group>"; };
+		723A5C5818CB01ED00CDE19A /* milestone_cload_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "milestone_cload_bg@2x.png"; sourceTree = "<group>"; };
+		723A5C5A18CB176F00CDE19A /* back_button_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_button_bg@2x.png"; sourceTree = "<group>"; };
 		725A69F918C2CCFF000FA35A /* ADMacroDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMacroDefine.h; sourceTree = "<group>"; };
 		725A69FD18C2CDFC000FA35A /* ADTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADTabBarViewController.h; sourceTree = "<group>"; };
 		725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTabBarViewController.m; sourceTree = "<group>"; };
@@ -219,6 +249,22 @@
 			path = GlobalCategory;
 			sourceTree = "<group>";
 		};
+		723A5C4918CA14ED00CDE19A /* MilestoneImages */ = {
+			isa = PBXGroup;
+			children = (
+				723A5C5A18CB176F00CDE19A /* back_button_bg@2x.png */,
+				723A5C4A18CA150000CDE19A /* milestone_section_bg@2x.png */,
+				723A5C5418CABDDE00CDE19A /* milestone_medal_image3@2x.png */,
+				723A5C5818CB01ED00CDE19A /* milestone_cload_bg@2x.png */,
+				723A5C5518CABDDE00CDE19A /* milestone_medal_image14@2x.png */,
+				723A5C4B18CA150000CDE19A /* milestone_scal@2x.png */,
+				723A5C4C18CA150000CDE19A /* milestone_yellow_line@2x.png */,
+				723A5C4D18CA150000CDE19A /* milestone_content_bg@2x.png */,
+				723A5C4E18CA150000CDE19A /* milestone_mark_bg@2x.png */,
+			);
+			path = MilestoneImages;
+			sourceTree = "<group>";
+		};
 		725A69F818C2CCCD000FA35A /* AppDefine */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +304,8 @@
 				725A6A2D18C2DD5D000FA35A /* ADSecondVC.m */,
 				72B78CB918C317CB00F9D608 /* ADThirdVC.h */,
 				72B78CBA18C317CB00F9D608 /* ADThirdVC.m */,
+				723A5C3D18C9CB8500CDE19A /* ADMilestoneVC.h */,
+				723A5C3E18C9CB8500CDE19A /* ADMilestoneVC.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -346,6 +394,8 @@
 				72EDD16E18C4DB3B0042292B /* coreData */,
 				72EDD17218C4DBD70042292B /* ADTypicalRecordModel.h */,
 				72EDD17318C4DBD70042292B /* ADTypicalRecordModel.m */,
+				723A5C4618C9CC8A00CDE19A /* ADMilestoneModel.h */,
+				723A5C4718C9CC8A00CDE19A /* ADMilestoneModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -362,6 +412,10 @@
 		72EDD17818C573FE0042292B /* CustomeCell */ = {
 			isa = PBXGroup;
 			children = (
+				723A5C4018C9CBF100CDE19A /* ADMilestoneContentCell.h */,
+				723A5C4118C9CBF100CDE19A /* ADMilestoneContentCell.m */,
+				723A5C4218C9CBF100CDE19A /* ADMilestoneSectionCell.h */,
+				723A5C4318C9CBF100CDE19A /* ADMilestoneSectionCell.m */,
 				72EDD17918C574170042292B /* ADTypitalRecordCell.h */,
 				72EDD17A18C574180042292B /* ADTypitalRecordCell.m */,
 			);
@@ -371,6 +425,7 @@
 		72EF992818C5B8F2005D3D21 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				723A5C4918CA14ED00CDE19A /* MilestoneImages */,
 				72EF993418C5C6E4005D3D21 /* HomeImages */,
 				72EF992918C5B8F2005D3D21 /* TabbarImages */,
 			);
@@ -448,13 +503,13 @@
 				72F0C4B418C195FB006ABEB1 /* ADAppDelegate.h */,
 				72F0C4B518C195FB006ABEB1 /* ADAppDelegate.m */,
 				725A6A2218C2D186000FA35A /* ViewControllers */,
+				72EDD17818C573FE0042292B /* CustomeCell */,
 				72EDD16D18C4DB3B0042292B /* Models */,
+				72382A5418C424AE00B37993 /* ModelManager */,
 				725A69FC18C2CDD7000FA35A /* BaseViewController */,
 				72EC187218C70E2800862D50 /* NotificationCenter */,
 				725A69F818C2CCCD000FA35A /* AppDefine */,
 				72382A6B18C438D900B37993 /* GlobalCategory */,
-				72382A5418C424AE00B37993 /* ModelManager */,
-				72EDD17818C573FE0042292B /* CustomeCell */,
 				72B78CBE18C3398800F9D608 /* CustomLibrary */,
 				72EF992818C5B8F2005D3D21 /* Resource */,
 				72F0C4AC18C195FB006ABEB1 /* Supporting Files */,
@@ -578,10 +633,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				723A5C4F18CA150000CDE19A /* milestone_section_bg@2x.png in Resources */,
 				72EF993318C5B8F3005D3D21 /* tab_setting_selected@2x.png in Resources */,
+				723A5C5118CA150000CDE19A /* milestone_yellow_line@2x.png in Resources */,
 				72F0C4B018C195FB006ABEB1 /* InfoPlist.strings in Resources */,
 				72EF993C18C5F3D8005D3D21 /* bar_bg_2@2x.png in Resources */,
 				72F0C4BB18C195FB006ABEB1 /* Images.xcassets in Resources */,
+				723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */,
 				72EF993018C5B8F3005D3D21 /* tab_fetalData_selected@2x.png in Resources */,
 				72EF993A18C5F3D8005D3D21 /* bar_bg_3@2x.png in Resources */,
 				72DE3FE918C70674008B4803 /* tab_record_selected@2x.png in Resources */,
@@ -595,9 +653,15 @@
 				72EF993118C5B8F3005D3D21 /* tab_record@2x.png in Resources */,
 				72DE3FE718C6C4B8008B4803 /* mark_link_line@2x.png in Resources */,
 				72EF992F18C5B8F3005D3D21 /* tab_fetalData@2x.png in Resources */,
+				723A5C5318CA150000CDE19A /* milestone_mark_bg@2x.png in Resources */,
 				72EC187E18C7209E00862D50 /* record_complete_button@2x.png in Resources */,
+				723A5C5218CA150000CDE19A /* milestone_content_bg@2x.png in Resources */,
 				72D5DCD918C6201E003B7CC8 /* share_button_selected@2x.png in Resources */,
+				723A5C5018CA150000CDE19A /* milestone_scal@2x.png in Resources */,
 				72EF993618C5C6F4005D3D21 /* cload_bg@2x.png in Resources */,
+				723A5C5618CABDDE00CDE19A /* milestone_medal_image3@2x.png in Resources */,
+				723A5C5718CABDDE00CDE19A /* milestone_medal_image14@2x.png in Resources */,
+				723A5C5B18CB177000CDE19A /* back_button_bg@2x.png in Resources */,
 				72D5DCDB18C6201E003B7CC8 /* historydata_button@2x.png in Resources */,
 				72F258F218C73282004B05A6 /* time_lable_bg@2x.png in Resources */,
 			);
@@ -619,6 +683,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				725A6A3218C2DEA6000FA35A /* ADNavigationController.m in Sources */,
+				723A5C4518C9CBF100CDE19A /* ADMilestoneSectionCell.m in Sources */,
 				72B78CCB18C33D4700F9D608 /* ADAnimations.m in Sources */,
 				725A6A0218C2CE18000FA35A /* ADTabBarView.m in Sources */,
 				72EF993F18C60C9B005D3D21 /* UILabel+CustomeLabel.m in Sources */,
@@ -626,6 +691,8 @@
 				725A6A3918C2FB01000FA35A /* ADBaseViewController.m in Sources */,
 				72EDD17B18C574180042292B /* ADTypitalRecordCell.m in Sources */,
 				72B78CB718C3003900F9D608 /* ADNavigationView.m in Sources */,
+				723A5C4818C9CC8A00CDE19A /* ADMilestoneModel.m in Sources */,
+				723A5C3F18C9CB8500CDE19A /* ADMilestoneVC.m in Sources */,
 				72EDD17118C4DB3B0042292B /* FetalMovementModel.m in Sources */,
 				72382A4F18C3569100B37993 /* ADBar.m in Sources */,
 				72D5DCDF18C62ADC003B7CC8 /* ADMarkView.m in Sources */,
@@ -642,6 +709,7 @@
 				72B78CC218C339C600F9D608 /* ADLineGraphView.m in Sources */,
 				725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */,
 				72F258F518C82CF2004B05A6 /* ADSortModel.m in Sources */,
+				723A5C4418C9CBF100CDE19A /* ADMilestoneContentCell.m in Sources */,
 				72382A6E18C4390B00B37993 /* NSDate+DateHelper.m in Sources */,
 				72B78CBB18C317CB00F9D608 /* ADThirdVC.m in Sources */,
 				72EDD17418C4DBD80042292B /* ADTypicalRecordModel.m in Sources */,

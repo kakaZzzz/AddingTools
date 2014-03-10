@@ -26,4 +26,25 @@
 #define kYellowColor   [UIColor colorWithRed:255/255.0 green:185/255.0 blue:2/255.0 alpha:1.0]
 //自定义导航条颜色
 #define kNavigationViewColor   [UIColor colorWithRed:255/255.0 green:83/255.0 blue:110/255.0 alpha:1.0]
+
+
+
+/**
+ *  里程碑 数据key
+ */
+#define kMilestoneDate @"milestoneDate"
+#define kMilestoneGestationalWeeks @"milestoneGestationalWeeks"
+#define kMilestoneMedal @"milestoneMedal"
+#define kMilestoneTag @"milestoneTag"
+#define kMilestoneCount @"milestoneCount"
+#define kMilestoneIsSection @"milestoneIsSection"
+
+/**
+ *  存放用户基本信息的 userdefault key值
+ */
+
+#define kFirstRecordFetal @"firstRecordFetal"
+
+
+
 @end

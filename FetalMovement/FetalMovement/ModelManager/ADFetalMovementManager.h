@@ -48,11 +48,21 @@ DEFINE_SINGLETON_FOR_CLASS(ADFetalMovementManager)
  */
 - (void)appendData:(NSArray *) datas;
 
-
 /**
  *  按格式排列 24小时
  *
  *  @return @["00:00,01:00......."]
  */
+
 - (NSArray *)getTwentyfourHours;
+/**
+ *  返回时间段之间的胎动数据
+ *
+ *  @param startTimestamp 开始日期
+ *  @param endTimestamp   结束日期
+ *
+ *  @return [{'date':(NSString *), 'count':(NSString *), 'gestationalWeeks':(NSString *),'medal':(NSString *),'tag':(NSString *),'isSection':(NSString *)}]
+ */
+- (NSArray *)getMilestonsDataWithStartDate:(double)startTimestamp endDate:(double)endTimestamp;
+
 @end

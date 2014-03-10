@@ -227,6 +227,7 @@
         
         
         aImageView.highlighted = YES;
+        
         //        for (UIView *subView in [button subviews])
         //        {
         //            if ([subView isKindOfClass:[UIImageView class]])
@@ -247,6 +248,13 @@
         
         //write data to coredata
         NSDate *date = [NSDate localdate];
+        double seconds = [date timeIntervalSince1970];
+        //将第一次记录胎动时间存起来
+        if (![[NSUserDefaults standardUserDefaults] objectForKey:kFirstRecordFetal]) {
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:seconds] forKey:kFirstRecordFetal];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+
         [[ADFetalMovementManager sharedADFetalMovementManager] appendData:@[date]];
         
         count = 1;
@@ -266,7 +274,7 @@
         }
         //write data to coredata
         NSDate *date = [NSDate localdate];
-        [[ADFetalMovementManager sharedADFetalMovementManager] appendData:@[date]];
+       [[ADFetalMovementManager sharedADFetalMovementManager] appendData:@[date]];
     }
     
 }
