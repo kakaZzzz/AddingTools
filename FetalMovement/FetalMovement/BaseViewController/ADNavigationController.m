@@ -110,7 +110,7 @@
     //system
     viewController.hidesBottomBarWhenPushed = YES;
     //custome
-    ADAppDelegate *app = [UIApplication sharedApplication].delegate;
+    ADAppDelegate *app =(ADAppDelegate *)[UIApplication sharedApplication].delegate;
     
     ADTabBarViewController *tabController = (ADTabBarViewController *)app.window.rootViewController;
     //hide tabController's tabbar，avoid long white when push
@@ -185,7 +185,7 @@
 - (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
 {
     
-    ADAppDelegate *app = [UIApplication sharedApplication].delegate;
+    ADAppDelegate *app = (ADAppDelegate *)[UIApplication sharedApplication].delegate;
     ADTabBarViewController *tabController = (ADTabBarViewController *)app.window.rootViewController;
     for (UIView * tabview in [tabController.view subviews]) {
         if ([tabview isKindOfClass:[ADTabBarView class]]) {
@@ -245,7 +245,7 @@
 {
     //show tabbar when pop to topVC
     if (topViewController) {
-        ADAppDelegate *app = [UIApplication sharedApplication].delegate;
+        ADAppDelegate *app = (ADAppDelegate *)[UIApplication sharedApplication].delegate;
         ADTabBarViewController *tabController = (ADTabBarViewController *)app.window.rootViewController;
         tabController.tabBar.hidden = YES;
         

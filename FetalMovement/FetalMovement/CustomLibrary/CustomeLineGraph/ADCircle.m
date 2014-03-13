@@ -48,8 +48,8 @@
     
     
     
-    CGSize size = self.bounds.size;
-    CGPoint point = self.frame.origin;
+//    CGSize size = self.bounds.size;
+//    CGPoint point = self.frame.origin;
     
     CALayer *waveLayer=[CALayer layer];
     waveLayer.frame = CGRectMake(5, 5, 14, 14);//经验值

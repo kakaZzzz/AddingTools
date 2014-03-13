@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ADAppDelegate : UIResponder <UIApplicationDelegate>
+@interface ADAppDelegate : UIResponder <UIApplicationDelegate,WeiboSDKDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -16,6 +16,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+@property (strong, nonatomic) NSString *wbtoken;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 

@@ -8,6 +8,7 @@
 
 #import "ADAppDelegate.h"
 #import "ADTabBarViewController.h"
+#import "ADAccountCenter.h"
 @implementation ADAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -16,6 +17,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+  
+    [WeiboSDK enableDebugMode:YES];
+    [WeiboSDK registerApp:kSinaAppKey];
+    
+    
+    
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
@@ -24,6 +33,76 @@
     [self.window makeKeyAndVisible];
     return YES;
 }
+- (void)didReceiveWeiboResponse:(WBBaseResponse *)response
+{
+    
+    
+    NSLog(@"2222222222");
+    if ([response isKindOfClass:WBSendMessageToWeiboResponse.class])
+    {
+        NSString *title = @"发送结果";
+        NSString *message = [NSString stringWithFormat:@"响应状态: %d\n响应UserInfo数据: %@\n原请求UserInfo数据: %@",(int)response.statusCode, response.userInfo, response.requestUserInfo];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:message
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
+    
+    
+    else if ([response isKindOfClass:WBAuthorizeResponse.class])
+    {
+        NSString *title = @"认证结果";
+        NSString *message = [NSString stringWithFormat:@"响应状态: %d\nresponse.userId: %@\nresponse.accessToken: %@\n响应UserInfo数据: %@\n原请求UserInfo数据: %@",(int)response.statusCode,[(WBAuthorizeResponse *)response userID], [(WBAuthorizeResponse *)response accessToken], response.userInfo, response.requestUserInfo];
+        
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:message
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        
+        self.wbtoken = [(WBAuthorizeResponse *)response accessToken];
+        
+        if ((int)response.statusCode == 0) {//登录成功
+            
+            NSString *tokenString = [(WBAuthorizeResponse *)response accessToken];
+            NSDate *expiresDate = [(WBAuthorizeResponse *)response expirationDate];
+            NSString *uidString = [(WBAuthorizeResponse *)response userID];
+            
+            NSDictionary *dic = @{ACCOUNT_SINA_TOKEN:tokenString,ACCOUNT_SINA_EXPIRES:expiresDate,ACCOUNT_SINA_UID:uidString};
+            [[NSUserDefaults standardUserDefaults] setObject:dic forKey:ACCOUNT_SINA_KEY];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            NSLog(@"---%@-----%@----%@",tokenString,expiresDate,uidString);
+            
+            //发送登录成功通知
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:OAthoBySinaSuccessfulNotification object:tokenString userInfo:dic];
+            
+//            //发送授权成功通知
+//            
+//            [[NSNotificationCenter defaultCenter] postNotificationName:LoginBySinaSuccessfulNotification object:tokenString];
+            
+            
+        }
+        
+        [alert show];
+        
+    }
+    
+    
+    
+}
+
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [WeiboSDK handleOpenURL:url delegate:self];
+}
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

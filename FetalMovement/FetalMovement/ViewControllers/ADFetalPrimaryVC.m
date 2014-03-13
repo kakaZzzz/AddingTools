@@ -16,12 +16,13 @@
 #import "ADSortModel.h"
 #import "ADMilestoneVC.h"
 #import "ADScrollCalendar.h"
-
+ #import "ADLoginVC.h"
 #define kScrollCalendarAnimationDurarion 0.3f
 @interface ADFetalPrimaryVC ()
 {
     NSTimeInterval seconds1970;
     BOOL isSelectingDate;
+    
     
 }
 @property (strong, nonatomic)UIImageView *cloadImageView;
@@ -50,6 +51,7 @@
 
 @implementation ADFetalPrimaryVC
 
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -71,6 +73,10 @@
     
     [self updateUI];
     
+}
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [self removeScrollCalendarView];
 }
 //invoke the method  update UI when need to refresh the view
 - (void)updateUI
@@ -169,6 +175,9 @@
 - (void)clickRightButton
 {
     NSLog(@"点击分享按钮");
+    ADLoginVC *loginVC = [[ADLoginVC alloc] initWithNavigationViewWithTitle:@"加丁账号"];
+    [self.navigationController pushViewController:loginVC animated:YES];
+   
 }
 
 - (void)selecteDate:(UITapGestureRecognizer *)tap
@@ -225,9 +234,11 @@
         }
         
         [primeVC.lineGraph reloadGraph];
-        
+       
+        //update datelabel text
         NSString *dateSring = [NSDate stringFromDate:loacalDate withFormat:@"yyyy.MM.dd"];
         primeVC.navigationView.titleLabel.text = dateSring;
+        //remove calendar
         [primeVC removeScrollCalendarView];
         
     };

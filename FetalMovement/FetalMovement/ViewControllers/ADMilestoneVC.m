@@ -19,6 +19,10 @@
 
 @implementation ADMilestoneVC
 
+- (void)dealloc
+{
+    NSLog(@"------milestone dealloc");
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -66,7 +70,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     NSIndexPath *index = [NSIndexPath indexPathForRow:_currentRow inSection:0];
-    [self.tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    //放在此处不合适  容易message sent to deallocated instance
+  //  [self.tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:YES];
 
 }
 #pragma mark - configure navigationView

@@ -19,4 +19,8 @@
     #import "NotificationDefine.h"
     #import "ADBaseViewController.h"
     #import "NSDate+DateHelper.h"
+    #import"ADNetwork.h"
+    #import "ADUIParamManager.h"
+
 #endif
+
