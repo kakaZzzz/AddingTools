@@ -162,6 +162,13 @@
 		72F258F018C730C7004B05A6 /* ADTimeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 72F258EF18C730C7004B05A6 /* ADTimeLabel.m */; };
 		72F258F218C73282004B05A6 /* time_lable_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 72F258F118C73282004B05A6 /* time_lable_bg@2x.png */; };
 		72F258F518C82CF2004B05A6 /* ADSortModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 72F258F418C82CF2004B05A6 /* ADSortModel.m */; };
+		ECEE083B18D9C29A00AA39CC /* AD朋友圈@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECEE083518D9C29A00AA39CC /* AD朋友圈@2x.png */; };
+		ECEE083C18D9C29A00AA39CC /* AD朋友圈点击@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECEE083618D9C29A00AA39CC /* AD朋友圈点击@2x.png */; };
+		ECEE083D18D9C29A00AA39CC /* AD微信@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECEE083718D9C29A00AA39CC /* AD微信@2x.png */; };
+		ECEE083E18D9C29A00AA39CC /* AD微信点击@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECEE083818D9C29A00AA39CC /* AD微信点击@2x.png */; };
+		ECEE083F18D9C29A00AA39CC /* AD微博点击@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECEE083918D9C29A00AA39CC /* AD微博点击@2x.png */; };
+		ECEE084018D9C29A00AA39CC /* AD微博@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECEE083A18D9C29A00AA39CC /* AD微博@2x.png */; };
+		ECEE084418D9C2FF00AA39CC /* ADShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE084318D9C2FF00AA39CC /* ADShareView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -394,6 +401,14 @@
 		72F258F118C73282004B05A6 /* time_lable_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "time_lable_bg@2x.png"; sourceTree = "<group>"; };
 		72F258F318C82CF2004B05A6 /* ADSortModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADSortModel.h; sourceTree = "<group>"; };
 		72F258F418C82CF2004B05A6 /* ADSortModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADSortModel.m; sourceTree = "<group>"; };
+		ECEE083518D9C29A00AA39CC /* AD朋友圈@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD朋友圈@2x.png"; sourceTree = "<group>"; };
+		ECEE083618D9C29A00AA39CC /* AD朋友圈点击@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD朋友圈点击@2x.png"; sourceTree = "<group>"; };
+		ECEE083718D9C29A00AA39CC /* AD微信@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD微信@2x.png"; sourceTree = "<group>"; };
+		ECEE083818D9C29A00AA39CC /* AD微信点击@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD微信点击@2x.png"; sourceTree = "<group>"; };
+		ECEE083918D9C29A00AA39CC /* AD微博点击@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD微博点击@2x.png"; sourceTree = "<group>"; };
+		ECEE083A18D9C29A00AA39CC /* AD微博@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD微博@2x.png"; sourceTree = "<group>"; };
+		ECEE084218D9C2FF00AA39CC /* ADShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADShareView.h; sourceTree = "<group>"; };
+		ECEE084318D9C2FF00AA39CC /* ADShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADShareView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -794,6 +809,7 @@
 		72B78CBE18C3398800F9D608 /* CustomLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				ECEE084118D9C2F100AA39CC /* ShareView */,
 				723522C218D3ED6400C9B5B4 /* CustomeSwitch */,
 				723522B418D2F26800C9B5B4 /* CustomeSheetPicker */,
 				723522A618D2E78800C9B5B4 /* CustomeBanner */,
@@ -884,6 +900,7 @@
 		72EF992818C5B8F2005D3D21 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				ECEE083418D9C28200AA39CC /* ShareImage */,
 				7235223B18D2AC4800C9B5B4 /* SettingImages */,
 				7201435518D0A7EB007D04B6 /* NavigationViewImages */,
 				722EA68B18CF0BD30080E16B /* LoginImages */,
@@ -1029,6 +1046,28 @@
 			path = CustomeTimeLabel;
 			sourceTree = "<group>";
 		};
+		ECEE083418D9C28200AA39CC /* ShareImage */ = {
+			isa = PBXGroup;
+			children = (
+				ECEE083518D9C29A00AA39CC /* AD朋友圈@2x.png */,
+				ECEE083618D9C29A00AA39CC /* AD朋友圈点击@2x.png */,
+				ECEE083718D9C29A00AA39CC /* AD微信@2x.png */,
+				ECEE083818D9C29A00AA39CC /* AD微信点击@2x.png */,
+				ECEE083918D9C29A00AA39CC /* AD微博点击@2x.png */,
+				ECEE083A18D9C29A00AA39CC /* AD微博@2x.png */,
+			);
+			path = ShareImage;
+			sourceTree = "<group>";
+		};
+		ECEE084118D9C2F100AA39CC /* ShareView */ = {
+			isa = PBXGroup;
+			children = (
+				ECEE084218D9C2FF00AA39CC /* ADShareView.h */,
+				ECEE084318D9C2FF00AA39CC /* ADShareView.m */,
+			);
+			path = ShareView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1107,6 +1146,7 @@
 			files = (
 				7235231518D5BB2B00C9B5B4 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				7201435718D0A7F4007D04B6 /* navigation_backbutton_bg@2x.png in Resources */,
+				ECEE083E18D9C29A00AA39CC /* AD微信点击@2x.png in Resources */,
 				7235225218D2B2B400C9B5B4 /* setting_about_icon@2x.png in Resources */,
 				723A5C4F18CA150000CDE19A /* milestone_section_bg@2x.png in Resources */,
 				72EF993318C5B8F3005D3D21 /* tab_setting_selected@2x.png in Resources */,
@@ -1126,6 +1166,7 @@
 				723522E218D4014D00C9B5B4 /* AccoundSetProperty List.plist in Resources */,
 				725A7EC818CDBF1A0058C4CF /* calendar_selected_bg@2x.png in Resources */,
 				723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */,
+				ECEE083F18D9C29A00AA39CC /* AD微博点击@2x.png in Resources */,
 				723522AC18D2EA1500C9B5B4 /* banner_2@2x.png in Resources */,
 				7201434818D08F08007D04B6 /* tencent_icon_hilight@2x.png in Resources */,
 				723522D618D3FCC000C9B5B4 /* tencent_bind_icon@2x..png in Resources */,
@@ -1133,6 +1174,7 @@
 				72EF993018C5B8F3005D3D21 /* tab_fetalData_selected@2x.png in Resources */,
 				723522D918D3FCC000C9B5B4 /* qq_bind_icon@2x.png in Resources */,
 				7235224F18D2B2B400C9B5B4 /* setting_grade_icon@2x.png in Resources */,
+				ECEE083B18D9C29A00AA39CC /* AD朋友圈@2x.png in Resources */,
 				72EF993A18C5F3D8005D3D21 /* bar_bg_3@2x.png in Resources */,
 				723522C018D309EE00C9B5B4 /* setting_switch_off@2x.png in Resources */,
 				7201435418D090B9007D04B6 /* immet_enter_bg@2x.png in Resources */,
@@ -1140,10 +1182,12 @@
 				72D5DCE118C62B6B003B7CC8 /* mark_bgImage@2x.png in Resources */,
 				72EC187B18C71B8100862D50 /* start_record_bg@2x.png in Resources */,
 				72D5DCDC18C6201E003B7CC8 /* share_button@2X.png in Resources */,
+				ECEE083C18D9C29A00AA39CC /* AD朋友圈点击@2x.png in Resources */,
 				722EA69718CF0BE80080E16B /* register_button_bg@2x.png in Resources */,
 				72EF993B18C5F3D8005D3D21 /* bar_bg_1@2x.png in Resources */,
 				72EF993218C5B8F3005D3D21 /* tab_setting@2x.png in Resources */,
 				723A5CB918CDB6CD00CDE19A /* triangle_button_bg@2x.png in Resources */,
+				ECEE083D18D9C29A00AA39CC /* AD微信@2x.png in Resources */,
 				72D5DCDA18C6201E003B7CC8 /* historydata_button_selected@2x.png in Resources */,
 				722EA69C18CF0BE80080E16B /* register_border_bg@2x.png in Resources */,
 				72EC187F18C7209E00862D50 /* record_complete_button_sel@2x.png in Resources */,
@@ -1173,6 +1217,7 @@
 				723A5C5618CABDDE00CDE19A /* milestone_medal_image3@2x.png in Resources */,
 				7235223918D2A30F00C9B5B4 /* SettingTabelViewPropertyList.plist in Resources */,
 				723522DA18D3FCC000C9B5B4 /* baidu_bind_icon@2x.png in Resources */,
+				ECEE084018D9C29A00AA39CC /* AD微博@2x.png in Resources */,
 				7235225418D2B2B400C9B5B4 /* setting_account_icon@2x.png in Resources */,
 				723A5C5718CABDDE00CDE19A /* milestone_medal_image14@2x.png in Resources */,
 				723A5C5B18CB177000CDE19A /* back_button_bg@2x.png in Resources */,
@@ -1235,6 +1280,7 @@
 				72B78CC818C33CFC00F9D608 /* ADCircle.m in Sources */,
 				725A6A2818C2D23A000FA35A /* ADSetPrimaryVC.m in Sources */,
 				72F258F018C730C7004B05A6 /* ADTimeLabel.m in Sources */,
+				ECEE084418D9C2FF00AA39CC /* ADShareView.m in Sources */,
 				72B78CC218C339C600F9D608 /* ADLineGraphView.m in Sources */,
 				725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */,
 				72F258F518C82CF2004B05A6 /* ADSortModel.m in Sources */,
