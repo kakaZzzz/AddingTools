@@ -17,6 +17,7 @@
 #import "ADMilestoneVC.h"
 #import "ADScrollCalendar.h"
  #import "ADLoginVC.h"
+#import "ADShareView.h"
 #define kScrollCalendarAnimationDurarion 0.3f
 @interface ADFetalPrimaryVC ()
 {
@@ -176,6 +177,7 @@
 {
     NSLog(@"点击分享按钮");
     
+    [ADShareView createShareView:self.view];
 }
 
 - (void)selecteDate:(UITapGestureRecognizer *)tap
