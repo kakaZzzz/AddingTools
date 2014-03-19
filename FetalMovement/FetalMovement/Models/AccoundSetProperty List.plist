@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>icon</key>
+	<array>
+		<string>setting_account_icon</string>
+		<string></string>
+		<string>sina_nonbind_icon</string>
+		<string>qq_nonbind_icon</string>
+		<string>baidu_nonbind_icon</string>
+	</array>
+	<key>title</key>
+	<array>
+		<string>昵称</string>
+		<string>第三方账号绑定</string>
+		<string>新浪微博</string>
+		<string>QQ</string>
+		<string>百度账号</string>
+	</array>
+</dict>
+</plist>
