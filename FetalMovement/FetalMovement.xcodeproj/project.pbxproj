@@ -169,6 +169,11 @@
 		72F258F518C82CF2004B05A6 /* ADSortModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 72F258F418C82CF2004B05A6 /* ADSortModel.m */; };
 		EC49596118DADFDC00A1950E /* ADMomInvitedVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EC49595D18DADFDC00A1950E /* ADMomInvitedVC.m */; };
 		EC49596218DADFDC00A1950E /* ADExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC49596018DADFDC00A1950E /* ADExplanationView.m */; };
+		EC49596618DAE11200A1950E /* ADShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC49596518DAE11200A1950E /* ADShareView.m */; };
+		EC49596D18DAE2A400A1950E /* AD上一页@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596818DAE2A400A1950E /* AD上一页@2x.png */; };
+		EC49596E18DAE2A400A1950E /* AD说明-白色问号@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596918DAE2A400A1950E /* AD说明-白色问号@2x.png */; };
+		EC49596F18DAE2A400A1950E /* AD下一页@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596A18DAE2A400A1950E /* AD下一页@2x.png */; };
+		EC49597018DAE2A400A1950E /* AD邀请妈妈按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596B18DAE2A400A1950E /* AD邀请妈妈按钮@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -411,6 +416,12 @@
 		EC49595D18DADFDC00A1950E /* ADMomInvitedVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMomInvitedVC.m; sourceTree = "<group>"; };
 		EC49595F18DADFDC00A1950E /* ADExplanationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADExplanationView.h; sourceTree = "<group>"; };
 		EC49596018DADFDC00A1950E /* ADExplanationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADExplanationView.m; sourceTree = "<group>"; };
+		EC49596418DAE11200A1950E /* ADShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADShareView.h; sourceTree = "<group>"; };
+		EC49596518DAE11200A1950E /* ADShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADShareView.m; sourceTree = "<group>"; };
+		EC49596818DAE2A400A1950E /* AD上一页@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD上一页@2x.png"; sourceTree = "<group>"; };
+		EC49596918DAE2A400A1950E /* AD说明-白色问号@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD说明-白色问号@2x.png"; sourceTree = "<group>"; };
+		EC49596A18DAE2A400A1950E /* AD下一页@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD下一页@2x.png"; sourceTree = "<group>"; };
+		EC49596B18DAE2A400A1950E /* AD邀请妈妈按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD邀请妈妈按钮@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -814,6 +825,7 @@
 		72B78CBE18C3398800F9D608 /* CustomLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EC49596318DAE11200A1950E /* ShareView */,
 				723522C218D3ED6400C9B5B4 /* CustomeSwitch */,
 				723522B418D2F26800C9B5B4 /* CustomeSheetPicker */,
 				723522A618D2E78800C9B5B4 /* CustomeBanner */,
@@ -935,6 +947,10 @@
 		72EF993418C5C6E4005D3D21 /* HomeImages */ = {
 			isa = PBXGroup;
 			children = (
+				EC49596818DAE2A400A1950E /* AD上一页@2x.png */,
+				EC49596918DAE2A400A1950E /* AD说明-白色问号@2x.png */,
+				EC49596A18DAE2A400A1950E /* AD下一页@2x.png */,
+				EC49596B18DAE2A400A1950E /* AD邀请妈妈按钮@2x.png */,
 				7244EF5D18D99A4500B2E132 /* home_question mark_bg@2x.png */,
 				725A7EC718CDBF1A0058C4CF /* calendar_selected_bg@2x.png */,
 				723A5CB718CDB6CD00CDE19A /* triangle_button_bg@2x.png */,
@@ -1080,6 +1096,15 @@
 			path = ExplanationView;
 			sourceTree = "<group>";
 		};
+		EC49596318DAE11200A1950E /* ShareView */ = {
+			isa = PBXGroup;
+			children = (
+				EC49596418DAE11200A1950E /* ADShareView.h */,
+				EC49596518DAE11200A1950E /* ADShareView.m */,
+			);
+			path = ShareView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1200,10 +1225,12 @@
 				723A5CB918CDB6CD00CDE19A /* triangle_button_bg@2x.png in Resources */,
 				72D5DCDA18C6201E003B7CC8 /* historydata_button_selected@2x.png in Resources */,
 				72EC187F18C7209E00862D50 /* record_complete_button_sel@2x.png in Resources */,
+				EC49596E18DAE2A400A1950E /* AD说明-白色问号@2x.png in Resources */,
 				723522D718D3FCC000C9B5B4 /* sina_nonbind_icon@2x.png in Resources */,
 				72EF993118C5B8F3005D3D21 /* tab_record@2x.png in Resources */,
 				7201434718D08F08007D04B6 /* tencent_icon@2x.png in Resources */,
 				7235246718D83A4900C9B5B4 /* code_resend_hilightbg@2x.png in Resources */,
+				EC49596D18DAE2A400A1950E /* AD上一页@2x.png in Resources */,
 				7244EF7618D9ECED00B2E132 /* navigation_backbutton_bg@2x.png in Resources */,
 				723A5CBA18CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png in Resources */,
 				722EA69518CF0BE80080E16B /* register_button_selected_bg@2x.png in Resources */,
@@ -1211,6 +1238,7 @@
 				72DE3FE718C6C4B8008B4803 /* mark_link_line@2x.png in Resources */,
 				72EF992F18C5B8F3005D3D21 /* tab_fetalData@2x.png in Resources */,
 				7235245C18D81ADA00C9B5B4 /* exit_button_bg@2x.png in Resources */,
+				EC49597018DAE2A400A1950E /* AD邀请妈妈按钮@2x.png in Resources */,
 				7235225018D2B2B400C9B5B4 /* setting_feedback_icon@2x.png in Resources */,
 				723A5C5318CA150000CDE19A /* milestone_mark_bg@2x.png in Resources */,
 				723522BF18D309EE00C9B5B4 /* setting_switch_on@2x.png in Resources */,
@@ -1219,6 +1247,7 @@
 				7244EF6918D9DA5E00B2E132 /* setting_calendar_bg@2x.png in Resources */,
 				723A5C5218CA150000CDE19A /* milestone_content_bg@2x.png in Resources */,
 				7244EF6F18D9E3B700B2E132 /* moon_little_bg@2x.png in Resources */,
+				EC49596F18DAE2A400A1950E /* AD下一页@2x.png in Resources */,
 				72D5DCD918C6201E003B7CC8 /* share_button_selected@2x.png in Resources */,
 				723A5C5018CA150000CDE19A /* milestone_scal@2x.png in Resources */,
 				7235225318D2B2B400C9B5B4 /* setting_version_icon@2x.png in Resources */,
@@ -1263,6 +1292,7 @@
 				72EDD17B18C574180042292B /* ADTypitalRecordCell.m in Sources */,
 				72B78CB718C3003900F9D608 /* ADNavigationView.m in Sources */,
 				7235224518D2AE5800C9B5B4 /* ADSettingSectionCell.m in Sources */,
+				EC49596618DAE11200A1950E /* ADShareView.m in Sources */,
 				723A5C4818C9CC8A00CDE19A /* ADMilestoneModel.m in Sources */,
 				723A5C3F18C9CB8500CDE19A /* ADMilestoneVC.m in Sources */,
 				725A7EC618CDBC3C0058C4CF /* CalendarDateUtil.m in Sources */,

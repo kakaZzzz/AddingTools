@@ -17,6 +17,16 @@
 #import "ADMilestoneVC.h"
 #import "ADScrollCalendar.h"
  #import "ADLoginVC.h"
+
+
+#import "ADShareView.h"
+#import "ADMomInvitedVC.h"
+#import "ADExplanationView.h"
+
+#define recommendButton_tag (10001)
+#define jumpButton_tag (20001)
+#define jumpButton_height (45)
+
 #define kScrollCalendarAnimationDurarion 0.3f
 @interface ADFetalPrimaryVC ()
 {
@@ -159,7 +169,7 @@
 - (void)clickRightButton
 {
     NSLog(@"点击分享按钮");
-    
+    [ADShareView createShareView:self.view];
 }
 
 - (void)selecteDate:(UITapGestureRecognizer *)tap
@@ -175,11 +185,7 @@
         
         [self showScrollCalendarView];
     }
-    
-    
-    
-    
-    
+  
 }
 #pragma mark - 显示滑动日历view
 - (void)showScrollCalendarView
@@ -305,7 +311,27 @@
     [_graphBackgroundScrollView addSubview:_lineGraph];
     
     
+    //绘制区域添加Label
+    UIButton * recommendButton = [[UIButton alloc]init];
+    [self.view addSubview:recommendButton];
+    recommendButton.tag = recommendButton_tag;
+    recommendButton.frame = CGRectMake(10, 100, 300, 35);
+    recommendButton.titleLabel.font = [UIFont systemFontOfSize:17];
+    [recommendButton setTitle:@"与544,224位妈妈一起记录胎动吧!" forState:UIControlStateNormal];
+    [recommendButton setBackgroundImage:[UIImage imageNamed:@"AD邀请妈妈按钮@2x"] forState:UIControlStateNormal];
+    [recommendButton addTarget:self action:@selector(recommendAction:) forControlEvents:UIControlEventTouchUpInside];
+    recommendButton.tintColor = [UIColor blackColor];
+    
+    
 }
+
+- (void)recommendAction:(UIButton*)button{//跳转到邀请妈妈页面
+    NSLog(@"跳转到邀请妈妈页面");
+    ADMomInvitedVC *momInViteVC = [[ADMomInvitedVC alloc]initWithNavigationViewWithTitle:@"邀请更多妈妈"];
+    [self.navigationController pushViewController:momInViteVC animated:YES];
+}
+
+
 #pragma mark - SimpleLineGraph Data Source
 - (int)numberOfPointsInGraph {
     
@@ -352,6 +378,7 @@
     _fetalMovementScrollView.backgroundColor = [UIColor whiteColor];
     _fetalMovementScrollView.bouncesZoom = NO;
     _fetalMovementScrollView.pagingEnabled = YES;
+    _fetalMovementScrollView.delegate = self;
     _fetalMovementScrollView.showsHorizontalScrollIndicator = NO;
     _fetalMovementScrollView.contentSize = CGSizeMake(SCREEN_WIDTH *2, _fetalMovementScrollView.frame.size.height);
     [self.view addSubview:_fetalMovementScrollView];
@@ -369,7 +396,7 @@
     [questionButton setBackgroundImage:[UIImage imageNamed:@"home_question mark_bg@2x"] forState:UIControlStateNormal];
     [questionButton addTarget:self action:@selector(addDataAnalysisView) forControlEvents:UIControlEventTouchUpInside];
     [_fetalMovementScrollView addSubview:questionButton];
-    
+
     
     NSDate *localDate = [NSDate localdate];
     NSTimeInterval seconds = [localDate timeIntervalSince1970];
@@ -449,14 +476,58 @@
                                              font:[UIFont systemFontOfSize:28/2]
                                         superView:_fetalMovementScrollView];
     
+    UIButton *jumpButton = [[UIButton alloc]init];
+    jumpButton.tag = jumpButton_tag;
+    //    jumpButton.backgroundColor = [UIColor redColor];
+    [jumpButton setImage:[UIImage imageNamed:@"AD下一页@2x"] forState:UIControlStateNormal];
+    [jumpButton addTarget:self action:@selector(jumpAction:) forControlEvents:UIControlEventTouchUpInside];
+    jumpButton.frame = CGRectMake(self.view.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+    [self.view addSubview:jumpButton];
+    
     
 }
+
+
+
+- (void)jumpAction:(UIButton *)button {
+    if (button.frame.origin.x == 0) {
+        [button setImage:[UIImage imageNamed:@"AD下一页@2x"] forState:UIControlStateNormal];
+        button.frame = CGRectMake(self.view.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+        
+        [UIView  animateWithDuration:0.3 animations:^{
+            _fetalMovementScrollView.contentOffset = CGPointMake(0, 0);
+        }];
+    }else{
+        [button setImage:[UIImage imageNamed:@"AD上一页@2x"] forState:UIControlStateNormal];
+        button.frame = CGRectMake(0, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+        [UIView  animateWithDuration:0.3 animations:^{
+            _fetalMovementScrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
+        }];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    //scrollView frame-> (0, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height, SCREEN_WIDTH, 240/2)];
+    UIButton * jumpButton = (UIButton *)[self.view viewWithTag:jumpButton_tag];
+    if (_fetalMovementScrollView.contentOffset.x == 0) {//点击button
+        jumpButton.frame = CGRectMake(self.view.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+        [jumpButton setImage:[UIImage imageNamed:@"AD下一页@2x"] forState:UIControlStateNormal];
+    }
+    if (_fetalMovementScrollView.contentOffset.x == SCREEN_WIDTH) {
+        jumpButton.frame = CGRectMake(0, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+        [jumpButton setImage:[UIImage imageNamed:@"AD上一页@2x"] forState:UIControlStateNormal];
+        
+        
+    }
+}
+
 
 #pragma mark - button event
 - (void)addDataAnalysisView
 {
     //加载数据解读view
     
+    [ADExplanationView createShareView:self.view];
     
 }
 #pragma mark - total fetalCount && Prediction
