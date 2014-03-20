@@ -34,50 +34,46 @@
     
     int navigationHeight = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight];
     UIImageView *calendarImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"setting_calendar_bg@2x"]];
-    calendarImage.frame = CGRectMake((SCREEN_WIDTH - 210/2)/2, navigationHeight + 24/2, 210/2, 210/2);
+    calendarImage.frame = CGRectMake((SCREEN_WIDTH - 580/2)/2, navigationHeight + 24/2, 580/2, 140/2);
     [self.view addSubview:calendarImage];
     
     //电话 或者邮箱
     
     CGRect rect = CGRectMake((320 - 580/2)/2,calendarImage.frame.origin.y + calendarImage.frame.size.height + 24/2,580/2 ,110/2);
-    UIImage* bgimg = [UIImage imageNamed:@"register_border_bg@2x"];
+    UIImage* bgimg = [UIImage imageNamed:@"duedate_border_bg@2x"];
     UIImageView*  telbg = [[UIImageView alloc]initWithFrame:rect];
     telbg.image = bgimg;
     telbg.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:telbg];
     
-    CGRect rectBut;
-    rectBut = rect;
-    rectBut.size.width  -=20 * 2;
-    rectBut.size.height  = 22;
-    rectBut.origin.x    += 20;
-    rectBut.origin.y    += (int)( (rect.size.height - rectBut.size.height) /2);
+    CGRect rectLabel;
+    rectLabel = rect;
+    rectLabel.size.width  -=20 * 2;
+    rectLabel.size.height  = 22;
+    rectLabel.origin.x    += 20;
+    rectLabel.origin.y    += (int)( (rect.size.height - rectLabel.size.height) /2);
     
-    self.telNumberField                      = [[UITextField alloc] init];
-    _telNumberField.backgroundColor      = [UIColor whiteColor];
-    _telNumberField.keyboardType         = UIKeyboardTypePhonePad;
-    _telNumberField.borderStyle          = UITextBorderStyleNone;
-    _telNumberField.clipsToBounds        = YES;
-    _telNumberField.clearButtonMode      = UITextFieldViewModeWhileEditing;
-    _telNumberField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    _telNumberField.autocorrectionType   = UITextAutocorrectionTypeNo;
-    _telNumberField.placeholder          = @"邮箱地址 或 手机号码";
-    _telNumberField.font                 = [UIFont systemFontOfSize:17];
-    _telNumberField.frame                = rectBut;
-    _telNumberField.delegate             = self;
-//    [self.view addSubview:_telNumberField];
+    
+    
+    NSDate *date;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:USER_DUEDATE_KEY]) {
+        date = [[NSUserDefaults standardUserDefaults] objectForKey:USER_DUEDATE_KEY];
+    }else{
+        date = [NSDate localdate];
+    }
+    
+    NSString *dateAndTime = [NSDate stringFromDate:date withFormat:@"yyyy - MM - dd"];
     
     self.duedateLabel                  = [[UILabel alloc] init];
     _duedateLabel.backgroundColor      = [UIColor whiteColor];
     _duedateLabel.clipsToBounds        = YES;
     _duedateLabel.font                 = [UIFont systemFontOfSize:17];
-    _duedateLabel.frame                = rectBut;
+    _duedateLabel.frame                = rectLabel;
     _duedateLabel.userInteractionEnabled = YES;
-    
     _duedateLabel.textAlignment        = NSTextAlignmentCenter;
+    _duedateLabel.text                 = dateAndTime;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(inputDate:)];
     [_duedateLabel addGestureRecognizer:tap];
-
     [self.view addSubview:_duedateLabel];
 
     
@@ -111,7 +107,7 @@
 - (void)showDatePicker
 {
     self.actionSheetView = [[BTSheetPickerview alloc] initWithPikerType:BTActionSheetPickerStyleDatePicker
-                                                              referView:nil
+                                                              referView:self.view
                                                                delegate:self
                                                                   title:@"选择预产期日期"];
     
@@ -123,9 +119,14 @@
     self.actionSheetView.datePicker.minimumDate = minDate;
     self.actionSheetView.datePicker.maximumDate = maxDate;
     //确定时间选择器默认的时间
-    
-    self.actionSheetView.datePicker.date = [NSDate localdate];
-  
+    NSDate *date;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:USER_DUEDATE_KEY]) {
+        date = [[NSUserDefaults standardUserDefaults] objectForKey:USER_DUEDATE_KEY];
+    }else{
+        date = [NSDate localdate];
+    }
+    self.actionSheetView.datePicker.date = date;
+
     [_actionSheetView show];
    
 
@@ -143,6 +144,10 @@
     
     //存储数据
     [[ADAccountCenter sharedADAccountCenter] writeDuedateToUserdefalutWithDate:localDate];
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.actionSheetView hide];
+
 }
 #pragma mark - 日期边滚动 边触发的方法
 - (void)actionSheetPickerView:(BTSheetPickerview *)pickerView didScrollDate:(NSDate*)date
