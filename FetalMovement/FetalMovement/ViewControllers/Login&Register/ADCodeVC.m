@@ -41,7 +41,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    self.view.backgroundColor = [UIColor whiteColor];
     [self configureNavigationView];
     [self createSubviews];
     
@@ -103,9 +103,6 @@
     bLabel.text = @"验证码已发送至你的手机";
     [self.view addSubview:bLabel];
 
-    
-    
-    //虚拟textField
     rect.origin.y += rect.size.height + 60/2;
     
     self.codeNumberField         = [[UITextField alloc] init];
@@ -123,7 +120,7 @@
     [self.view addSubview:_codeNumberField];
 
     UIView *aView = [[UIView alloc] initWithFrame:CGRectMake(_codeNumberField.frame.origin.x, _codeNumberField.frame.origin.y, 320, _codeNumberField.frame.size.height)];
-    aView.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    aView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:aView];
     
     
@@ -133,7 +130,7 @@
     
     
     for (int i =0; i < 4; i ++) {
-        rect.origin.x =64/2 + 55*i+ i*12;
+        rect.origin.x =48/2 + 55*i+ i*12;
         UIImageView *aImageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"code_circle_hilightbg@2x"]];
         aImageview.frame = rect;
         [self.view addSubview:aImageview];
@@ -147,7 +144,7 @@
     }
    
     
-    rect.origin.y +=(rect.size.height + 30/2);
+    rect.origin.y +=(rect.size.height + 60/2);
     rect = rect;
     rect.origin.x = (320 - 260/2)/2;
     rect.size.width = 260/2;
@@ -161,35 +158,11 @@
     [_btnEnter setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_btnEnter setBackgroundImage:[UIImage imageNamed:@"register_button_bg@2x"] forState:UIControlStateNormal];
     [_btnEnter setBackgroundImage:[UIImage imageNamed:@"register_button_selected_bg@2x"] forState:UIControlStateHighlighted];
-    [_btnEnter addTarget:self action:@selector(completeRegister) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_btnEnter];
     
-    //小超人图片
-    UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_little_bg@2x"]];
-    aImageView.frame = CGRectMake(0, self.view.frame.size.height - 400/4, 400/2, 400/2);
-    
-    //月球图片
-    UIImageView *bImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"moon_little_bg@2x"]];
-    bImageView.frame = CGRectMake(0, self.view.frame.size.height - 240/4, 240/2, 240/2);
-    
-    if (RETINA_INCH4) {
-        aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_ba@2x"]];
-        aImageView.frame = CGRectMake(0, self.view.frame.size.height - 600/4, 600/2, 600/2);
-        
-        bImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"moon_bg@2x"]];
-        bImageView.frame = CGRectMake(0, self.view.frame.size.height - 360/4, 360/2, 360/2);
-    }
     
     
-    CGPoint center = aImageView.center;
-    aImageView.center = CGPointMake(320/2,center.y);
-    [self.view addSubview:aImageView];
-    
-    center = bImageView.center;
-    bImageView.center = CGPointMake(320/2,center.y);
-    [self.view addSubview:bImageView];
-
-    
+    [_btnEnter addTarget:self action:@selector(completeRegister) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)completeRegister
@@ -229,8 +202,13 @@
     NSString *token = object;
     [[NSUserDefaults standardUserDefaults] setObject:token forKey:ACCOUNT_ADDING_TOKEN];
     [[NSUserDefaults standardUserDefaults] synchronize];
-
-    [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"登录成功"];
+    //拿token去后去用户信息
+    //[[ADAccountCenter sharedADAccountCenter] getUserInfoWithToken:token withTarget:self success:@selector(getUserInfoSuccessful:) failure:@selector(getUserInfoFailure:)];
+    
+//    ADAppDelegate *appDelegate = (ADAppDelegate *)[[UIApplication sharedApplication] delegate];
+//    ADTabBarViewController *tabbarController = (ADTabBarViewController *)appDelegate.window.rootViewController;
+//    ADSetPrimaryVC *setPrimeVC = [tabbarController.viewControllers objectAtIndex:1];
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
 
 }
@@ -259,7 +237,6 @@
             [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"密码格式错误"];
             break;
         default:
-             [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"注册失败，请检查您的验证码是否正确"];
             break;
     }
 }

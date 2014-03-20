@@ -105,8 +105,8 @@
     
     //hide system backButton
     // [viewController.navigationItem setHidesBackButton:YES];
-    //hide tabbar when push next VC
     
+    //hide tabbar when push next VC
     //system
     viewController.hidesBottomBarWhenPushed = YES;
     //custome
@@ -132,50 +132,49 @@
  *
  *  @return 返回值为上一级页面
  */
-//-(UIViewController*)popViewControllerAnimated:(BOOL)animated
-//{
-//    NSLog(@"返回上一级");
-//    
-//    [_animationLayer removeFromSuperlayer];
-//    [self.view.layer insertSublayer:_animationLayer above:self.view.layer];
-//    
-//    if(animated)
-//    {
-//        [self loadLayerWithImage];
-//        
-//        
-//        
-//        UIView * toView = [[self.viewControllers objectAtIndex:[self.viewControllers indexOfObject:self.visibleViewController]-1] view];
-//        
-//        
-//        CABasicAnimation *Animation  = [CABasicAnimation animationWithKeyPath:@"transform"];
-//        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-//        rotationAndPerspectiveTransform.m34 = 1.0 / -1000;
-//        rotationAndPerspectiveTransform = CATransform3DMakeTranslation(self.view.frame.size.width, 0, 0);
-//        [Animation setFromValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
-//        [Animation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeTranslation(self.view.bounds.size.width, 0, 0)]];
-//        [Animation setDuration:kNavigationPopAnimationDuration];
-//        Animation.delegate = self;
-//        Animation.removedOnCompletion = NO;
-//        Animation.fillMode = kCAFillModeBoth;
-//        [_animationLayer addAnimation:Animation forKey:@"scale"];
-//        
-//        
-//        CABasicAnimation *Animation1  = [CABasicAnimation animationWithKeyPath:@"transform"];
-//        CATransform3D rotationAndPerspectiveTransform1 = CATransform3DIdentity;
-//        rotationAndPerspectiveTransform1.m34 = 1.0 / -1000;
-//        rotationAndPerspectiveTransform1 = CATransform3DMakeScale(1.0, 1.0, 1.0);
-//        [Animation1 setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 0.9)]];
-//        [Animation1 setToValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
-//        [Animation1 setDuration:kNavigationPopAnimationDuration];
-//        Animation1.delegate = self;
-//        Animation1.removedOnCompletion = NO;
-//        Animation1.fillMode = kCAFillModeBoth;
-//        [toView.layer addAnimation:Animation1 forKey:@"scale"];
-//        
-//    }
-//    return [super popViewControllerAnimated:NO];
-//}
+-(UIViewController*)popViewControllerAnimated:(BOOL)animated
+{
+    NSLog(@"返回上一级");
+    
+    [_animationLayer removeFromSuperlayer];
+    [self.view.layer insertSublayer:_animationLayer above:self.view.layer];
+    if(animated)
+    {
+        [self loadLayerWithImage];
+        
+        
+        
+        UIView * toView = [[self.viewControllers objectAtIndex:[self.viewControllers indexOfObject:self.visibleViewController]-1] view];
+        
+        
+        CABasicAnimation *Animation  = [CABasicAnimation animationWithKeyPath:@"transform"];
+        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+        rotationAndPerspectiveTransform.m34 = 1.0 / -1000;
+        rotationAndPerspectiveTransform = CATransform3DMakeTranslation(self.view.frame.size.width, 0, 0);
+        [Animation setFromValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
+        [Animation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeTranslation(self.view.bounds.size.width, 0, 0)]];
+        [Animation setDuration:kNavigationPopAnimationDuration];
+        Animation.delegate = self;
+        Animation.removedOnCompletion = NO;
+        Animation.fillMode = kCAFillModeBoth;
+        [_animationLayer addAnimation:Animation forKey:@"scale"];
+        
+        
+        CABasicAnimation *Animation1  = [CABasicAnimation animationWithKeyPath:@"transform"];
+        CATransform3D rotationAndPerspectiveTransform1 = CATransform3DIdentity;
+        rotationAndPerspectiveTransform1.m34 = 1.0 / -1000;
+        rotationAndPerspectiveTransform1 = CATransform3DMakeScale(1.0, 1.0, 1.0);
+        [Animation1 setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 0.9)]];
+        [Animation1 setToValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
+        [Animation1 setDuration:kNavigationPopAnimationDuration];
+        Animation1.delegate = self;
+        Animation1.removedOnCompletion = NO;
+        Animation1.fillMode = kCAFillModeBoth;
+        [toView.layer addAnimation:Animation1 forKey:@"scale"];
+        
+    }
+    return [super popViewControllerAnimated:NO];
+}
 /**
  *   Pops until there's only a single view controller left on the stack. Returns the popped controllers
  *
@@ -201,44 +200,44 @@
     
     
     //
-//    [_animationLayer removeFromSuperlayer];
-//    [self.view.layer insertSublayer:_animationLayer above:self.view.layer];
-//    if(animated)
-//    {
-//        [self loadLayerWithImage];
-//        
-//        
-//        
-//        UIView * toView = [[self.viewControllers objectAtIndex:[self.viewControllers indexOfObject:self.visibleViewController]-1] view];
-//        
-//        
-//        CABasicAnimation *Animation  = [CABasicAnimation animationWithKeyPath:@"transform"];
-//        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-//        rotationAndPerspectiveTransform.m34 = 1.0 / -1000;
-//        rotationAndPerspectiveTransform = CATransform3DMakeTranslation(self.view.frame.size.width, 0, 0);
-//        [Animation setFromValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
-//        [Animation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeTranslation(self.view.bounds.size.width, 0, 0)]];
-//        [Animation setDuration:kNavigationPopAnimationDuration];
-//        Animation.delegate = self;
-//        Animation.removedOnCompletion = NO;
-//        Animation.fillMode = kCAFillModeBoth;
-//        [_animationLayer addAnimation:Animation forKey:@"scale"];
-//        
-//        
-//        CABasicAnimation *Animation1  = [CABasicAnimation animationWithKeyPath:@"transform"];
-//        CATransform3D rotationAndPerspectiveTransform1 = CATransform3DIdentity;
-//        rotationAndPerspectiveTransform1.m34 = 1.0 / -1000;
-//        rotationAndPerspectiveTransform1 = CATransform3DMakeScale(1.0, 1.0, 1.0);
-//        [Animation1 setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 0.9)]];
-//        [Animation1 setToValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
-//        [Animation1 setDuration:kNavigationPopAnimationDuration];
-//        Animation1.delegate = self;
-//        Animation1.removedOnCompletion = NO;
-//        Animation1.fillMode = kCAFillModeBoth;
-//        [toView.layer addAnimation:Animation1 forKey:@"scale"];
-//        
-//    }
-    return [super popToRootViewControllerAnimated:YES];
+    [_animationLayer removeFromSuperlayer];
+    [self.view.layer insertSublayer:_animationLayer above:self.view.layer];
+    if(animated)
+    {
+        [self loadLayerWithImage];
+        
+        
+        
+        UIView * toView = [[self.viewControllers objectAtIndex:[self.viewControllers indexOfObject:self.visibleViewController]-1] view];
+        
+        
+        CABasicAnimation *Animation  = [CABasicAnimation animationWithKeyPath:@"transform"];
+        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+        rotationAndPerspectiveTransform.m34 = 1.0 / -1000;
+        rotationAndPerspectiveTransform = CATransform3DMakeTranslation(self.view.frame.size.width, 0, 0);
+        [Animation setFromValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
+        [Animation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeTranslation(self.view.bounds.size.width, 0, 0)]];
+        [Animation setDuration:kNavigationPopAnimationDuration];
+        Animation.delegate = self;
+        Animation.removedOnCompletion = NO;
+        Animation.fillMode = kCAFillModeBoth;
+        [_animationLayer addAnimation:Animation forKey:@"scale"];
+        
+        
+        CABasicAnimation *Animation1  = [CABasicAnimation animationWithKeyPath:@"transform"];
+        CATransform3D rotationAndPerspectiveTransform1 = CATransform3DIdentity;
+        rotationAndPerspectiveTransform1.m34 = 1.0 / -1000;
+        rotationAndPerspectiveTransform1 = CATransform3DMakeScale(1.0, 1.0, 1.0);
+        [Animation1 setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 0.9)]];
+        [Animation1 setToValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
+        [Animation1 setDuration:kNavigationPopAnimationDuration];
+        Animation1.delegate = self;
+        Animation1.removedOnCompletion = NO;
+        Animation1.fillMode = kCAFillModeBoth;
+        [toView.layer addAnimation:Animation1 forKey:@"scale"];
+        
+    }
+    return [super popToRootViewControllerAnimated:NO];
     
     
 }

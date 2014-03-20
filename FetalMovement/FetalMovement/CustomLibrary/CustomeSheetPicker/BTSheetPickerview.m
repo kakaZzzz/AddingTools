@@ -351,24 +351,19 @@
    
     
     
-     [self.referView addSubview:self];
+     [shareWindow addSubview:self];
     
       self.isShow = YES;
-//       [UIView animateWithDuration:kModalViewAnimationDuration animations:^{
-//           
-////     CGAffineTransform t = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
-////    [self.referView setTransform:t];
-//
-//        self.alpha = 1;
-//        self.coverView.alpha = 1;
-//        
-//        
-//    }];
-    
-//    [UIView animateWithDuration:kModalViewAnimationDuration delay:2.0 options:UIViewAnimationOptionLayoutSubviews animations:^{
-//        self.alpha = 1;
-//        self.coverView.alpha = 1;
-//    } completion:nil];
+       [UIView animateWithDuration:kModalViewAnimationDuration animations:^{
+           
+//     CGAffineTransform t = CGAffineTransformScale(CGAffineTransformIdentity, 0.9, 0.9);
+//    [self.referView setTransform:t];
+
+        self.alpha = 1;
+        self.coverView.alpha = 1;
+        
+        
+    }];
     
 }
 

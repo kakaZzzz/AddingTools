@@ -16,6 +16,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+@property (strong, nonatomic) NSString *wbtoken;
 @property (assign, nonatomic) ADACCOUNT_TYPE urlType;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

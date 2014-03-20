@@ -276,11 +276,6 @@
         //请求数据错误
         NSLog(@"MKNetwork request error------ : %@", [err localizedDescription]);
         
-        if (target && [target respondsToSelector:success]) {
-            [target performSelectorOnMainThread:failure withObject:nil waitUntilDone:NO];
-        }
-
-        
     }];
     [_engine enqueueOperation:op];
     
