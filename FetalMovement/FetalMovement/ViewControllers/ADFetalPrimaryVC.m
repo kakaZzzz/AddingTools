@@ -316,8 +316,10 @@
     if (IOS7_OR_LATER) {
         yAxias = 20;
     }
+
     
     //背景
+
     self.cloadImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 90/2 + yAxias, SCREEN_WIDTH, 380/2)];
     
     _cloadImageView.backgroundColor = [UIColor colorWithRed:255/255.0 green:118/255.0 blue:133/255.0 alpha:1.0];
