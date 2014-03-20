@@ -37,10 +37,6 @@
 @property (strong, nonatomic) NSMutableArray *ArrayOfValues;//绘制曲线y值
 @property (strong, nonatomic) NSMutableArray *ArrayOfDates;//绘制曲线横坐标
 
-//bar
-@property (strong, nonatomic) NSMutableArray *ArrayOfBarXAxis;
-@property (strong, nonatomic) NSMutableArray *ArrayOfBarValues;
-
 //
 @property(nonatomic,strong)UILabel *todayCountLabel;
 @property(nonatomic,strong)UILabel *todayContentLabel;
@@ -75,6 +71,7 @@
 {
     [self updateUI];
 }
+#pragma mark - 更新页面数据
 //可用来更新页面数据
 - (void)viewWillAppear:(BOOL)animated{
     
@@ -107,14 +104,6 @@
     self.ArrayOfValues.array = [[ADFetalMovementManager sharedADFetalMovementManager] getHourlyStatDataByDate:seconds1970];
     self.ArrayOfDates.array  = [[ADFetalMovementManager sharedADFetalMovementManager] getTwentyfourHours];
     
-    [self.ArrayOfBarValues removeAllObjects];
-    [self.ArrayOfBarXAxis removeAllObjects];
-    NSArray *arrayBar = [[ADFetalMovementManager sharedADFetalMovementManager] getTypicalRecordByDate:seconds1970];
-    for (NSDictionary *dic in arrayBar) {
-        [self.ArrayOfBarValues addObject:[dic objectForKey:kFetalCount]];
-        [self.ArrayOfBarXAxis addObject:[dic objectForKey:kStartTimeStamp]];
-    }
-    
     [self.lineGraph reloadGraph];
     
     //更新列表数据
@@ -138,11 +127,6 @@
     [self addFetalMovementCountScrollView];
     [self addTypicalRecordView];
     
-}
-- (void)pushNextView
-{
-    ADSecondVC *secondVC = [[ADSecondVC alloc] initWithNavigationViewWithTitle:@"胎动详情"];
-    [self.navigationController pushViewController:secondVC animated:YES];
 }
 
 #pragma mark - configure navigationView
@@ -199,10 +183,11 @@
     }
     
     
-    //
+    
     
     
 }
+#pragma mark - 显示滑动日历view
 - (void)showScrollCalendarView
 {
     self.navigationView.titleLabel.textColor = [UIColor colorWithRed:217/255.0 green:0/255.0 blue:66/255.0 alpha:0.6];
@@ -228,15 +213,6 @@
         //update graph
         primeVC.ArrayOfValues.array = [[ADFetalMovementManager sharedADFetalMovementManager] getHourlyStatDataByDate:seconds];
         primeVC.ArrayOfDates.array  = [[ADFetalMovementManager sharedADFetalMovementManager] getTwentyfourHours];
-        
-        [primeVC.ArrayOfBarValues removeAllObjects];
-        [primeVC.ArrayOfBarXAxis removeAllObjects];
-        NSArray *arrayBar = [[ADFetalMovementManager sharedADFetalMovementManager] getTypicalRecordByDate:seconds];
-        for (NSDictionary *dic in arrayBar) {
-            [primeVC.ArrayOfBarValues addObject:[dic objectForKey:kFetalCount]];
-            [primeVC.ArrayOfBarXAxis addObject:[dic objectForKey:kStartTimeStamp]];
-        }
-        
         [primeVC.lineGraph reloadGraph];
        
         //update datelabel text
@@ -302,23 +278,17 @@
     
     NSLog(@"hahhahahaha%@", self.ArrayOfValues);
     
-    //bar datas
-    self.ArrayOfBarValues = [[NSMutableArray alloc] init];
-    self.ArrayOfBarXAxis = [[NSMutableArray alloc] init];
-    
-    NSArray *array = [[ADFetalMovementManager sharedADFetalMovementManager] getTypicalRecordByDate:seconds1970];
-    for (NSDictionary *dic in array) {
-        [self.ArrayOfBarValues addObject:[dic objectForKey:kFetalCount]];
-        [self.ArrayOfBarXAxis addObject:[dic objectForKey:kStartTimeStamp]];
-    }
-    
     int yAxias = 0;
     if (IOS7_OR_LATER) {
         yAxias = 20;
     }
+<<<<<<< HEAD
     
     //背景
     self.cloadImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 90/2 + yAxias, SCREEN_WIDTH, 380/2)];
+=======
+    self.cloadImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 90/2 + yAxias, SCREEN_WIDTH, 316/2)];
+>>>>>>> b9c0d61d8486ed34a9bd0433a7e3108eeae46035
     
     _cloadImageView.backgroundColor = [UIColor colorWithRed:255/255.0 green:118/255.0 blue:133/255.0 alpha:1.0];
     _cloadImageView.image = [UIImage imageNamed:@"cload_bg@2x"];
@@ -385,27 +355,8 @@
     return 12 - 1;
 }
 
-//bar delegate method
-- (int)numberOfPointsInBar
-{
-    return (int)[self.ArrayOfBarValues count];
-}
 
-//
-- (float)valueOfBarForIndex:(NSInteger)index
-{
-    return [[self.ArrayOfBarValues objectAtIndex:index] floatValue];
-}
 
-//
-- (float)xAxisOfBarForIndex:(NSInteger)index
-{
-    //要将类似“20:14”的时间转化成浮点数
-    NSString *str = [self.ArrayOfBarXAxis objectAtIndex:index];
-    NSArray *array = [str componentsSeparatedByString:@":"];
-    float xAxis = [[array objectAtIndex:0] floatValue] + [[array objectAtIndex:1] floatValue]/60.0;
-    return xAxis;
-}
 #pragma mark - SimpleLineGraph Delegate
 
 - (int)numberOfGapsBetweenLabels {
@@ -446,6 +397,7 @@
                                              font:kMacroFontSize
                                         superView:_fetalMovementScrollView];
     
+<<<<<<< HEAD
     UIButton * explanationButton = [[UIButton alloc]init];
     [explanationButton setImage:[UIImage imageNamed:@"AD按钮-问号@2x"] forState:UIControlStateNormal];
     explanationButton.frame = CGRectMake(self.view.frame.size.width-45, jumpButton_height - 35, 24, 24);
@@ -453,6 +405,13 @@
     [_fetalMovementScrollView addSubview:explanationButton];
     
     
+=======
+    UIButton *questionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    questionButton.frame = CGRectMake(SCREEN_WIDTH - 34/2 - 36/2, 30/2, 34/2, 34/2);
+    [questionButton setBackgroundImage:[UIImage imageNamed:@"home_question mark_bg@2x"] forState:UIControlStateNormal];
+    [questionButton addTarget:self action:@selector(addDataAnalysisView) forControlEvents:UIControlEventTouchUpInside];
+    [_fetalMovementScrollView addSubview:questionButton];
+>>>>>>> b9c0d61d8486ed34a9bd0433a7e3108eeae46035
     
     
     NSDate *localDate = [NSDate localdate];
@@ -527,7 +486,7 @@
     
     
     
-    UILabel *unitLable3 = [UILabel labelWithTitle:@"次/每小时"
+    UILabel *unitLable3 = [UILabel labelWithTitle:@"次/小时"
                                             frame:CGRectMake(_hourlyPredicationLabel.frame.origin.x + _hourlyPredicationLabel.frame.size.width, _hourlyPredicationLabel.frame.origin.y + _hourlyPredicationLabel.frame.size.height - 20, 80, 20)
                                         textColor:kRedFontColor
                                     textAlignment:NSTextAlignmentLeft
@@ -581,6 +540,13 @@
     }
 }
 
+#pragma mark - button event
+- (void)addDataAnalysisView
+{
+    //加载数据解读view
+    
+    
+}
 #pragma mark - total fetalCount && Prediction
 /**
  *  展示当天典型的三次小时胎动记录

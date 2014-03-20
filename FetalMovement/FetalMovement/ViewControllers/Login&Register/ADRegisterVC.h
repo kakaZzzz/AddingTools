@@ -9,10 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ADRegisterVC : ADBaseViewController<UITextFieldDelegate>
-{
-    NSInteger acounrNumber;
-    NSTimer *similarTimer;
-}
+
 @property(nonatomic,strong)UITextField *telNumberField;//电话或者邮箱
 @property(nonatomic,strong)UITextField *pswordField;//密码
 @property(nonatomic,strong)UITextField *nickNameField;//昵称
