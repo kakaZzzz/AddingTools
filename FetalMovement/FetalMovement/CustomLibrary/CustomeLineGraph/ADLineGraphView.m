@@ -20,7 +20,7 @@
 #define kLabelHeight 20.0
 
 #define kXMargin 32.0
-#define kYLineMargin 63.0
+#define kYLineMargin 0.0
 #define kCustomeWidth (self.viewForBaselineLayout.frame.size.width - 2 * kXMargin)
 #define kCustomeLineHeight (self.viewForBaselineLayout.frame.size.height - 80/2 - kYLineMargin)
 
@@ -191,36 +191,6 @@ int currentlyCloser;
         [self.animationDelegate animationForLine:i line:line animationSpeed:self.animationGraphEntranceSpeed];
     }
     
-    
-    //CREATION OF THE BAR
-    
-    float positionOfBarXAxis; // The position on the X-axis of the point currently being created.
-    
-    if ([self.delegate respondsToSelector:@selector(numberOfPointsInBar)]) {
-        numberOfBars = [self.delegate numberOfPointsInBar];
-        
-    }else{
-        numberOfBars = 0;
-    }
-    for (UIView *subview in [self subviews]) {
-        if ([subview isKindOfClass:[ADBar class]])
-            [subview removeFromSuperview];
-    }
-    
-    for (int i = 0; i<numberOfBars; i++) {
-        
-        float xGrage = [self.delegate xAxisOfBarForIndex:i];
-        NSLog(@"绘制柱形图%f",xGrage);
-        positionOfBarXAxis = kXMargin + xGrage *gradeOfXAxis;
-        ADBar *bar = [[ADBar alloc] initWithFrame:CGRectMake(positionOfBarXAxis,54/2, gradeOfXAxis, kXaxisHeight - 54/2)];
-        bar.backgroundColor = [UIColor clearColor];
-        
-        bar.bgImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"bar_bg_%d",i+ 1]];
-        bar.alpha = 1.0;
-        [self addSubview:bar];
-        [self sendSubviewToBack:bar];
-        
-    }
     
     
 }
