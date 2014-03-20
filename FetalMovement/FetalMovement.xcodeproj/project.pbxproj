@@ -167,6 +167,8 @@
 		72F258F018C730C7004B05A6 /* ADTimeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 72F258EF18C730C7004B05A6 /* ADTimeLabel.m */; };
 		72F258F218C73282004B05A6 /* time_lable_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 72F258F118C73282004B05A6 /* time_lable_bg@2x.png */; };
 		72F258F518C82CF2004B05A6 /* ADSortModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 72F258F418C82CF2004B05A6 /* ADSortModel.m */; };
+		EC49596118DADFDC00A1950E /* ADMomInvitedVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EC49595D18DADFDC00A1950E /* ADMomInvitedVC.m */; };
+		EC49596218DADFDC00A1950E /* ADExplanationView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC49596018DADFDC00A1950E /* ADExplanationView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -324,7 +326,7 @@
 		725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTabBarViewController.m; sourceTree = "<group>"; };
 		725A6A0018C2CE18000FA35A /* ADTabBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADTabBarView.h; sourceTree = "<group>"; };
 		725A6A0118C2CE18000FA35A /* ADTabBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTabBarView.m; sourceTree = "<group>"; };
-		725A6A2318C2D209000FA35A /* ADFetalPrimaryVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADFetalPrimaryVC.h; sourceTree = "<group>"; };
+		725A6A2318C2D209000FA35A /* ADFetalPrimaryVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ADFetalPrimaryVC.h; path = ../../ViewControllers/ADFetalPrimaryVC.h; sourceTree = "<group>"; };
 		725A6A2618C2D23A000FA35A /* ADSetPrimaryVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADSetPrimaryVC.h; sourceTree = "<group>"; };
 		725A6A2718C2D23A000FA35A /* ADSetPrimaryVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADSetPrimaryVC.m; sourceTree = "<group>"; };
 		725A6A2C18C2DD5D000FA35A /* ADSecondVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADSecondVC.h; sourceTree = "<group>"; };
@@ -338,7 +340,7 @@
 		725A7EC418CDBC3C0058C4CF /* CalendarDateUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarDateUtil.h; sourceTree = "<group>"; };
 		725A7EC518CDBC3C0058C4CF /* CalendarDateUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarDateUtil.m; sourceTree = "<group>"; };
 		725A7EC718CDBF1A0058C4CF /* calendar_selected_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calendar_selected_bg@2x.png"; sourceTree = "<group>"; };
-		7262F6FB18D939AA0058E61E /* ADFetalPrimaryVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADFetalPrimaryVC.m; sourceTree = "<group>"; };
+		7262F6FB18D939AA0058E61E /* ADFetalPrimaryVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ADFetalPrimaryVC.m; path = ../../ViewControllers/ADFetalPrimaryVC.m; sourceTree = "<group>"; };
 		72B78CB518C3003900F9D608 /* ADNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADNavigationView.h; sourceTree = "<group>"; };
 		72B78CB618C3003900F9D608 /* ADNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADNavigationView.m; sourceTree = "<group>"; };
 		72B78CB818C30B2B00F9D608 /* ADAppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADAppConfig.h; sourceTree = "<group>"; };
@@ -405,6 +407,10 @@
 		72F258F118C73282004B05A6 /* time_lable_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "time_lable_bg@2x.png"; sourceTree = "<group>"; };
 		72F258F318C82CF2004B05A6 /* ADSortModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADSortModel.h; sourceTree = "<group>"; };
 		72F258F418C82CF2004B05A6 /* ADSortModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADSortModel.m; sourceTree = "<group>"; };
+		EC49595C18DADFDC00A1950E /* ADMomInvitedVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMomInvitedVC.h; sourceTree = "<group>"; };
+		EC49595D18DADFDC00A1950E /* ADMomInvitedVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADMomInvitedVC.m; sourceTree = "<group>"; };
+		EC49595F18DADFDC00A1950E /* ADExplanationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADExplanationView.h; sourceTree = "<group>"; };
+		EC49596018DADFDC00A1950E /* ADExplanationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADExplanationView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -768,8 +774,6 @@
 			isa = PBXGroup;
 			children = (
 				72EC187418C70FDB00862D50 /* StartRecordFetal */,
-				725A6A2318C2D209000FA35A /* ADFetalPrimaryVC.h */,
-				7262F6FB18D939AA0058E61E /* ADFetalPrimaryVC.m */,
 				725A6A2618C2D23A000FA35A /* ADSetPrimaryVC.h */,
 				725A6A2718C2D23A000FA35A /* ADSetPrimaryVC.m */,
 			);
@@ -853,6 +857,7 @@
 			children = (
 				72EC187518C7105800862D50 /* ADStartRecordView.h */,
 				72EC187618C7105800862D50 /* ADStartRecordView.m */,
+				EC49595A18DADFDC00A1950E /* ADFetailPrimary */,
 			);
 			name = StartRecordFetal;
 			path = ../StartRecordFetal;
@@ -1044,6 +1049,35 @@
 				72F258EF18C730C7004B05A6 /* ADTimeLabel.m */,
 			);
 			path = CustomeTimeLabel;
+			sourceTree = "<group>";
+		};
+		EC49595A18DADFDC00A1950E /* ADFetailPrimary */ = {
+			isa = PBXGroup;
+			children = (
+				725A6A2318C2D209000FA35A /* ADFetalPrimaryVC.h */,
+				7262F6FB18D939AA0058E61E /* ADFetalPrimaryVC.m */,
+				EC49595B18DADFDC00A1950E /* ADMomInVited */,
+				EC49595E18DADFDC00A1950E /* ExplanationView */,
+			);
+			path = ADFetailPrimary;
+			sourceTree = "<group>";
+		};
+		EC49595B18DADFDC00A1950E /* ADMomInVited */ = {
+			isa = PBXGroup;
+			children = (
+				EC49595C18DADFDC00A1950E /* ADMomInvitedVC.h */,
+				EC49595D18DADFDC00A1950E /* ADMomInvitedVC.m */,
+			);
+			path = ADMomInVited;
+			sourceTree = "<group>";
+		};
+		EC49595E18DADFDC00A1950E /* ExplanationView */ = {
+			isa = PBXGroup;
+			children = (
+				EC49595F18DADFDC00A1950E /* ADExplanationView.h */,
+				EC49596018DADFDC00A1950E /* ADExplanationView.m */,
+			);
+			path = ExplanationView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1240,6 +1274,7 @@
 				722EA67F18CF01CA0080E16B /* NSDate+RFC1123.m in Sources */,
 				72D5DCDF18C62ADC003B7CC8 /* ADMarkView.m in Sources */,
 				722EA65818CEFFB00080E16B /* ADLoginVC.m in Sources */,
+				EC49596218DADFDC00A1950E /* ADExplanationView.m in Sources */,
 				7235245F18D820D400C9B5B4 /* ADCodeVC.m in Sources */,
 				722EA66518CF016F0080E16B /* ADAccountCenter.m in Sources */,
 				722EA67E18CF01CA0080E16B /* NSData+MKBase64.m in Sources */,
@@ -1255,6 +1290,7 @@
 				72F0C4B618C195FB006ABEB1 /* ADAppDelegate.m in Sources */,
 				72B78CC818C33CFC00F9D608 /* ADCircle.m in Sources */,
 				725A6A2818C2D23A000FA35A /* ADSetPrimaryVC.m in Sources */,
+				EC49596118DADFDC00A1950E /* ADMomInvitedVC.m in Sources */,
 				72F258F018C730C7004B05A6 /* ADTimeLabel.m in Sources */,
 				72B78CC218C339C600F9D608 /* ADLineGraphView.m in Sources */,
 				725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */,
