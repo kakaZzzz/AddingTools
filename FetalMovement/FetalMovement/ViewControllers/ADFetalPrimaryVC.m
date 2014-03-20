@@ -68,6 +68,7 @@
 {
     [self updateUI];
 }
+#pragma mark - 更新页面数据
 //可用来更新页面数据
 - (void)viewWillAppear:(BOOL)animated{
     
@@ -134,11 +135,6 @@
     
     
 }
-- (void)pushNextView
-{
-    ADSecondVC *secondVC = [[ADSecondVC alloc] initWithNavigationViewWithTitle:@"胎动详情"];
-    [self.navigationController pushViewController:secondVC animated:YES];
-}
 
 #pragma mark - configure navigationView
 - (void)configureNavigationView
@@ -193,10 +189,11 @@
     }
     
     
-    //
+    
     
     
 }
+#pragma mark - 显示滑动日历view
 - (void)showScrollCalendarView
 {
     self.navigationView.titleLabel.textColor = [UIColor colorWithRed:217/255.0 green:0/255.0 blue:66/255.0 alpha:0.6];
@@ -417,6 +414,12 @@
                                              font:kMacroFontSize
                                         superView:_fetalMovementScrollView];
     
+    UIButton *questionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    questionButton.frame = CGRectMake(SCREEN_WIDTH - 34/2 - 36/2, 30/2, 34/2, 34/2);
+    [questionButton setBackgroundImage:[UIImage imageNamed:@"home_question mark_bg@2x"] forState:UIControlStateNormal];
+    [questionButton addTarget:self action:@selector(addDataAnalysisView) forControlEvents:UIControlEventTouchUpInside];
+    [_fetalMovementScrollView addSubview:questionButton];
+    
     
     NSDate *localDate = [NSDate localdate];
     NSTimeInterval seconds = [localDate timeIntervalSince1970];
@@ -489,7 +492,7 @@
     
     
     
-    UILabel *unitLable3 = [UILabel labelWithTitle:@"次/每小时"
+    UILabel *unitLable3 = [UILabel labelWithTitle:@"次/小时"
                                             frame:CGRectMake(_hourlyPredicationLabel.frame.origin.x + _hourlyPredicationLabel.frame.size.width, _hourlyPredicationLabel.frame.origin.y + _hourlyPredicationLabel.frame.size.height - 20, 80, 20)
                                         textColor:kRedFontColor
                                     textAlignment:NSTextAlignmentLeft
@@ -499,6 +502,13 @@
     
 }
 
+#pragma mark - button event
+- (void)addDataAnalysisView
+{
+    //加载数据解读view
+    
+    
+}
 #pragma mark - total fetalCount && Prediction
 /**
  *  展示当天典型的三次小时胎动记录
