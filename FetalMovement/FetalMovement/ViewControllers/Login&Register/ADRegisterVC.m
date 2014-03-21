@@ -11,11 +11,15 @@
 #import "ADAccountCenter.h"
 #import "ADCodeVC.h"
 
+#define REGISTER_TEXFID_TAG 100
+#define countButton_tag  (3001)
+
 
 @interface ADRegisterVC ()
 
 @property(nonatomic,strong) UIImageView *passwordImage;
 @property(nonatomic,strong) UIImageView *codeImageViewbg;
+@property(nonatomic,strong) UIScrollView *scrollView;
 @property(nonatomic,strong) UIButton *btnEnter;
 @property(nonatomic,strong) NSString *codeid;
 @end
@@ -35,7 +39,7 @@
     [super viewDidLoad];
     
    
-    self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    self.view.backgroundColor = [UIColor blueColor];
     [self createSubviews:self.view.frame];
     [self configureNavigationView];
     
@@ -57,6 +61,9 @@
 #pragma mark - navigation button event
 - (void)clickLeftButton
 {
+    [similarTimer invalidate];
+    similarTimer = nil;
+
     [self.navigationController popViewControllerAnimated:YES];
     
 }
@@ -64,16 +71,29 @@
 - (void)createSubviews:(CGRect)frame
 {
     
-    int yOffset = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight] +  24/2;
+    int yStatusOffset = 0;
+    if (IOS7_OR_LATER) {
+        yStatusOffset = 20;
+    }
+    frame.origin.y -=yStatusOffset;
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, frame.size.height)];
+    _scrollView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_scrollView];
+    [self.view bringSubviewToFront:self.navigationView];
+    
+    int yOffset = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight] +  12/2;
+
     
     //tel
     CGRect rect = CGRectMake((320 - 580/2)/2,yOffset,580/2 ,110/2);
     
     UIImage* bgimg = [UIImage imageNamed:@"register_border_bg@2x"];
+    
+    //电话 或者邮箱
     UIImageView*  telbg = [[UIImageView alloc]initWithFrame:rect];
     telbg.image = bgimg;
-    telbg.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
-    [self.view addSubview:telbg];
+    telbg.backgroundColor = [UIColor whiteColor];
+    [_scrollView addSubview:telbg];
     
     CGRect rectBut;
     rectBut = rect;
@@ -90,34 +110,38 @@
     _telNumberField.clearButtonMode      = UITextFieldViewModeWhileEditing;
     _telNumberField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _telNumberField.autocorrectionType   = UITextAutocorrectionTypeNo;
-    _telNumberField.placeholder          = @"手机号码";
+    _telNumberField.placeholder          = @" 手机号码";
     _telNumberField.font                 = [UIFont systemFontOfSize:40/2];
-    _telNumberField.textColor            = kContentFontColor;
     _telNumberField.frame                = rectBut;
+    _telNumberField.delegate             = self;
+    _telNumberField.tag = REGISTER_TEXFID_TAG + 0;
+    [_scrollView addSubview:_telNumberField];
     
-    [self.view addSubview:_telNumberField];
     
     
+    //密码
     rect.origin.y +=(rect.size.height + 24/2);
     
-    UIImageView*  pswbg = [[UIImageView alloc]initWithFrame:rect];
-    pswbg.image  = bgimg;
-    pswbg.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
-    [self.view addSubview:pswbg];
+    self.passwordImage = [[UIImageView alloc]initWithFrame:rect];
+    _passwordImage.image  = bgimg;
+    _passwordImage.backgroundColor = [UIColor whiteColor];
+    _passwordImage.userInteractionEnabled = YES;
+    [_scrollView addSubview:_passwordImage];
     
     
     rectBut = rect;
-    rectBut.size.width  -=20 * 2;
+    rectBut.size.width  -=20*2;
     rectBut.size.height  = 22;
-    rectBut.origin.x    += 20;
-    rectBut.origin.y    += (int)( ( rect.size.height - rectBut.size.height) /2);
-    self.pswordField                      = [[UITextField alloc] init];
+    rectBut.origin.x     = 20;
+    rectBut.origin.y    = (int)( ( rect.size.height - rectBut.size.height) /2);
+
+    
+    self.pswordField                  = [[UITextField alloc] init];
     _pswordField.backgroundColor      = [UIColor whiteColor];
     _pswordField.keyboardType         = UIKeyboardTypeASCIICapable;
     _pswordField.borderStyle          = UITextBorderStyleNone;
     _pswordField.clipsToBounds        = YES;
-    _pswordField.font                 = [UIFont systemFontOfSize:40/2];
-    _pswordField.textColor            = kContentFontColor;
+    _pswordField.font                 = [UIFont systemFontOfSize:17];
     
     _pswordField.clearButtonMode      = UITextFieldViewModeWhileEditing;
     _pswordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -127,55 +151,72 @@
     _pswordField.secureTextEntry      = YES;
     _pswordField.returnKeyType        = UIReturnKeyGo;
     _pswordField.delegate             = self;
-    [self.view addSubview:_pswordField];
+    _pswordField.tag                  = REGISTER_TEXFID_TAG + 2;
+    [_passwordImage addSubview:_pswordField];
     
     
+    //验证码
+    rect.origin.y +=(rect.size.height + 24/2);
     
+    self.codeImageViewbg = [[UIImageView alloc]initWithFrame:rect];
+    _codeImageViewbg.image  = bgimg;
+    _codeImageViewbg.backgroundColor = [UIColor whiteColor];
+    _codeImageViewbg.userInteractionEnabled = YES;
+    _codeImageViewbg.hidden = YES;
+    [_scrollView addSubview:_codeImageViewbg];
+    
+    
+
+    
+    rectBut = rect;
+    rectBut.size.width  -=20*2;
+    rectBut.size.height  = 22;
+    rectBut.origin.x     = 20;
+    rectBut.origin.y     = (int)( ( rect.size.height - rectBut.size.height) /2);
+    
+    rectBut.size.width -= 100;
+
+    self.codeField                  = [[UITextField alloc] init];
+    _codeField.backgroundColor      = [UIColor whiteColor];
+    _codeField.keyboardType         = UIKeyboardTypeASCIICapable;
+    _codeField.borderStyle          = UITextBorderStyleNone;
+    _codeField.clipsToBounds        = YES;
+    _codeField.font                 = [UIFont systemFontOfSize:17];
+    
+    _codeField.clearButtonMode      = UITextFieldViewModeWhileEditing;
+    _codeField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    _codeField.autocorrectionType   = UITextAutocorrectionTypeNo;
+    _codeField.frame                = rectBut;
+    _codeField.placeholder          = @"验证码";
+    _codeField.secureTextEntry      = YES;
+    _codeField.returnKeyType        = UIReturnKeyGo;
+    _codeField.delegate             = self;
+    _codeField.tag                  = REGISTER_TEXFID_TAG + 3;
+    [_codeImageViewbg addSubview:_codeField];
+
     
     //_btnLogin
-    
-    rect.origin.y +=(rect.size.height + 40/2);
+    rect = _passwordImage.frame;
+    rect.origin.y +=(rect.size.height + 60/2);
     rectBut = rect;
-    rectBut.origin.x = (SCREEN_WIDTH - 260/2)/2;
+    rectBut.origin.x = (320 - 260/2)/2;
     rectBut.size.width = 260/2;
-    rectBut.size.height= 100/2;
+    rectBut.size.height= 110/2;
     
-    UIButton* _btnRegister        = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnRegister.frame  = rectBut;
+    self.btnEnter        = [UIButton buttonWithType:UIButtonTypeCustom];
+    _btnEnter.frame  = rectBut;
     
-    [_btnRegister.titleLabel setFont:[UIFont systemFontOfSize:18]];
-    [_btnRegister setTitle:@"注册" forState:UIControlStateNormal];
-    [_btnRegister setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_btnRegister setBackgroundImage:[UIImage imageNamed:@"register_button_bg@2x"] forState:UIControlStateNormal];
-    [_btnRegister setBackgroundImage:[UIImage imageNamed:@"register_button_selected_bg@2x"] forState:UIControlStateHighlighted];
-    [_btnRegister addTarget:self action:@selector(completeRegister) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_btnRegister];
-    
-    //小超人图片
-    UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_little_bg@2x"]];
-    aImageView.frame = CGRectMake(0, frame.size.height - 400/4, 400/2, 400/2);
-    
-    //月球图片
-    UIImageView *bImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"moon_little_bg@2x"]];
-    bImageView.frame = CGRectMake(0, frame.size.height - 240/4, 240/2, 240/2);
-    
-    if (RETINA_INCH4) {
-        aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_ba@2x"]];
-        aImageView.frame = CGRectMake(0, frame.size.height - 600/4, 600/2, 600/2);
-        
-        bImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"moon_bg@2x"]];
-        bImageView.frame = CGRectMake(0, frame.size.height - 360/4, 360/2, 360/2);
-    }
+    [_btnEnter.titleLabel setFont:[UIFont systemFontOfSize:18]];
+    [_btnEnter setTitle:@"注册" forState:UIControlStateNormal];
+    [_btnEnter setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_btnEnter setBackgroundImage:[UIImage imageNamed:@"register_button_bg@2x"] forState:UIControlStateNormal];
+    [_btnEnter setBackgroundImage:[UIImage imageNamed:@"register_button_selected_bg@2x"] forState:UIControlStateHighlighted];
+    [_scrollView addSubview:_btnEnter];
     
     
-    CGPoint center = aImageView.center;
-    aImageView.center = CGPointMake(320/2,center.y);
-    [self.view addSubview:aImageView];
+      
+    [_btnEnter addTarget:self action:@selector(completeRegister) forControlEvents:UIControlEventTouchUpInside];
     
-    center = bImageView.center;
-    bImageView.center = CGPointMake(320/2,center.y);
-    [self.view addSubview:bImageView];
-
     
     
 }
@@ -204,6 +245,12 @@
     
 }
 
+- (void)showAlertWithTitle:(NSString *)message
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"亲" message:message delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+    [alert show];
+    
+}
 #pragma mark - private methods
 - (BOOL)sMatchedByRegex:(NSString *)regex
 {
@@ -221,6 +268,8 @@
 - (BOOL)isPassWord:(NSString *)password
 {
     
+    
+ // return  [password isMatchedByRegex: @"^[A-Za-z0-9]{9,15}$"];
     
     BOOL hasChar = [password isMatchedByRegex: @"[A-Za-z]"];
     BOOL hasNum = [password isMatchedByRegex: @"[0-9]"];
@@ -251,8 +300,21 @@
     if ([_telNumberField isFirstResponder]){
         [_telNumberField resignFirstResponder];
     }
+    if ([_nickNameField isFirstResponder]){
+        [_nickNameField resignFirstResponder];
+    }
+    if ([_codeField isFirstResponder]){
+        [_codeField resignFirstResponder];
+    }
+
+    self.scrollView.contentOffset = CGPointMake(0, 0);
 }
 #pragma mark - textField delegate
+- (void)getCodeSuccessful:(id)obj
+{
+    NSString *codeid = obj;
+    self.codeid = codeid;
+}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self hideKeyBoard];
@@ -260,6 +322,11 @@
 }
 
 
+- (void)dealloc
+{
+    [similarTimer invalidate];
+    similarTimer = nil;
+}
 
 - (void)didReceiveMemoryWarning
 {

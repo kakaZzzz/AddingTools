@@ -37,7 +37,7 @@
     
 
     [self configureNavigationView];
-    self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    self.view.backgroundColor = [UIColor whiteColor];
     [self createSubviews:self.view.frame];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBlankRegin:)];
@@ -65,15 +65,22 @@
 - (void)createSubviews:(CGRect)frame
 {
 //    int nLeftMargin = (320 - 580/2)/2;
-    int yOffset = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight] +  24/2;
+    int yOffset = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight] +  12/2;
    
     //tel
     CGRect rect = CGRectMake((320 - 580/2)/2,yOffset,580/2 ,110/2);
     
     UIImage* bgimg = [UIImage imageNamed:@"register_border_bg@2x"];
+    //    if ([UIImage instancesRespondToSelector:@selector(resizableImageWithCapInsets:)]) {
+    //        bgimg = [bgimg resizableImageWithCapInsets:UIEdgeInsetsMake(0,10,0,10)];
+    //    }
+    //    else{
+    //        bgimg = [bgimg stretchableImageWithLeftCapWidth:10 topCapHeight:0];
+    //    }
+    
     UIImageView*  telbg = [[UIImageView alloc]initWithFrame:rect];
     telbg.image = bgimg;
-    telbg.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    telbg.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:telbg];
     
     CGRect rectBut;
@@ -91,9 +98,8 @@
     _telNumberField.clearButtonMode      = UITextFieldViewModeWhileEditing;
     _telNumberField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _telNumberField.autocorrectionType   = UITextAutocorrectionTypeNo;
-    _telNumberField.placeholder          = @"邮箱地址 或 手机号";
-    _telNumberField.font                 = [UIFont systemFontOfSize:40/2];
-    _telNumberField.textColor            = kContentFontColor;
+    _telNumberField.placeholder          = @"手机号";
+    _telNumberField.font                 = [UIFont systemFontOfSize:17];
     _telNumberField.frame                = rectBut;
     
     [self.view addSubview:_telNumberField];
@@ -103,7 +109,7 @@
     
     UIImageView*  pswbg = [[UIImageView alloc]initWithFrame:rect];
     pswbg.image  = bgimg;
-    pswbg.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    pswbg.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:pswbg];
     
     
@@ -117,9 +123,8 @@
     _pswordField.keyboardType         = UIKeyboardTypeASCIICapable;
     _pswordField.borderStyle          = UITextBorderStyleNone;
     _pswordField.clipsToBounds        = YES;
-    _pswordField.font                 = [UIFont systemFontOfSize:40/2];
-    _pswordField.textColor            = kContentFontColor;
-
+    _pswordField.font                 = [UIFont systemFontOfSize:17];
+    
     _pswordField.clearButtonMode      = UITextFieldViewModeWhileEditing;
     _pswordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _pswordField.autocorrectionType   = UITextAutocorrectionTypeNo;
@@ -134,8 +139,7 @@
     
     
     //_btnLogin
-    
-    rect.origin.y +=(rect.size.height + 40/2);
+    rect.origin.y +=(rect.size.height + 60/2);
     rectBut = rect;
     rectBut.origin.x = (SCREEN_WIDTH - 260/2)/2;
     rectBut.size.width = 260/2;
@@ -158,7 +162,7 @@
     _btnRegister.frame  = rectBut;
     
     [_btnRegister.titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [_btnRegister setTitle:@"注册" forState:UIControlStateNormal];
+    [_btnRegister setTitle:@"注册加丁账号" forState:UIControlStateNormal];
     [_btnRegister setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
 //    [_btnRegister setBackgroundImage:[UIImage imageNamed:@"register_button_bg@2x"]forState:UIControlStateNormal];
 //    [_btnRegister setBackgroundImage:[UIImage imageNamed:@"register_button_selected_bg@2x"] forState:UIControlStateHighlighted];
@@ -169,24 +173,35 @@
     
     
     //others login
-    rect.origin.y += (rect.size.height + 100/2);
+    rect.origin.y += (rect.size.height + 120/2);
     rect.origin.x   = 0;
     rect.size.width =frame.size.width;
-    rect.size.height=100/2;
+    rect.size.height=frame.size.height-rect.origin.y;
     
     self.contentView = [[UIView alloc] initWithFrame:rect];
-    _contentView.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    _contentView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_contentView];
     
     
     
-
+//    rect = CGRectMake(0, 0, frame.size.width, 30);
+//    UILabel * othersTitle = [[UILabel alloc]init];
+//    othersTitle.backgroundColor = [UIColor clearColor];
+//    othersTitle.textAlignment = NSTextAlignmentCenter;
+//    [othersTitle setFont:[UIFont systemFontOfSize:16]];
+//    [othersTitle setText:@"第三方帐号登录"];
+//    [othersTitle setTextColor:[UIColor blueColor]];
+//    othersTitle.frame = rect;
+//    [_contentView addSubview:othersTitle];
+    
+    
+    
     //
     rect = CGRectMake(0, 0, frame.size.width, 0);
     int nbuttonMargin = 24/2;
     rect.size.height    = 100/2;
     rect.size.width     = 100/2;
-    rect.origin.x       = 146/2;
+    rect.origin.x       = 30/2;
     
     UIButton * _btnSina = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnSina.frame = rect;
@@ -194,7 +209,9 @@
     [_btnSina setBackgroundImage:[UIImage imageNamed:@"sina_icon_hilight@2x"] forState:UIControlStateNormal];
     [_contentView addSubview:_btnSina];
     
-
+    
+   
+    
     rect.origin.x += (rect.size.width + nbuttonMargin);
     UIButton * _btnQQ = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnQQ.frame = rect;
@@ -209,9 +226,17 @@
     _baidu.frame = rect;
     [_contentView addSubview:_baidu];
     
- 
+    rect.origin.x += (rect.size.width + 36/2);
+    rect.size.width     = SCREEN_WIDTH - rect.origin.x;
+    UIButton * _immeEnter = [UIButton buttonWithType:UIButtonTypeCustom];
+    _immeEnter.frame = rect;
+    [_immeEnter setBackgroundImage:[UIImage imageNamed:@"immet_enter_bg@2x"] forState:UIControlStateNormal];
+    [_immeEnter setBackgroundImage:[UIImage imageNamed:@"immet_enter_bg_hilight@2x"] forState:UIControlStateHighlighted];
+    [_contentView addSubview:_immeEnter];
+    
     [_btnSina addTarget:self action:@selector(LoginAuthSina) forControlEvents:UIControlEventTouchUpInside];
     [_btnQQ addTarget:self action:@selector(LoginAuthQQ) forControlEvents:UIControlEventTouchUpInside];
+<<<<<<< HEAD
     [_baidu addTarget:self action:@selector(LoginAauthBaidu) forControlEvents:UIControlEventTouchUpInside];
     
     //小超人图片
@@ -238,6 +263,9 @@
     center = bImageView.center;
     bImageView.center = CGPointMake(320/2,center.y);
     [self.view addSubview:bImageView];
+=======
+    [_immeEnter addTarget:self action:@selector(immediateEnter) forControlEvents:UIControlEventTouchUpInside];
+>>>>>>> FETCH_HEAD
 
 }
 
@@ -248,10 +276,15 @@
 //注册
 -(void)LoginRegister
 {
+    //    FlurrylogEvent(@"1284", @"注册");
+    //
     [self hideKeyBoard];
     
     ADRegisterVC *registerVC = [[ADRegisterVC alloc] initWithNavigationViewWithTitle:@"注册"];
     [self.navigationController pushViewController:registerVC animated:YES];
+    //[self presentViewController:registerVC animated:YES completion:nil];
+    //
+    //    [self doAskUserRegister];
 }
 
 //登录
@@ -266,26 +299,24 @@
                 [[ADAccountCenter sharedADAccountCenter] userLoginWithPhone:[string stringByAppendingString:_telNumberField.text] passWord:_pswordField.text withTarget:self success:@selector(loginAddingSuccessful:) failure:@selector(loginAddingFailure:)];
         }else{
             NSLog(@"密码格式不正确");
-            [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"密码格式不正确"];
+            
         }
     }
     else if ([self isEmail:_telNumberField.text])
     {
         if ([self isPassWord:_pswordField.text]) {
-            //发送登录请求
+            //发送注册请求
             [[ADAccountCenter sharedADAccountCenter] userLoginWithEmail:_telNumberField.text passWord:_pswordField.text withTarget:self success:@selector(loginAddingSuccessful:) failure:@selector(loginAddingFailure:)];
             
         }
         else{
             NSLog(@"密码格式不正确");
-            [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"密码格式不正确"];
         }
     }
     
     else
     {
         NSLog(@"重新输入邮箱或者手机号");
-        [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"请重新输入邮箱或者手机号"];
     }
 
 
@@ -308,13 +339,13 @@
     [[ADAccountCenter sharedADAccountCenter] writeUserInfoToUserdefalutWithUserInfo:dic];
     
     //表示登录成功  做登录成功之后的事情
-    [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"登录成功"];
-
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    
+    
 }
 - (void)getUserInfoFailure:(id)object
 {
-    [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"登录失败"];
+    
 }
 //登录加丁账号失败
 - (void)loginAddingFailure:(id)object

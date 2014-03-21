@@ -72,7 +72,8 @@
     [shareButton setTitle:@"同步" forState:UIControlStateNormal];
     shareButton.backgroundColor = [UIColor blueColor];
     [shareButton addTarget:self action:@selector(shareToSina) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:shareButton];
+    
+    [self.view addSubview:shareButton];
     
     UIButton *exitButton = [UIButton buttonWithType:UIButtonTypeCustom];
     exitButton.frame = CGRectMake((SCREEN_WIDTH - 170/2)/2, self.view.frame.size.height - 36/2 - 80/2, 170/2, 80/2);
@@ -276,10 +277,8 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self.tableView reloadData];
     //在页面刷新之后取消昵称的存储。也就是说账号页面的昵称现在不改变，但是确保当进设置页面的时候，昵称重新请求网络
-    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:ACCOUNT_ADDING_NICKNAME];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:ACCOUNT_ADDING_NICKNAME];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    NSLog(@"取消本地存储的昵称%@",[[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME]);
 }
 - (void)cancleSinaBindFailure:(id)obj
 {
@@ -408,9 +407,8 @@
 #pragma mark - button event
 - (void)exitAccount
 {
-
-    [[ADAccountCenter sharedADAccountCenter] exit];
     
+
     [self.navigationController popToRootViewControllerAnimated:YES];
     
     ADAppDelegate * appDelegate =APP_DELEGATE;
@@ -424,6 +422,10 @@
 //    ADLoginFirstVC *loginFirstVC = [nav.viewControllers objectAtIndex:0];
 //    loginFirstVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 //    [appDelegate.window bringSubviewToFront:loginFirstVC.view];
+
+    
+    [[ADAccountCenter sharedADAccountCenter] exit];
+
     //直接到注册登录界面
 //    self.firstLoginVC =  [[ADLoginFirstVC alloc] init];
 //    UIWindow *shareWindow =((ADAppDelegate *)[[UIApplication sharedApplication] delegate]).window;

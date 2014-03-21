@@ -92,13 +92,13 @@
     NSLog(@"点击的是哪副图%d",item);
 }
 
-#pragma mark - 页面数据更新
 - (void)viewWillAppear:(BOOL)animated
 {
     
-    //获取第三方账号信息(是否绑定)，将此请求放在一级页面
+    //获取第三方账号信息(是否绑定)
     [[ADAccountCenter sharedADAccountCenter] getThirdPartyBindInfomationWithOAuthtoken:nil];
     
+<<<<<<< HEAD
     NSString *nickName=@"";
     
     NSLog(@"本地昵称是多少啊啊啊  %@",[[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME]);
@@ -123,6 +123,19 @@
     
     
     if (nickName == nil) {
+=======
+    
+    NSString *nikeName=@"";
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME] == nil) {
+        //获取用户信息(昵称)
+        [[ADAccountCenter sharedADAccountCenter] getUserInfoWithToken:nil withTarget:self success:@selector(getAddingUserInfoSuccessful:) failure:@selector(getAddingUserInfoFailure:)];
+    }else{
+        nikeName = [[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME];
+        NSLog(@"昵称是。。。。。。%@",nikeName);
+    }
+
+    if (nikeName == nil) {
+>>>>>>> FETCH_HEAD
         self.acccount = @"";
     }else{
         self.acccount =nickName;
@@ -144,9 +157,6 @@
     
     [self.tableView reloadData];
     
-    NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-    //放在此处不合适  容易message sent to deallocated instance
-    [self.tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
 - (void)getAddingUserInfoSuccessful:(id)obj
@@ -330,6 +340,35 @@
     //
 }
 
+
+
+
+
+
+- (void)onAndOff:(UISwitch *)aSwitch
+{
+    if (aSwitch.on == NO) {
+        NSLog(@"关闭了");
+        //解除绑定
+        [[ADAccountCenter sharedADAccountCenter] outOAuthSina];
+        //删除本地存储token
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:ACCOUNT_SINA_KEY];
+        //调取本地解除绑定接口
+        //[[ADAccountCenter sharedADAccountCenter] removeBindingThirdpartyToken:nil thirdPartyType:ADACCOUNT_TYPE_SINA];
+        
+        
+    }else{
+        NSLog(@"打开了");
+        //如果本地没有新浪的token
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_SINA_KEY] == nil) {
+            
+            [[ADAccountCenter sharedADAccountCenter] getOAuthSina];
+        }else{
+            NSLog(@"大爷。。。已经授权了");
+        }
+        
+    }
+}
 
 
 - (void)shareToSina

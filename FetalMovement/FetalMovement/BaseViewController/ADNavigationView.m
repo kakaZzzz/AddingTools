@@ -10,8 +10,8 @@
 #import "ADNavigationView.h"
 
 #define kMargin 24/2
-#define kButtonWidth 41/2
-#define kButtonHeight 35/2
+#define kButtonWidth 50/2
+#define kButtonHeight 50/2
 
 #define kTitleLabelWidth 100.0
 #define kTitleLabelHeight 30.0
@@ -29,20 +29,13 @@
 - (void)createSubviewsWithFrame:(CGRect)frame
 
 {
-    
-    CGRect rect = CGRectMake((SCREEN_WIDTH - kTitleLabelWidth)/2, (frame.size.height - kTitleLabelHeight)/2, kTitleLabelWidth, kTitleLabelHeight);
-    
-    if (IOS7_OR_LATER) {
-        rect.origin.y = 20 + (frame.size.height -20 - kTitleLabelHeight)/2;
-    }
-
-    self.titleLabel = [[UILabel alloc]initWithFrame:rect];
- 
+    self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake((SCREEN_WIDTH - kTitleLabelWidth)/2, (frame.size.height - 20/2 - kButtonHeight), kTitleLabelWidth, kTitleLabelHeight)];
     _titleLabel.backgroundColor = [UIColor clearColor];
     _titleLabel.textColor = [UIColor whiteColor];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_titleLabel];
     
+<<<<<<< HEAD
     
     rect.origin.x = kMargin;
     if (IOS7_OR_LATER) {
@@ -53,14 +46,14 @@
     rect.size.width = kButtonWidth;
     rect.size.height = kButtonHeight;
     
+=======
+>>>>>>> FETCH_HEAD
     self.backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _backButton.frame = rect;
+    _backButton.frame = CGRectMake(kMargin, frame.size.height - 24/2 - kButtonHeight , kButtonWidth, kButtonHeight);
     [self addSubview:_backButton];
     
-    rect.origin.x = (SCREEN_WIDTH - kMargin - kButtonWidth);
-
     self.rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _rightButton.frame = rect;
+    _rightButton.frame = CGRectMake(SCREEN_WIDTH - kMargin - kButtonWidth, frame.size.height - 24/2 - kButtonHeight , kButtonWidth, kButtonHeight);
     [self addSubview:_rightButton];
     
     
