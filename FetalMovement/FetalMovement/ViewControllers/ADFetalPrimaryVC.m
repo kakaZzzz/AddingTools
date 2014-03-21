@@ -22,10 +22,14 @@
 #import "ADShareView.h"
 #import "ADMomInvitedVC.h"
 #import "ADExplanationView.h"
+#import "CAKeyframeAnimation+GLPadShake.h"
 
 #define recommendButton_tag (10001)
 #define jumpButton_tag (20001)
 #define jumpButton_height (45)
+
+#define guideImage_tag (40001)
+#define handImage_tag (50001)
 
 #define kScrollCalendarAnimationDurarion 0.3f
 @interface ADFetalPrimaryVC ()
@@ -35,6 +39,8 @@
     
     
 }
+@property (nonatomic, strong)UIScrollView * bg_scrollView;
+
 @property (strong, nonatomic)UIImageView *cloadImageView;
 //line
 @property (strong, nonatomic) NSMutableArray *ArrayOfValues;//绘制曲线y值
@@ -56,7 +62,7 @@
 @end
 
 @implementation ADFetalPrimaryVC
-
+@synthesize bg_scrollView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -118,19 +124,115 @@
         [self.dataArray addObject:model];
     }
     [self.tableView reloadData];
+    [self dismissAction];
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
     seconds1970 = [[NSDate localdate] timeIntervalSince1970];
     [self configureNavigationView];
-    [self addLineGraphView];
-    [self addFetalMovementCountScrollView];
-    [self addTypicalRecordView];
+    [self addLineGraphView]; //折线图
+    
+    NSDate *loacalDate = [NSDate localdate];//判断当计数为零的时候,显示提示页面
+    NSTimeInterval seconds = [loacalDate timeIntervalSince1970];
+    int count = [[ADFetalMovementManager sharedADFetalMovementManager] getTotalCountByDate:seconds];
+    if (count == 0) {
+        [self addFetalMovementCountScrollView];
+        [self addGuidePage];
+        [self delayGuidView];
+    }else{
+        [self addFetalMovementCountScrollView];
+        [self addTypicalRecordView];
+    }
+   
+}
+
+#pragma mark - guide page
+
+- (void)delayGuidView{
+    UIImageView * guideImage= [[UIImageView alloc]initWithFrame:CGRectMake(0, bg_scrollView.frame.size.height, 320, 110)];
+    [self.view addSubview: guideImage];
+    guideImage.tag = guideImage_tag;
+    guideImage.image = [UIImage imageNamed:@"AD小屁股提示@2x"];
+    
+    UIImageView * handImage= [[UIImageView alloc]initWithFrame:CGRectMake(bg_scrollView.frame.size.width, bg_scrollView.frame.size.height- tabbar_height - 110, 320, 110)];
+    [self.view addSubview: handImage];
+    handImage.tag = handImage_tag;
+    handImage.image = [UIImage imageNamed:@"AD小屁股提示-手@2x"];
+    
+    [self performSelector:@selector(showGuideAction) withObject:self afterDelay:1];
+    
+    [self performSelector:@selector(showHandAction) withObject:self afterDelay:1.75];
+    
+    [self performSelector:@selector(dismissAction) withObject:self afterDelay:4];
+}
+
+- (void)showGuideAction{
+    UIImageView * guideImage = (UIImageView *)[self.view viewWithTag:guideImage_tag];
+    CGPoint centerPoint = CGPointMake(160, self.view.frame.size.height - 55- 49);
+    CALayer *layer=[guideImage layer];
+    [CATransaction begin];
+    [CATransaction setValue:[NSNumber numberWithFloat:0.750] forKey:kCATransactionAnimationDuration];
+    CAAnimation *chase = [CAKeyframeAnimation animationWithKeyPath:@"position" function:BackEaseOut fromPoint:[guideImage center] toPoint:centerPoint];
+    [chase setDelegate:self];
+    [layer addAnimation:chase forKey:@"position"];
+    [CATransaction commit];
+    [guideImage setCenter:centerPoint];
+}
+
+- (void)showHandAction{
+    UIImageView * handImage = (UIImageView *)[self.view viewWithTag:handImage_tag];
+    CGPoint centerPoint = CGPointMake(160, self.view.frame.size.height - 55- 49);
+    CALayer *layer=[handImage layer];
+    [CATransaction begin];
+    [CATransaction setValue:[NSNumber numberWithFloat:0.750] forKey:kCATransactionAnimationDuration];
+    CAAnimation *chase = [CAKeyframeAnimation animationWithKeyPath:@"position" function:BackEaseOut fromPoint:[handImage center] toPoint:centerPoint];
+    [chase setDelegate:self];
+    [layer addAnimation:chase forKey:@"position"];
+    [CATransaction commit];
+    [handImage setCenter:centerPoint];
+}
+
+CGFloat BackEaseOut(CGFloat p)
+{
+	CGFloat f = (1 - p);
+	return 1 - (f * f * f - f * sin(f * M_PI));
+}
+
+- (void)dismissAction{
+    UIImageView * guideImage = (UIImageView *)[self.view viewWithTag:guideImage_tag];
+    UIImageView * handImage = (UIImageView *)[self.view viewWithTag:handImage_tag];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        guideImage.frame = CGRectMake(0, self.view.frame.size.height, 320, 110);
+        handImage.frame = CGRectMake(0, self.view.frame.size.height, 320, 110);
+    }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+}
+
+- (void)addGuidePage{
     
     
+    UIImageView *guideView = [[UIImageView alloc]initWithFrame:CGRectMake(0, _fetalMovementScrollView.frame.size.height + _fetalMovementScrollView.frame.origin.y, 320, 50)];//添加智能解读
+    [bg_scrollView addSubview:guideView];
+    guideView.userInteractionEnabled = YES;
+    guideView.image = [UIImage imageNamed:@"AD智能计算-标题@2x"];
+    
+    UIButton *questionButton = [UIButton buttonWithType:UIButtonTypeCustom]; //问号
+    questionButton.frame = CGRectMake(SCREEN_WIDTH - 34/2 - 36/2,  40/2, 34/2, 34/2);
+    [questionButton setBackgroundImage:[UIImage imageNamed:@"home_question mark_bg@2x"] forState:UIControlStateNormal];
+    [questionButton addTarget:self action:@selector(addDataAnalysisView) forControlEvents:UIControlEventTouchUpInside];
+    [guideView addSubview:questionButton];
+    
+    UIImageView *noDataView = [[UIImageView alloc]initWithFrame:CGRectMake(0, guideView.frame.size.height + guideView.frame.origin.y, 320, 122)];
+    noDataView.image = [UIImage imageNamed:@"AD无数据说明@2x"];
+    [bg_scrollView addSubview:noDataView];
+    
+    bg_scrollView.contentSize = CGSizeMake(320, noDataView.frame.size.height + noDataView.frame.origin.y + statusBar_height + navItem_height);
     
 }
 
@@ -169,7 +271,7 @@
 - (void)clickRightButton
 {
     NSLog(@"点击分享按钮");
-    [ADShareView createShareView:self.view];
+    [ADShareView createShareView:[UIApplication sharedApplication].keyWindow];
 }
 
 - (void)selecteDate:(UITapGestureRecognizer *)tap
@@ -268,6 +370,11 @@
 #pragma mark - line graph
 - (void)addLineGraphView
 {
+    //添加背景scrollView
+    bg_scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, statusBar_height + navItem_height, self.view.frame.size.width, self.view.frame.size.height - (statusBar_height + navItem_height))];
+    [self.view addSubview:bg_scrollView];
+    bg_scrollView.backgroundColor = UIColorFromRGB(0xFBF7F1);
+    
     //line datas
     self.ArrayOfValues = [[NSMutableArray alloc] init];
     self.ArrayOfDates = [[NSMutableArray alloc] init];
@@ -282,12 +389,12 @@
     if (IOS7_OR_LATER) {
         yAxias = 20;
     }
-    self.cloadImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 90/2 + yAxias, SCREEN_WIDTH, 316/2)];
+    self.cloadImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, 316/2)];
     
     _cloadImageView.backgroundColor = [UIColor colorWithRed:255/255.0 green:118/255.0 blue:133/255.0 alpha:1.0];
     _cloadImageView.image = [UIImage imageNamed:@"cload_bg@2x"];
     _cloadImageView.userInteractionEnabled = YES;
-    [self.view addSubview:_cloadImageView];
+    [bg_scrollView addSubview:_cloadImageView];
     
     self.graphBackgroundScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, _cloadImageView.frame.size.height - 0)];
     _graphBackgroundScrollView.backgroundColor = [UIColor clearColor];
@@ -313,16 +420,19 @@
     
     //绘制区域添加Label
     UIButton * recommendButton = [[UIButton alloc]init];
-    [self.view addSubview:recommendButton];
+    [bg_scrollView addSubview:recommendButton];
     recommendButton.tag = recommendButton_tag;
-    recommendButton.frame = CGRectMake(10, 100, 300, 35);
+    recommendButton.frame = CGRectMake(10, 40, 300, 30);
     recommendButton.titleLabel.font = [UIFont systemFontOfSize:17];
     [recommendButton setTitle:@"与544,224位妈妈一起记录胎动吧!" forState:UIControlStateNormal];
-    [recommendButton setBackgroundImage:[UIImage imageNamed:@"AD邀请妈妈按钮@2x"] forState:UIControlStateNormal];
+
+    UIImage * image = [UIImage imageNamed:@"AD一起记胎动按钮小@2x"];//拉伸图片
+    UIImage * imageClicked = [UIImage imageNamed:@"AD一起记胎动按钮小-点击@2x"];
+    //resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)
+
+    [recommendButton setBackgroundImage:image forState:UIControlStateNormal];
+    [recommendButton setBackgroundImage:imageClicked forState:UIControlStateHighlighted];
     [recommendButton addTarget:self action:@selector(recommendAction:) forControlEvents:UIControlEventTouchUpInside];
-    recommendButton.tintColor = [UIColor blackColor];
-    
-    
 }
 
 - (void)recommendAction:(UIButton*)button{//跳转到邀请妈妈页面
@@ -374,14 +484,14 @@
  */
 - (void)addFetalMovementCountScrollView
 {
-    self.fetalMovementScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height, SCREEN_WIDTH, 240/2)];
+    self.fetalMovementScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height, SCREEN_WIDTH, 240/2 - 12)];
     _fetalMovementScrollView.backgroundColor = [UIColor whiteColor];
     _fetalMovementScrollView.bouncesZoom = NO;
     _fetalMovementScrollView.pagingEnabled = YES;
     _fetalMovementScrollView.delegate = self;
     _fetalMovementScrollView.showsHorizontalScrollIndicator = NO;
     _fetalMovementScrollView.contentSize = CGSizeMake(SCREEN_WIDTH *2, _fetalMovementScrollView.frame.size.height);
-    [self.view addSubview:_fetalMovementScrollView];
+    [bg_scrollView addSubview:_fetalMovementScrollView];
     
     
     UILabel *todayTitle = [UILabel labelWithTitle:@"今日记录胎动总数"
@@ -391,7 +501,7 @@
                                              font:kMacroFontSize
                                         superView:_fetalMovementScrollView];
     
-    UIButton *questionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *questionButton = [UIButton buttonWithType:UIButtonTypeCustom]; //问号
     questionButton.frame = CGRectMake(SCREEN_WIDTH - 34/2 - 36/2, 30/2, 34/2, 34/2);
     [questionButton setBackgroundImage:[UIImage imageNamed:@"home_question mark_bg@2x"] forState:UIControlStateNormal];
     [questionButton addTarget:self action:@selector(addDataAnalysisView) forControlEvents:UIControlEventTouchUpInside];
@@ -418,12 +528,12 @@
     
     
     
-    self.todayContentLabel = [UILabel labelWithTitle:@"2222222位妈妈记录超过20次"
-                                               frame:CGRectMake((SCREEN_WIDTH - 300)/2, _todayCountLabel.frame.origin.y + _todayCountLabel.frame.size.height + 24/2, 300, 24/2)
-                                           textColor:kRedFontColor
-                                       textAlignment:NSTextAlignmentCenter
-                                                font:kMacroFontSize
-                                           superView:_fetalMovementScrollView];
+//    self.todayContentLabel = [UILabel labelWithTitle:@"2222222位妈妈记录超过20次"
+//                                               frame:CGRectMake((SCREEN_WIDTH - 300)/2, _todayCountLabel.frame.origin.y + _todayCountLabel.frame.size.height + 24/2, 300, 24/2)
+//                                           textColor:kRedFontColor
+//                                       textAlignment:NSTextAlignmentCenter
+//                                                font:kMacroFontSize
+//                                           superView:_fetalMovementScrollView];
     
     
     UILabel *totalPredicationTitle = [UILabel labelWithTitle:@"推算今日胎动总数"
@@ -481,8 +591,8 @@
     //    jumpButton.backgroundColor = [UIColor redColor];
     [jumpButton setImage:[UIImage imageNamed:@"AD下一页@2x"] forState:UIControlStateNormal];
     [jumpButton addTarget:self action:@selector(jumpAction:) forControlEvents:UIControlEventTouchUpInside];
-    jumpButton.frame = CGRectMake(self.view.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
-    [self.view addSubview:jumpButton];
+    jumpButton.frame = CGRectMake(bg_scrollView.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+    [bg_scrollView addSubview:jumpButton];
     
     
 }
@@ -492,7 +602,7 @@
 - (void)jumpAction:(UIButton *)button {
     if (button.frame.origin.x == 0) {
         [button setImage:[UIImage imageNamed:@"AD下一页@2x"] forState:UIControlStateNormal];
-        button.frame = CGRectMake(self.view.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+        button.frame = CGRectMake(bg_scrollView.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
         
         [UIView  animateWithDuration:0.3 animations:^{
             _fetalMovementScrollView.contentOffset = CGPointMake(0, 0);
@@ -508,9 +618,9 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     //scrollView frame-> (0, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height, SCREEN_WIDTH, 240/2)];
-    UIButton * jumpButton = (UIButton *)[self.view viewWithTag:jumpButton_tag];
+    UIButton * jumpButton = (UIButton *)[bg_scrollView viewWithTag:jumpButton_tag];
     if (_fetalMovementScrollView.contentOffset.x == 0) {//点击button
-        jumpButton.frame = CGRectMake(self.view.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
+        jumpButton.frame = CGRectMake(bg_scrollView.frame.size.width-23, _cloadImageView.frame.origin.y + _cloadImageView.frame.size.height + jumpButton_height, 23,45);
         [jumpButton setImage:[UIImage imageNamed:@"AD下一页@2x"] forState:UIControlStateNormal];
     }
     if (_fetalMovementScrollView.contentOffset.x == SCREEN_WIDTH) {
@@ -527,7 +637,7 @@
 {
     //加载数据解读view
     
-    [ADExplanationView createShareView:self.view];
+    [ADExplanationView createShareView:[UIApplication sharedApplication].keyWindow];
     
 }
 #pragma mark - total fetalCount && Prediction
@@ -543,13 +653,17 @@
     }else{
         kHeight = 60;
     }
+    
+    self.tableView = [[UITableView alloc] init];
+    _tableView.frame = CGRectMake(0, _fetalMovementScrollView.frame.origin.y + _fetalMovementScrollView.frame.size.height, SCREEN_WIDTH,kHeight);
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _fetalMovementScrollView.frame.origin.y + _fetalMovementScrollView.frame.size.height, SCREEN_WIDTH,kHeight)];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor colorWithRed:251/255.0 green:247/255.0 blue:241/255.0 alpha:1.0];
     _tableView.showsVerticalScrollIndicator = NO;
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    [self.view addSubview:_tableView];
+    [bg_scrollView addSubview:_tableView];
+    
     
     self.dataArray = [NSMutableArray arrayWithCapacity:1];
     NSArray *array = [[ADFetalMovementManager sharedADFetalMovementManager] getTypicalRecordByDate:20000];

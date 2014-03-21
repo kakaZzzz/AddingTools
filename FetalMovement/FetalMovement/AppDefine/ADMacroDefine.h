@@ -16,6 +16,10 @@
 #define SCREEN_WIDTH    ([UIScreen mainScreen].bounds.size.width)  //获取屏幕 宽度
 #define SCREEN_HEIGHT   ([UIScreen mainScreen].bounds.size.height) //获取屏幕 高度
 
+#define navItem_height (44)
+#define statusBar_height (20)
+#define tabbar_height   (49)
+
 
 #define MAIN_WINDOW  [[[UIApplication sharedApplication] windows] objectAtIndex:0]//获得主窗口
 @end

@@ -34,6 +34,8 @@
 #define kNavigationViewColor   [UIColor colorWithRed:255/255.0 green:83/255.0 blue:110/255.0 alpha:1.0]
 
 
+//16进制得到颜色
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 /**
  *  里程碑 数据key

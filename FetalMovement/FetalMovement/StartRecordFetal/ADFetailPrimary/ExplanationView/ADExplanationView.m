@@ -7,6 +7,8 @@
 //
 
 #import "ADExplanationView.h"
+#import "CAKeyframeAnimation+GLPadShake.h"
+
 #define coverView_tag (80001)
 
 @interface ADExplanationView()
@@ -22,7 +24,7 @@
     coverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
     [superView addSubview:coverView];
     
-    ADExplanationView * explanationView = [[ADExplanationView alloc]initWithFrame:CGRectMake(0, 0, 270, superView.frame.size.height)];
+    ADExplanationView * explanationView = [[ADExplanationView alloc]initWithFrame:CGRectMake(0, 0, 400, superView.frame.size.height)];
     explanationView.superVirw_a = superView;
     [coverView addSubview:explanationView];
     
@@ -56,10 +58,26 @@
 
 - (void)showAnimation//显示
 {
-    self.frame = CGRectMake(-270, 0, 270, self.superVirw_a.frame.size.height);
-    [UIView animateWithDuration:0.5f animations:^{
-        self.frame = CGRectMake(0, 0, 270, self.superVirw_a.frame.size.height);
-    }];
+    self.frame = CGRectMake(-270, 0, 400, self.superVirw_a.frame.size.height);
+    
+    CGPoint centerPoint = CGPointMake(65, self.superVirw_a.frame.size.height/2);
+    CALayer *layer=[self layer];
+    [CATransaction begin];
+    [CATransaction setValue:[NSNumber numberWithFloat:0.750] forKey:kCATransactionAnimationDuration];
+    CAAnimation *chase = [CAKeyframeAnimation animationWithKeyPath:@"position"
+                                                          function:BackEaseOut_a
+                                                         fromPoint:[self center]
+                                                           toPoint:centerPoint];
+    [chase setDelegate:self];
+    [layer addAnimation:chase forKey:@"position"];
+    [CATransaction commit];
+    [self setCenter:centerPoint];
+}
+
+CGFloat BackEaseOut_a(CGFloat p)
+{
+	CGFloat f = (1 - p);
+	return 1 - (f * f * f - f * sin(f * M_PI));
 }
 
 - (void)setFrame:(CGRect)frame{

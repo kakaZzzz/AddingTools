@@ -174,6 +174,15 @@
 		EC49596E18DAE2A400A1950E /* AD说明-白色问号@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596918DAE2A400A1950E /* AD说明-白色问号@2x.png */; };
 		EC49596F18DAE2A400A1950E /* AD下一页@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596A18DAE2A400A1950E /* AD下一页@2x.png */; };
 		EC49597018DAE2A400A1950E /* AD邀请妈妈按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49596B18DAE2A400A1950E /* AD邀请妈妈按钮@2x.png */; };
+		EC49597318DAEC3500A1950E /* AD地图@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49597118DAEC3500A1950E /* AD地图@2x.png */; };
+		EC49597418DAEC3500A1950E /* AD人头@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC49597218DAEC3500A1950E /* AD人头@2x.png */; };
+		ECF0F9BB18DB4544005C2B60 /* AD智能计算-标题@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF0F9BA18DB4544005C2B60 /* AD智能计算-标题@2x.png */; };
+		ECF0F9BD18DB464B005C2B60 /* AD无数据说明@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF0F9BC18DB464B005C2B60 /* AD无数据说明@2x.png */; };
+		ECF0F9C018DB5021005C2B60 /* AD小屁股提示-手@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF0F9BE18DB5021005C2B60 /* AD小屁股提示-手@2x.png */; };
+		ECF0F9C118DB5021005C2B60 /* AD小屁股提示@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF0F9BF18DB5021005C2B60 /* AD小屁股提示@2x.png */; };
+		ECF0F9C518DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.m in Sources */ = {isa = PBXBuildFile; fileRef = ECF0F9C318DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.m */; };
+		ECF0F9CD18DBFC8A005C2B60 /* AD一起记胎动按钮小@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF0F9CB18DBFC8A005C2B60 /* AD一起记胎动按钮小@2x.png */; };
+		ECF0F9CE18DBFC8A005C2B60 /* AD一起记胎动按钮小-点击@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF0F9CC18DBFC8A005C2B60 /* AD一起记胎动按钮小-点击@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -422,6 +431,17 @@
 		EC49596918DAE2A400A1950E /* AD说明-白色问号@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD说明-白色问号@2x.png"; sourceTree = "<group>"; };
 		EC49596A18DAE2A400A1950E /* AD下一页@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD下一页@2x.png"; sourceTree = "<group>"; };
 		EC49596B18DAE2A400A1950E /* AD邀请妈妈按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD邀请妈妈按钮@2x.png"; sourceTree = "<group>"; };
+		EC49597118DAEC3500A1950E /* AD地图@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD地图@2x.png"; sourceTree = "<group>"; };
+		EC49597218DAEC3500A1950E /* AD人头@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD人头@2x.png"; sourceTree = "<group>"; };
+		ECF0F9BA18DB4544005C2B60 /* AD智能计算-标题@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD智能计算-标题@2x.png"; sourceTree = "<group>"; };
+		ECF0F9BC18DB464B005C2B60 /* AD无数据说明@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD无数据说明@2x.png"; sourceTree = "<group>"; };
+		ECF0F9BE18DB5021005C2B60 /* AD小屁股提示-手@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD小屁股提示-手@2x.png"; sourceTree = "<group>"; };
+		ECF0F9BF18DB5021005C2B60 /* AD小屁股提示@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD小屁股提示@2x.png"; sourceTree = "<group>"; };
+		ECF0F9C218DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CAKeyframeAnimation+GLPadShake.h"; path = "../CAKeyframeAnimation+GLPadShake.h"; sourceTree = "<group>"; };
+		ECF0F9C318DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CAKeyframeAnimation+GLPadShake.m"; path = "../CAKeyframeAnimation+GLPadShake.m"; sourceTree = "<group>"; };
+		ECF0F9C418DB53A4005C2B60 /* GLPadEasing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLPadEasing.h; path = ../GLPadEasing.h; sourceTree = "<group>"; };
+		ECF0F9CB18DBFC8A005C2B60 /* AD一起记胎动按钮小@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD一起记胎动按钮小@2x.png"; sourceTree = "<group>"; };
+		ECF0F9CC18DBFC8A005C2B60 /* AD一起记胎动按钮小-点击@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AD一起记胎动按钮小-点击@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -947,6 +967,14 @@
 		72EF993418C5C6E4005D3D21 /* HomeImages */ = {
 			isa = PBXGroup;
 			children = (
+				ECF0F9CB18DBFC8A005C2B60 /* AD一起记胎动按钮小@2x.png */,
+				ECF0F9CC18DBFC8A005C2B60 /* AD一起记胎动按钮小-点击@2x.png */,
+				ECF0F9BE18DB5021005C2B60 /* AD小屁股提示-手@2x.png */,
+				ECF0F9BF18DB5021005C2B60 /* AD小屁股提示@2x.png */,
+				ECF0F9BC18DB464B005C2B60 /* AD无数据说明@2x.png */,
+				ECF0F9BA18DB4544005C2B60 /* AD智能计算-标题@2x.png */,
+				EC49597118DAEC3500A1950E /* AD地图@2x.png */,
+				EC49597218DAEC3500A1950E /* AD人头@2x.png */,
 				EC49596818DAE2A400A1950E /* AD上一页@2x.png */,
 				EC49596918DAE2A400A1950E /* AD说明-白色问号@2x.png */,
 				EC49596A18DAE2A400A1950E /* AD下一页@2x.png */,
@@ -1072,6 +1100,7 @@
 			children = (
 				725A6A2318C2D209000FA35A /* ADFetalPrimaryVC.h */,
 				7262F6FB18D939AA0058E61E /* ADFetalPrimaryVC.m */,
+				ECF0F9C618DB53CA005C2B60 /* ADAnimition */,
 				EC49595B18DADFDC00A1950E /* ADMomInVited */,
 				EC49595E18DADFDC00A1950E /* ExplanationView */,
 			);
@@ -1103,6 +1132,16 @@
 				EC49596518DAE11200A1950E /* ADShareView.m */,
 			);
 			path = ShareView;
+			sourceTree = "<group>";
+		};
+		ECF0F9C618DB53CA005C2B60 /* ADAnimition */ = {
+			isa = PBXGroup;
+			children = (
+				ECF0F9C218DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.h */,
+				ECF0F9C318DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.m */,
+				ECF0F9C418DB53A4005C2B60 /* GLPadEasing.h */,
+			);
+			path = ADAnimition;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1185,6 +1224,7 @@
 				7235225218D2B2B400C9B5B4 /* setting_about_icon@2x.png in Resources */,
 				723A5C4F18CA150000CDE19A /* milestone_section_bg@2x.png in Resources */,
 				7244EF6518D9D2EE00B2E132 /* superman_ba@2x.png in Resources */,
+				ECF0F9BB18DB4544005C2B60 /* AD智能计算-标题@2x.png in Resources */,
 				72EF993318C5B8F3005D3D21 /* tab_setting_selected@2x.png in Resources */,
 				723A5C5118CA150000CDE19A /* milestone_yellow_line@2x.png in Resources */,
 				72F0C4B018C195FB006ABEB1 /* InfoPlist.strings in Resources */,
@@ -1196,6 +1236,7 @@
 				723523B918D691D800C9B5B4 /* WeiboSDK.bundle in Resources */,
 				7244EF6B18D9DB3100B2E132 /* duedate_border_bg@2x.png in Resources */,
 				7244EF6718D9D5EB00B2E132 /* register_border_bg@2x.png in Resources */,
+				EC49597318DAEC3500A1950E /* AD地图@2x.png in Resources */,
 				723522D418D3FCC000C9B5B4 /* qq_nonbind_icon@2x.png in Resources */,
 				7244EF6418D9D2EE00B2E132 /* moon_bg@2x.png in Resources */,
 				723522D818D3FCC000C9B5B4 /* tencent_nonbind_icon@2x.png in Resources */,
@@ -1206,7 +1247,9 @@
 				7244EF7118D9EA9000B2E132 /* code_circle_hilightbg@2x.png in Resources */,
 				723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */,
 				7201434818D08F08007D04B6 /* tencent_icon_hilight@2x.png in Resources */,
+				ECF0F9C018DB5021005C2B60 /* AD小屁股提示-手@2x.png in Resources */,
 				723522D618D3FCC000C9B5B4 /* tencent_bind_icon@2x..png in Resources */,
+				EC49597418DAEC3500A1950E /* AD人头@2x.png in Resources */,
 				7201435318D090B9007D04B6 /* immet_enter_bg_hilight@2x.png in Resources */,
 				72EF993018C5B8F3005D3D21 /* tab_fetalData_selected@2x.png in Resources */,
 				723522D918D3FCC000C9B5B4 /* qq_bind_icon@2x.png in Resources */,
@@ -1218,6 +1261,7 @@
 				7244EF5E18D99A4500B2E132 /* home_question mark_bg@2x.png in Resources */,
 				72D5DCE118C62B6B003B7CC8 /* mark_bgImage@2x.png in Resources */,
 				72EC187B18C71B8100862D50 /* start_record_bg@2x.png in Resources */,
+				ECF0F9BD18DB464B005C2B60 /* AD无数据说明@2x.png in Resources */,
 				72D5DCDC18C6201E003B7CC8 /* share_button@2X.png in Resources */,
 				722EA69718CF0BE80080E16B /* register_button_bg@2x.png in Resources */,
 				72EF993B18C5F3D8005D3D21 /* bar_bg_1@2x.png in Resources */,
@@ -1241,10 +1285,12 @@
 				EC49597018DAE2A400A1950E /* AD邀请妈妈按钮@2x.png in Resources */,
 				7235225018D2B2B400C9B5B4 /* setting_feedback_icon@2x.png in Resources */,
 				723A5C5318CA150000CDE19A /* milestone_mark_bg@2x.png in Resources */,
+				ECF0F9C118DB5021005C2B60 /* AD小屁股提示@2x.png in Resources */,
 				723522BF18D309EE00C9B5B4 /* setting_switch_on@2x.png in Resources */,
 				72EC187E18C7209E00862D50 /* record_complete_button@2x.png in Resources */,
 				723522D318D3FCC000C9B5B4 /* sina_bind_icon@2x.png in Resources */,
 				7244EF6918D9DA5E00B2E132 /* setting_calendar_bg@2x.png in Resources */,
+				ECF0F9CD18DBFC8A005C2B60 /* AD一起记胎动按钮小@2x.png in Resources */,
 				723A5C5218CA150000CDE19A /* milestone_content_bg@2x.png in Resources */,
 				7244EF6F18D9E3B700B2E132 /* moon_little_bg@2x.png in Resources */,
 				EC49596F18DAE2A400A1950E /* AD下一页@2x.png in Resources */,
@@ -1256,6 +1302,7 @@
 				72EF993618C5C6F4005D3D21 /* cload_bg@2x.png in Resources */,
 				723A5C5618CABDDE00CDE19A /* milestone_medal_image3@2x.png in Resources */,
 				7235223918D2A30F00C9B5B4 /* SettingTabelViewPropertyList.plist in Resources */,
+				ECF0F9CE18DBFC8A005C2B60 /* AD一起记胎动按钮小-点击@2x.png in Resources */,
 				7244EF6E18D9E3B700B2E132 /* superman_little_bg@2x.png in Resources */,
 				723522DA18D3FCC000C9B5B4 /* baidu_bind_icon@2x.png in Resources */,
 				7235225418D2B2B400C9B5B4 /* setting_account_icon@2x.png in Resources */,
@@ -1342,6 +1389,7 @@
 				7262F6FC18D939AA0058E61E /* ADFetalPrimaryVC.m in Sources */,
 				722EA68218CF01CA0080E16B /* UIAlertView+MKNetworkKitAdditions.m in Sources */,
 				7244EF6118D9C62400B2E132 /* ADLoginFirstVC.m in Sources */,
+				ECF0F9C518DB53A4005C2B60 /* CAKeyframeAnimation+GLPadShake.m in Sources */,
 				723522CA18D3F48900C9B5B4 /* ADAccoundCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
