@@ -51,6 +51,7 @@ typedef enum {
 #define ACCOUNT_ADDING_UID @"addingUid"
 #define ACCOUNT_ADDING_TOKEN @"addingToken"
 #define ACCOUNT_ADDING_NICKNAME @"addingNickname"
+#define ACCOUNT_ADDING_ISADDING @"isAdding"
 
 //sina
 #define kSinaAppKey         @"717965101"

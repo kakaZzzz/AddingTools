@@ -7,7 +7,6 @@
 //
 
 #import "ADAppDelegate.h"
-#import "ADTabBarViewController.h"
 #import "ADAccountCenter.h"
 
 
@@ -24,13 +23,14 @@
     [WeiboSDK enableDebugMode:YES];
     [WeiboSDK registerApp:kSinaAppKey];
     
-    
-    
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
-    ADTabBarViewController *tabBarController = [[ADTabBarViewController alloc] init];
-    self.window.rootViewController = tabBarController;
+    self.tabBarController = [[ADTabBarViewController alloc] init];
+    self.window.rootViewController = _tabBarController;
+    
+
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -42,7 +42,6 @@
 }
 - (void)didReceiveWeiboResponse:(WBBaseResponse *)response
 {
-    
     
     NSLog(@"2222222222");
     if ([response isKindOfClass:WBSendMessageToWeiboResponse.class])

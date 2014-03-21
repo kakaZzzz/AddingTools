@@ -43,12 +43,28 @@
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:_titleLabel];
     
+<<<<<<< HEAD
     
     rect.origin.x = kMargin;
     rect.origin.y = 20 + (frame.size.height -20 - kButtonWidth)/2;
     rect.size.width = kButtonWidth;
     rect.size.height = kButtonHeight;
     
+=======
+<<<<<<< HEAD
+    
+    rect.origin.x = kMargin;
+    if (IOS7_OR_LATER) {
+        rect.origin.y = 20 + (frame.size.height -20 - kButtonWidth)/2;
+    }else{
+        rect.origin.y = (frame.size.height - kButtonWidth)/2;
+    }
+    rect.size.width = kButtonWidth;
+    rect.size.height = kButtonHeight;
+    
+=======
+>>>>>>> FETCH_HEAD
+>>>>>>> FETCH_HEAD
     self.backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _backButton.frame = rect;
     [self addSubview:_backButton];

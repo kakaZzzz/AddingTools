@@ -22,5 +22,6 @@
     #import"ADNetwork.h"
     #import "ADUIParamManager.h"
     #import "ADAccountCenter.h"
+    #import "ADNavigationController.h"
 #endif
 

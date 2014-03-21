@@ -12,11 +12,14 @@
 #import "ADAccountCenter.h"
 #import "ADSwitch.h"
 #import "ADAppDelegate.h"
+#import "ADLoginFirstVC.h"
 
 #define CELL_SECTION (indexPath.row == 1)
 @interface ADAccountVC ()
 @property(nonatomic,strong) UITableView *tableView;
 @property(nonatomic,strong) TencentOAuth *tencentOAuth;
+
+
 @end
 
 @implementation ADAccountVC
@@ -34,7 +37,8 @@
         
         NSString *path = [[NSBundle mainBundle] pathForResource:@"AccoundSetProperty List" ofType:@"plist"];
         NSDictionary *resourseDic = [NSDictionary dictionaryWithContentsOfFile:path];
-        self.titleArray = [resourseDic objectForKey:@"title"];
+        self.titleArray = [NSMutableArray arrayWithCapacity:1];
+        self.titleArray.array = [resourseDic objectForKey:@"title"];
         self.iconArray = [resourseDic objectForKey:@"icon"];
         
     }
@@ -78,7 +82,17 @@
     [self.view addSubview:exitButton];
     
 }
-
+- (void)viewWillAppear:(BOOL)animated
+{
+  
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_ISADDING]) {
+        [self.titleArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"账号"]];
+    }else{
+        [self.titleArray replaceObjectAtIndex:0 withObject:[NSString stringWithFormat:@"昵称"]];
+    }
+    
+    [self.tableView reloadData];
+}
 - (void)configureNavigationView
 {
     self.navigationView.backgroundColor = [UIColor whiteColor];
@@ -210,6 +224,7 @@
 //绑定新浪账户
 -(void)oAuthSinaSuccessful:(NSNotification *)notification
 {
+    
     NSLog(@"仅仅拿个授权第三方新浪微博授权成功----%@",[notification userInfo]);//拿到了新浪微博的token
     NSDictionary *dic = notification.userInfo;
     //拿到新浪微博的token,再向本地服务器发送一个请求（前提使用户已经登录）
@@ -228,6 +243,7 @@
 {
     //[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:WEIBO_ENABLED_KEY];
     [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"绑定失败"];
+    
     [self.tableView reloadData];
 }
 
@@ -302,7 +318,7 @@
 
     
     //调取本地解除绑定接口
-     [[ADAccountCenter sharedADAccountCenter] removeBindingThirdpartyToken:nil thirdPartyType:ADACCOUNT_TYPE_SINA withTarget:self success:@selector(cancleQQBindSuccessful:) failure:@selector(cancleQQBindFailure:)];
+     [[ADAccountCenter sharedADAccountCenter] removeBindingThirdpartyToken:nil thirdPartyType:ADACCOUNT_TYPE_TENCENT withTarget:self success:@selector(cancleQQBindSuccessful:) failure:@selector(cancleQQBindFailure:)];
     
     
 }
@@ -392,10 +408,36 @@
 #pragma mark - button event
 - (void)exitAccount
 {
+<<<<<<< HEAD
 
     [[ADAccountCenter sharedADAccountCenter] exit];
     
+=======
+    
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    ADAppDelegate * appDelegate =APP_DELEGATE;
+    ADLoginFirstVC *loginFirstVC = [[ADLoginFirstVC alloc] initWithNavigationViewWithTitle:@""];
+    ADNavigationController *loginFirstNav = [[ADNavigationController alloc] initWithRootViewController:loginFirstVC];
+    
+    //ADNavigationController *nav = appDelegate.loginFirstNav;
+    appDelegate.window.rootViewController = loginFirstNav;
+    
+    
+//    ADLoginFirstVC *loginFirstVC = [nav.viewControllers objectAtIndex:0];
+//    loginFirstVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//    [appDelegate.window bringSubviewToFront:loginFirstVC.view];
+
+    
+    [[ADAccountCenter sharedADAccountCenter] exit];
+
+>>>>>>> FETCH_HEAD
     //直接到注册登录界面
+//    self.firstLoginVC =  [[ADLoginFirstVC alloc] init];
+//    UIWindow *shareWindow =((ADAppDelegate *)[[UIApplication sharedApplication] delegate]).window;
+//    [shareWindow addSubview:_firstLoginVC.view];
+    
     
 }
 - (void)didReceiveMemoryWarning
