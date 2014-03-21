@@ -673,6 +673,8 @@ CGFloat BackEaseOut(CGFloat p)
         [self.dataArray addObject:model];
     }
     
+    bg_scrollView.contentSize = CGSizeMake(320, _tableView.frame.size.height + _tableView.frame.origin.y + statusBar_height + navItem_height);
+    
 }
 
 #pragma mark - Table view data source
