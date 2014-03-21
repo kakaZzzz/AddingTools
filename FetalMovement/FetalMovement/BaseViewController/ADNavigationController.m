@@ -112,15 +112,19 @@
     //custome
     ADAppDelegate *app =(ADAppDelegate *)[UIApplication sharedApplication].delegate;
     
-    ADTabBarViewController *tabController = (ADTabBarViewController *)app.window.rootViewController;
+    UIViewController *tabController = app.window.rootViewController;
     //hide tabController's tabbar，avoid long white when push
-    tabController.tabBar.hidden = YES;
-    for (UIView * tabview in [tabController.view subviews]) {
-        if ([tabview isKindOfClass:[ADTabBarView class]]) {
-            if (tabview.hidden == NO) {
-                tabview.hidden = YES;
+    if ([tabController isKindOfClass:[ADTabBarViewController class]]) {
+        ADTabBarViewController *tabbarControl = (ADTabBarViewController *)tabController;
+        tabbarControl.tabBar.hidden = YES;
+        for (UIView * tabview in [tabController.view subviews]) {
+            if ([tabview isKindOfClass:[ADTabBarView class]]) {
+                if (tabview.hidden == NO) {
+                    tabview.hidden = YES;
+                }
             }
         }
+
     }
     
     
@@ -186,18 +190,24 @@
 - (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
 {
     
+
+    
     ADAppDelegate *app = (ADAppDelegate *)[UIApplication sharedApplication].delegate;
-    ADTabBarViewController *tabController = (ADTabBarViewController *)app.window.rootViewController;
+    UIViewController *tabController = app.window.rootViewController;
+    
+    if ([tabController isKindOfClass:[ADTabBarViewController class]]) {
     for (UIView * tabview in [tabController.view subviews]) {
         if ([tabview isKindOfClass:[ADTabBarView class]]) {
+            
+            ADTabBarViewController *tabbarControl = (ADTabBarViewController *)tabController;
             if (tabview.hidden == YES) {
                 tabview.hidden = NO;
             }
-            tabController.tabBar.hidden = YES;
+            tabbarControl.tabBar.hidden = YES;
             [tabController.view bringSubviewToFront:tabview];
         }
     }
-    
+    }
     
     
     //
@@ -239,28 +249,6 @@
 //        
 //    }
     return [super popToRootViewControllerAnimated:YES];
-    
-    
-}
-- (void)popToViewControllerIsTopViewController:(BOOL)topViewController
-{
-    //show tabbar when pop to topVC
-    if (topViewController) {
-        ADAppDelegate *app = (ADAppDelegate *)[UIApplication sharedApplication].delegate;
-        ADTabBarViewController *tabController = (ADTabBarViewController *)app.window.rootViewController;
-        tabController.tabBar.hidden = YES;
-        
-        for (UIView * tabview in [tabController.view subviews]) {
-            if ([tabview isKindOfClass:[ADTabBarView class]]) {
-                if (tabview.hidden == YES) {
-                    tabview.hidden = NO;
-                }
-                [tabController.view bringSubviewToFront:tabview];
-            }
-        }
-    }
-    
-    [self popViewControllerAnimated:YES];
     
     
 }

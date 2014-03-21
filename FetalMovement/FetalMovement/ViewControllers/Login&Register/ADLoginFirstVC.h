@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ADLoginFirstVC : UIViewController<UITextFieldDelegate,TencentSessionDelegate>
+@interface ADLoginFirstVC :ADBaseViewController <UITextFieldDelegate,TencentSessionDelegate>
 @property(nonatomic,strong)UITextField *telNumberField;
 @property(nonatomic,strong)UITextField *pswordField;
 @property(nonatomic,strong)UIView *contentView;

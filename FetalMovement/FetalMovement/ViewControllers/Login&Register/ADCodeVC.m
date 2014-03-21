@@ -9,7 +9,7 @@
 #import "ADCodeVC.h"
 #import "ADAccountVC.h"
 #import "ADSetPrimaryVC.h"
-
+#import "RegexKitLite.h"
 #import "ADAppDelegate.h"
 #import "ADTabBarViewController.h"
 #define acount_Number     (60)
@@ -54,6 +54,11 @@
    //发送请求验证码
     NSString *string = @"%2b86";
     [[ADAccountCenter sharedADAccountCenter] getCodeWhenRegisterWithPhone:[string stringByAppendingString:_phoneNumber] withTarget:self success:@selector(getCodeSuccessful:) failure:nil];
+    
+    //点击空白处收回键盘
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBlankRegin:)];
+    [self.view addGestureRecognizer:tap];
+
     // Do any additional setup after loading the view.
 }
 - (void)configureNavigationView
@@ -136,6 +141,10 @@
         rect.origin.x =64/2 + 55*i+ i*12;
         UIImageView *aImageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"code_circle_hilightbg@2x"]];
         aImageview.frame = rect;
+        aImageview.userInteractionEnabled = YES;
+        //在aImageview上添加手势 弹出键盘
+        UITapGestureRecognizer *showKeybord = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showKeybord:)];
+        [aImageview addGestureRecognizer:showKeybord];
         [self.view addSubview:aImageview];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 55, 55)];
@@ -143,6 +152,7 @@
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont systemFontOfSize:40];
         label.tag = 100+i;
+         
         [aImageview addSubview:label];
     }
    
@@ -202,11 +212,27 @@
         [codeString appendString:label.text];
     }
 
-    //发送手机注册请求
-    NSString *string = @"%2b86";
-    [[ADAccountCenter sharedADAccountCenter] userRegisterWithPhone:[string stringByAppendingString:_phoneNumber] passWord:_password codeid:_codeid code:codeString withTarget:self success:@selector(registerSuccessful:) failure:@selector(registerFailure:)];
-}
+    if ([self isRealCode:codeString]) {
+        //发送手机注册请求
+        NSString *string = @"%2b86";
+        [[ADAccountCenter sharedADAccountCenter] userRegisterWithPhone:[string stringByAppendingString:_phoneNumber] passWord:_password codeid:_codeid code:codeString withTarget:self success:@selector(registerSuccessful:) failure:@selector(registerFailure:)];
 
+    }else{
+        [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"验证码错误"];
+    }
+    
+    
+ }
+//判断验证码是否4为数字
+- (BOOL)isRealCode:(NSString *)code
+{
+     BOOL isCode = [code isMatchedByRegex: @"^[0-9]*$"];
+    if (isCode && (code.length == 4)) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
 - (void)registerSuccessful:(id)object
 {
     NSLog(@"注册成功，.......  %@",object);
@@ -330,6 +356,26 @@
 }
 
 
+#pragma mark - private method
+-(void)tapBlankRegin:(UITapGestureRecognizer *)tap
+{
+    [self hideKeyBoard];
+}
+
+-(void)hideKeyBoard
+{
+    if ([_codeNumberField isFirstResponder]){
+        [_codeNumberField resignFirstResponder];
+    }
+}
+//弹出键盘
+-(void)showKeybord:(UITapGestureRecognizer *)tap
+{
+    if (![_codeNumberField isFirstResponder]){
+        [_codeNumberField becomeFirstResponder];
+    }
+
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

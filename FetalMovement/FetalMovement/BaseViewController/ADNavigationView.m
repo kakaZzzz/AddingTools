@@ -45,7 +45,11 @@
     
     
     rect.origin.x = kMargin;
-    rect.origin.y = 20 + (frame.size.height -20 - kButtonWidth)/2;
+    if (IOS7_OR_LATER) {
+        rect.origin.y = 20 + (frame.size.height -20 - kButtonWidth)/2;
+    }else{
+        rect.origin.y = (frame.size.height - kButtonWidth)/2;
+    }
     rect.size.width = kButtonWidth;
     rect.size.height = kButtonHeight;
     

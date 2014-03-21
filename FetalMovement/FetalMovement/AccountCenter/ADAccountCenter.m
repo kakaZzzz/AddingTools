@@ -373,6 +373,17 @@
             NSString *nickname;
             if (![[resultDic objectForKey:@"nickname"] isEqualToString:@""]) {
                 nickname = [resultDic objectForKey:@"nickname"];
+                
+
+            }else{
+                
+                
+                if (![[resultDic objectForKey:@"phone"] isEqualToString:@""]) {
+                    nickname = [resultDic objectForKey:@"phone"];
+                }else{
+                    nickname = [resultDic objectForKey:@"email"];
+                }
+                
             }
             
             [[NSUserDefaults standardUserDefaults] setObject:nickname forKey:ACCOUNT_ADDING_NICKNAME];
@@ -1098,9 +1109,9 @@ static int remoteSync = 0;
         token = oauth_token;
     }
     
-    MKNetworkEngine *engine = [[MKNetworkEngine alloc] initWithHostName:HTTP_HOST customHeaderFields:nil];
-    [engine cancelAllOperations];
-    MKNetworkOperation * op = [engine operationWithPath:[NSString stringWithFormat:@"account/partner_get_bind?oauth_token=%@",token] params:nil httpMethod:@"GET" ssl:NO];
+    self.engine = [[MKNetworkEngine alloc] initWithHostName:HTTP_HOST customHeaderFields:nil];
+    [_engine cancelAllOperations];
+    MKNetworkOperation * op = [_engine operationWithPath:[NSString stringWithFormat:@"account/partner_get_bind?oauth_token=%@",token] params:nil httpMethod:@"GET" ssl:NO];
     
     NSLog(@"获取第三方账户绑定信息请求接口是%@",op);
     [op addCompletionHandler:^(MKNetworkOperation *operation) {
@@ -1109,11 +1120,17 @@ static int remoteSync = 0;
         NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingAllowFragments error:nil];
         NSLog(@"获取第三方账户绑定信息是%@",resultDic);
         
+        if ([[resultDic objectForKey:@"weibo_enabled"] intValue] == 1 || [[resultDic objectForKey:@"qq_enabled"] intValue] == 1 || [[resultDic objectForKey:@"baidu_enabled"] intValue] == 1) {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:ACCOUNT_ADDING_ISADDING];
+             [[NSUserDefaults standardUserDefaults] synchronize];
+        }else{
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:ACCOUNT_ADDING_ISADDING];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
         
         [[NSUserDefaults standardUserDefaults] setObject:[resultDic objectForKey:@"weibo_enabled"] forKey:WEIBO_ENABLED_KEY];
         [[NSUserDefaults standardUserDefaults] setObject:[resultDic objectForKey:@"qq_enabled"] forKey:QQ_ENABLED_KEY];
         [[NSUserDefaults standardUserDefaults] setObject:[resultDic objectForKey:@"baidu_enabled"] forKey:BAIDU_ENABLED_KEY];
-        
         [[NSUserDefaults standardUserDefaults] synchronize];
      
         //后续操作，绑定成功还是失败再进行操作........
@@ -1125,7 +1142,7 @@ static int remoteSync = 0;
         
         
     }];
-    [engine enqueueOperation:op];
+    [_engine enqueueOperation:op];
 
 }
 
@@ -1145,7 +1162,12 @@ static int remoteSync = 0;
  */
 - (void)exit
 {
+    
+    NSLog(@"推出前token 是%@",[[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_TOKEN]);
+    
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:ACCOUNT_ADDING_TOKEN];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+     NSLog(@"推出后token 是%@",[[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_TOKEN]);
 }
 @end

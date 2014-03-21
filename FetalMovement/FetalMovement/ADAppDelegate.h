@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ADTabBarViewController.h"
 @interface ADAppDelegate : UIResponder <UIApplicationDelegate,WeiboSDKDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
@@ -16,6 +16,10 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+@property (strong, nonatomic)ADTabBarViewController *tabBarController;
+//登录页面
+//@property (strong, nonatomic) ADLoginFirstVC *loginFirstVC;
+//@property (strong, nonatomic) ADNavigationController *loginFirstNav;
 @property (assign, nonatomic) ADACCOUNT_TYPE urlType;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

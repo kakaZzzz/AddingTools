@@ -203,17 +203,16 @@
     [_contentView addSubview:_btnQQ];
     
     rect.origin.x += (rect.size.width + nbuttonMargin);
-    UIButton * _tencent = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_tencent setBackgroundImage:[UIImage imageNamed:@"tencent_icon@2x"] forState:UIControlStateNormal];
-    [_tencent setBackgroundImage:[UIImage imageNamed:@"tencent_icon_hilight@2x"] forState:UIControlStateHighlighted];
-    _tencent.frame = rect;
-    [_contentView addSubview:_tencent];
+    UIButton * _baidu = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_baidu setBackgroundImage:[UIImage imageNamed:@"baidu_icon@2x"] forState:UIControlStateNormal];
+    [_baidu setBackgroundImage:[UIImage imageNamed:@"baidu_icon_hilight@2x"] forState:UIControlStateHighlighted];
+    _baidu.frame = rect;
+    [_contentView addSubview:_baidu];
     
  
     [_btnSina addTarget:self action:@selector(LoginAuthSina) forControlEvents:UIControlEventTouchUpInside];
-    [_tencent addTarget:self action:@selector(LoginAauthTencentWeibo) forControlEvents:UIControlEventTouchUpInside];
     [_btnQQ addTarget:self action:@selector(LoginAuthQQ) forControlEvents:UIControlEventTouchUpInside];
-    
+    [_baidu addTarget:self action:@selector(LoginAauthBaidu) forControlEvents:UIControlEventTouchUpInside];
     
     //小超人图片
     UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_little_bg@2x"]];
@@ -348,6 +347,7 @@
 
 - (void)thirdPartySuccessful:(id)obj
 {
+    [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"登录成功"];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 - (void)thirdPartyFailure:(id)obj
@@ -391,7 +391,7 @@
         NSLog(@"获取的token是%@",_tencentOAuth.accessToken);
         //拿到qq的token,再向本地服务器发送一个请求.生成一个加丁自己的token
         
-        [[ADAccountCenter sharedADAccountCenter] postThirdpartyTokenTolocalServer:_tencentOAuth.accessToken thirdPartyType:ADACCOUNT_TYPE_SINA withTarget:self success:@selector(thirdPartySuccessful:) failure:@selector(thirdPartyFailure:)];
+        [[ADAccountCenter sharedADAccountCenter] postThirdpartyTokenTolocalServer:_tencentOAuth.accessToken thirdPartyType:ADACCOUNT_TYPE_TENCENT withTarget:self success:@selector(thirdPartySuccessful:) failure:@selector(thirdPartyFailure:)];
     }
     else
     {
@@ -401,16 +401,17 @@
     }
 }
 
--(void)LoginAauthTencentWeibo
+-(void)LoginAauthBaidu
 {
     [self hideKeyBoard];
      //百度云账号登录
     
 }
-
-- (void)immediateEnter
+#pragma mark - textField delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    
+    [self LoginAuthTel];
+    return YES;
 }
 #pragma mark - Private Methods
 

@@ -11,7 +11,7 @@
 #import "ADAccountCenter.h"
 #import "RegexKitLite.h"
 #import "ADAppDelegate.h"
-
+#import "ADTabBarViewController.h"
 @interface ADLoginFirstVC ()
 @property(nonatomic,strong)TencentOAuth *tencentOAuth;
 @end
@@ -32,9 +32,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self configureNavigationView];
+    NSLog(@"登录页面的viewdidLoad走了吗？");
   
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
     [self createSubviews:self.view.frame];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBlankRegin:)];
@@ -42,27 +43,26 @@
 
     // Do any additional setup after loading the view.
 }
+- (void)configureNavigationView
+{
+    self.navigationView.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
+    self.navigationView.titleLabel.textColor = kOrangeFontColor;
+    
+}
 
 #pragma mark - 创建子视图
 - (void)createSubviews:(CGRect)frame
 {
-    //    int nLeftMargin = (320 - 580/2)/2;
-    int yOffset = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight] +  12/2;
+    
+    int yOffset = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight] +  24/2;
     
     //tel
     CGRect rect = CGRectMake((320 - 580/2)/2,yOffset,580/2 ,110/2);
     
     UIImage* bgimg = [UIImage imageNamed:@"register_border_bg@2x"];
-    //    if ([UIImage instancesRespondToSelector:@selector(resizableImageWithCapInsets:)]) {
-    //        bgimg = [bgimg resizableImageWithCapInsets:UIEdgeInsetsMake(0,10,0,10)];
-    //    }
-    //    else{
-    //        bgimg = [bgimg stretchableImageWithLeftCapWidth:10 topCapHeight:0];
-    //    }
-    
     UIImageView*  telbg = [[UIImageView alloc]initWithFrame:rect];
     telbg.image = bgimg;
-    telbg.backgroundColor = [UIColor whiteColor];
+    telbg.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
     [self.view addSubview:telbg];
     
     CGRect rectBut;
@@ -80,9 +80,11 @@
     _telNumberField.clearButtonMode      = UITextFieldViewModeWhileEditing;
     _telNumberField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _telNumberField.autocorrectionType   = UITextAutocorrectionTypeNo;
-    _telNumberField.placeholder          = @"手机号";
-    _telNumberField.font                 = [UIFont systemFontOfSize:17];
+    _telNumberField.placeholder          = @"邮箱地址 或 手机号";
+    _telNumberField.font                 = [UIFont systemFontOfSize:40/2];
+    _telNumberField.textColor            = kContentFontColor;
     _telNumberField.frame                = rectBut;
+
     
     [self.view addSubview:_telNumberField];
     
@@ -91,7 +93,7 @@
     
     UIImageView*  pswbg = [[UIImageView alloc]initWithFrame:rect];
     pswbg.image  = bgimg;
-    pswbg.backgroundColor = [UIColor whiteColor];
+    pswbg.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
     [self.view addSubview:pswbg];
     
     
@@ -105,7 +107,8 @@
     _pswordField.keyboardType         = UIKeyboardTypeASCIICapable;
     _pswordField.borderStyle          = UITextBorderStyleNone;
     _pswordField.clipsToBounds        = YES;
-    _pswordField.font                 = [UIFont systemFontOfSize:17];
+    _pswordField.font                 = [UIFont systemFontOfSize:40/2];
+    _pswordField.textColor            = kContentFontColor;
     
     _pswordField.clearButtonMode      = UITextFieldViewModeWhileEditing;
     _pswordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -115,6 +118,7 @@
     _pswordField.secureTextEntry      = YES;
     _pswordField.returnKeyType        = UIReturnKeyGo;
     _pswordField.delegate             = self;
+
     [self.view addSubview:_pswordField];
     
     
@@ -144,7 +148,7 @@
     _btnRegister.frame  = rectBut;
     
     [_btnRegister.titleLabel setFont:[UIFont systemFontOfSize:15]];
-    [_btnRegister setTitle:@"注册加丁账号" forState:UIControlStateNormal];
+    [_btnRegister setTitle:@"注册" forState:UIControlStateNormal];
     [_btnRegister setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     //    [_btnRegister setBackgroundImage:[UIImage imageNamed:@"register_button_bg@2x"]forState:UIControlStateNormal];
     //    [_btnRegister setBackgroundImage:[UIImage imageNamed:@"register_button_selected_bg@2x"] forState:UIControlStateHighlighted];
@@ -154,14 +158,15 @@
     [_btnRegister addTarget:self action:@selector(LoginRegister) forControlEvents:UIControlEventTouchUpInside];
     
     
-    //others login
-    rect.origin.y += (rect.size.height + 120/2);
+    //other logins
+    rect.origin.y += (rect.size.height + 100/2);
     rect.origin.x   = 0;
     rect.size.width =frame.size.width;
-    rect.size.height=frame.size.height-rect.origin.y;
+    rect.size.height=100/2;
+
     
     self.contentView = [[UIView alloc] initWithFrame:rect];
-    _contentView.backgroundColor = [UIColor whiteColor];
+    _contentView.backgroundColor = [UIColor colorWithRed:241/255.0 green:235/255.0 blue:223/255.0 alpha:1.0];
     [self.view addSubview:_contentView];
     
 
@@ -178,9 +183,7 @@
     [_btnSina setBackgroundImage:[UIImage imageNamed:@"sina_icon_hilight@2x"] forState:UIControlStateNormal];
     [_contentView addSubview:_btnSina];
     
-    
-    
-    
+
     rect.origin.x += (rect.size.width + nbuttonMargin);
     UIButton * _btnQQ = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnQQ.frame = rect;
@@ -189,11 +192,11 @@
     [_contentView addSubview:_btnQQ];
     
     rect.origin.x += (rect.size.width + nbuttonMargin);
-    UIButton * _tencent = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_tencent setBackgroundImage:[UIImage imageNamed:@"tencent_icon@2x"] forState:UIControlStateNormal];
-    [_tencent setBackgroundImage:[UIImage imageNamed:@"tencent_icon_hilight@2x"] forState:UIControlStateHighlighted];
-    _tencent.frame = rect;
-    [_contentView addSubview:_tencent];
+    UIButton * _baidu = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_baidu setBackgroundImage:[UIImage imageNamed:@"baidu_icon@2x"] forState:UIControlStateNormal];
+    [_baidu setBackgroundImage:[UIImage imageNamed:@"baidu_icon_hilight@2x"] forState:UIControlStateHighlighted];
+    _baidu.frame = rect;
+    [_contentView addSubview:_baidu];
     
     rect.origin.x += (rect.size.width + 36/2);
     rect.size.width     = SCREEN_WIDTH - rect.origin.x;
@@ -204,9 +207,37 @@
     [_contentView addSubview:_immeEnter];
     
     [_btnSina addTarget:self action:@selector(LoginAuthSina) forControlEvents:UIControlEventTouchUpInside];
-    [_tencent addTarget:self action:@selector(LoginAauthTencentWeibo) forControlEvents:UIControlEventTouchUpInside];
     [_btnQQ addTarget:self action:@selector(LoginAuthQQ) forControlEvents:UIControlEventTouchUpInside];
+    [_baidu addTarget:self action:@selector(LoginAauthTencentWeibo) forControlEvents:UIControlEventTouchUpInside];
     [_immeEnter addTarget:self action:@selector(immediateEnter) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    //
+    //小超人图片
+    UIImageView *aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_little_bg@2x"]];
+    aImageView.frame = CGRectMake(0, frame.size.height - 400/4, 400/2, 400/2);
+    
+    //月球图片
+    UIImageView *bImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"moon_little_bg@2x"]];
+    bImageView.frame = CGRectMake(0, frame.size.height - 240/4, 240/2, 240/2);
+    
+    if (RETINA_INCH4) {
+        aImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"superman_ba@2x"]];
+        aImageView.frame = CGRectMake(0, frame.size.height - 600/4, 600/2, 600/2);
+        
+        bImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"moon_bg@2x"]];
+        bImageView.frame = CGRectMake(0, frame.size.height - 360/4, 360/2, 360/2);
+    }
+    
+    
+    CGPoint center = aImageView.center;
+    aImageView.center = CGPointMake(320/2,center.y);
+    [self.view addSubview:aImageView];
+    
+    center = bImageView.center;
+    bImageView.center = CGPointMake(320/2,center.y);
+    [self.view addSubview:bImageView];
+
     
 }
 
@@ -220,6 +251,8 @@
     [self hideKeyBoard];
     
     ADRegisterVC *registerVC = [[ADRegisterVC alloc] initWithNavigationViewWithTitle:@"注册"];
+    NSLog(@"登陆页面的 导航栏是%@",self.navigationController);
+    
     [self.navigationController pushViewController:registerVC animated:YES];
 }
 
@@ -279,7 +312,14 @@
     //表示登录成功  做登录成功之后的事情
     [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"登录成功"];
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+//    ADAppDelegate * appDelegate =((ADAppDelegate *)[[UIApplication sharedApplication] delegate]);
+//    ADNavigationController *nav = appDelegate.loginFirstNav;
+//    ADLoginFirstVC *loginFirstVC = [nav.viewControllers objectAtIndex:0];
+//    loginFirstVC.view.frame = CGRectMake(-320, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//    [appDelegate.window bringSubviewToFront:loginFirstVC.view];
+  
+//    self.view.frame = CGRectMake(0, -320, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
 }
 - (void)getUserInfoFailure:(id)object
 {
@@ -316,7 +356,19 @@
 
 - (void)thirdPartySuccessful:(id)obj
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    //表示登录成功  做登录成功之后的事情
+    [[ADAccountCenter sharedADAccountCenter] showAlertWithMessage:@"登录成功"];
+    
+    //移除登录界面
+    ADAppDelegate * appDelegate =((ADAppDelegate *)[[UIApplication sharedApplication] delegate]);
+//    ADNavigationController *nav = appDelegate.loginFirstNav;
+//    ADLoginFirstVC *loginFirstVC = [nav.viewControllers objectAtIndex:0];
+//    loginFirstVC.view.frame = CGRectMake(-320, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//    [appDelegate.window bringSubviewToFront:loginFirstVC.view];
+    //程序恢复到第一个界面
+    ADTabBarViewController *tabbarController = (ADTabBarViewController *)appDelegate.window.rootViewController;
+    tabbarController.selectedIndex = 0;
+    [tabbarController.customTabBar setSelectedIndex:0];
 }
 - (void)thirdPartyFailure:(id)obj
 {
@@ -359,7 +411,7 @@
         NSLog(@"获取的token是%@",_tencentOAuth.accessToken);
         //拿到qq的token,再向本地服务器发送一个请求.生成一个加丁自己的token
         
-        [[ADAccountCenter sharedADAccountCenter] postThirdpartyTokenTolocalServer:_tencentOAuth.accessToken thirdPartyType:ADACCOUNT_TYPE_SINA withTarget:self success:@selector(thirdPartySuccessful:) failure:@selector(thirdPartyFailure:)];
+        [[ADAccountCenter sharedADAccountCenter] postThirdpartyTokenTolocalServer:_tencentOAuth.accessToken thirdPartyType:ADACCOUNT_TYPE_TENCENT withTarget:self success:@selector(thirdPartySuccessful:) failure:@selector(thirdPartyFailure:)];
     }
     else
     {
@@ -375,10 +427,18 @@
     //百度云账号登录
     
 }
-
+/**
+ *  立即进入程序 不需要注册
+ */
 - (void)immediateEnter
 {
-    
+//    ADAppDelegate * appDelegate =((ADAppDelegate *)[[UIApplication sharedApplication] delegate]);
+//    ADNavigationController *nav = appDelegate.loginFirstNav;
+//    ADLoginFirstVC *loginFirstVC = [nav.viewControllers objectAtIndex:0];
+//    loginFirstVC.view.frame = CGRectMake(-320, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//    [appDelegate.window bringSubviewToFront:loginFirstVC.view];
+//    self.view.frame = CGRectMake(0, -320, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 }
 #pragma mark - Private Methods
 

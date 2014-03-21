@@ -57,8 +57,7 @@
     [shareButton addTarget:self action:@selector(shareToSina) forControlEvents:UIControlEventTouchUpInside];
     //    [self.view addSubview:shareButton];
     
-    
-    
+
     int navigationHeight = [[ADUIParamManager sharedADUIParamManager] getNavigationBarHeight];
     
     //banner
@@ -100,26 +99,35 @@
     //获取第三方账号信息(是否绑定)，将此请求放在一级页面
     [[ADAccountCenter sharedADAccountCenter] getThirdPartyBindInfomationWithOAuthtoken:nil];
     
-    
-    NSString *nikeName=@"";
+    NSString *nickName=@"";
     
     NSLog(@"本地昵称是多少啊啊啊  %@",[[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME]);
     
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME] == nil) {
-        //获取用户信息(昵称)
-        NSLog(@"请求网络获取昵称");
-        [[ADAccountCenter sharedADAccountCenter] getUserInfoWithToken:nil withTarget:self success:@selector(getAddingUserInfoSuccessful:) failure:@selector(getAddingUserInfoFailure:)];
+    //前提看有没有登录，没有登录直接就显示未登录
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_TOKEN] == nil) {//登录态
+        NSLog(@"未登录状态");
+         nickName = @"未登录";
     }else{
-        nikeName = [[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME];
-        NSLog(@"直接取本地昵称是。。。。。。%@",nikeName);
+       
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME] == nil) {
+            //获取用户信息(昵称)
+            NSLog(@"请求网络获取昵称");
+            [[ADAccountCenter sharedADAccountCenter] getUserInfoWithToken:nil withTarget:self success:@selector(getAddingUserInfoSuccessful:) failure:@selector(getAddingUserInfoFailure:)];
+        }else{
+            nickName = [[NSUserDefaults standardUserDefaults] objectForKey:ACCOUNT_ADDING_NICKNAME];
+            NSLog(@"直接取本地昵称是111。。。。。。%@",nickName);
+        }
+        
+  
     }
     
-    if (nikeName == nil) {
+    
+    if (nickName == nil) {
         self.acccount = @"";
     }else{
-        self.acccount =nikeName;
+        self.acccount =nickName;
     }
-    
+
     self.duedate = @"2014-08-25";
     
     NSDate *date = [[ADAccountCenter sharedADAccountCenter] getDuedate];

@@ -11,7 +11,7 @@
 @interface ADAccountVC : ADBaseViewController<UITableViewDelegate,
 UITableViewDataSource,
 TencentSessionDelegate>
-@property(nonatomic,strong)NSArray *titleArray;//标题数组
+@property(nonatomic,strong)NSMutableArray *titleArray;//标题数组
 @property(nonatomic,strong)NSArray *iconArray;//标题数组
 @property(nonatomic,strong)NSArray *contentArray;//标题数组
 @end

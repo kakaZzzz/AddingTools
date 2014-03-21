@@ -109,6 +109,8 @@
 		7244EF7618D9ECED00B2E132 /* navigation_backbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7244EF7518D9ECED00B2E132 /* navigation_backbutton_bg@2x.png */; };
 		7244EF7918D9F01B00B2E132 /* banner_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7244EF7718D9F01B00B2E132 /* banner_2@2x.png */; };
 		7244EF7A18D9F01B00B2E132 /* banner_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7244EF7818D9F01B00B2E132 /* banner_1@2x.png */; };
+		7244EF7D18DAB51B00B2E132 /* baidu_icon_hilight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7244EF7B18DAB51B00B2E132 /* baidu_icon_hilight@2x.png */; };
+		7244EF7E18DAB51B00B2E132 /* baidu_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7244EF7C18DAB51B00B2E132 /* baidu_icon@2x.png */; };
 		725A69FF18C2CDFC000FA35A /* ADTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */; };
 		725A6A0218C2CE18000FA35A /* ADTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A0118C2CE18000FA35A /* ADTabBarView.m */; };
 		725A6A2818C2D23A000FA35A /* ADSetPrimaryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 725A6A2718C2D23A000FA35A /* ADSetPrimaryVC.m */; };
@@ -319,6 +321,8 @@
 		7244EF7518D9ECED00B2E132 /* navigation_backbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigation_backbutton_bg@2x.png"; sourceTree = "<group>"; };
 		7244EF7718D9F01B00B2E132 /* banner_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "banner_2@2x.png"; sourceTree = "<group>"; };
 		7244EF7818D9F01B00B2E132 /* banner_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "banner_1@2x.png"; sourceTree = "<group>"; };
+		7244EF7B18DAB51B00B2E132 /* baidu_icon_hilight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baidu_icon_hilight@2x.png"; sourceTree = "<group>"; };
+		7244EF7C18DAB51B00B2E132 /* baidu_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baidu_icon@2x.png"; sourceTree = "<group>"; };
 		725A69F918C2CCFF000FA35A /* ADMacroDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADMacroDefine.h; sourceTree = "<group>"; };
 		725A69FD18C2CDFC000FA35A /* ADTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADTabBarViewController.h; sourceTree = "<group>"; };
 		725A69FE18C2CDFC000FA35A /* ADTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADTabBarViewController.m; sourceTree = "<group>"; };
@@ -552,6 +556,8 @@
 			isa = PBXGroup;
 			children = (
 				7244EF7018D9EA9000B2E132 /* code_circle_hilightbg@2x.png */,
+				7244EF7B18DAB51B00B2E132 /* baidu_icon_hilight@2x.png */,
+				7244EF7C18DAB51B00B2E132 /* baidu_icon@2x.png */,
 				7244EF6618D9D5EB00B2E132 /* register_border_bg@2x.png */,
 				7244EF6218D9D2EE00B2E132 /* moon_bg@2x.png */,
 				7244EF6C18D9E3B700B2E132 /* superman_little_bg@2x.png */,
@@ -1146,6 +1152,7 @@
 				7244EF7918D9F01B00B2E132 /* banner_2@2x.png in Resources */,
 				7244EF7118D9EA9000B2E132 /* code_circle_hilightbg@2x.png in Resources */,
 				723A5C5918CB01ED00CDE19A /* milestone_cload_bg@2x.png in Resources */,
+				7244EF7D18DAB51B00B2E132 /* baidu_icon_hilight@2x.png in Resources */,
 				7201434818D08F08007D04B6 /* tencent_icon_hilight@2x.png in Resources */,
 				723522D618D3FCC000C9B5B4 /* tencent_bind_icon@2x..png in Resources */,
 				7201435318D090B9007D04B6 /* immet_enter_bg_hilight@2x.png in Resources */,
@@ -1170,6 +1177,7 @@
 				72EF993118C5B8F3005D3D21 /* tab_record@2x.png in Resources */,
 				7201434718D08F08007D04B6 /* tencent_icon@2x.png in Resources */,
 				7235246718D83A4900C9B5B4 /* code_resend_hilightbg@2x.png in Resources */,
+				7244EF7E18DAB51B00B2E132 /* baidu_icon@2x.png in Resources */,
 				7244EF7618D9ECED00B2E132 /* navigation_backbutton_bg@2x.png in Resources */,
 				723A5CBA18CDB6CD00CDE19A /* triangle_button_selected_bg@2x.png in Resources */,
 				722EA69518CF0BE80080E16B /* register_button_selected_bg@2x.png in Resources */,
@@ -1344,7 +1352,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 			};

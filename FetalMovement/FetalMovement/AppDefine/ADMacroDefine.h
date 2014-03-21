@@ -18,4 +18,5 @@
 
 
 #define MAIN_WINDOW  [[[UIApplication sharedApplication] windows] objectAtIndex:0]//获得主窗口
+#define APP_DELEGATE ((ADAppDelegate *)[[UIApplication sharedApplication] delegate])//获得Appdelegate
 @end
